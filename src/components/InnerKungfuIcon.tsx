@@ -84,7 +84,7 @@ const KUNGFU_IMAGE_MAP: Record<string, string> = {
   'chung van trach': '/images/kungfu/chung_van_trach.png',
   'pha trong van': '/images/kungfu/pha_trong_van.png',
   'phi kien': '/images/kungfu/phi_kien.png',
-  'minh can qua': '/images/kungfu/minh_can_qua_hd.png',
+  'minh can qua': '/images/kungfu/minh_can_qua.png',
   'tram uyen': '/images/kungfu/tram_uyen.png',
   'chuoc sat': '/images/kungfu/chuoc_sat.png',
   'thong huyen': '/images/kungfu/thong_huyen.png',
@@ -164,14 +164,14 @@ export function InnerKungfuIcon({
   return (
     <div
       style={styleObj}
-      className={`relative rounded-lg overflow-hidden border ${getElementBorder()} bg-[#111c2a] flex items-center justify-center flex-shrink-0 transition-transform select-none ${className}`}
+      className={`relative rounded-lg overflow-hidden border ${getElementBorder()} bg-gradient-to-b from-[#18263a] to-[#0a101a] flex items-center justify-center flex-shrink-0 transition-transform select-none p-1 ${className}`}
       title={name}
     >
       {imgPath && !imgError ? (
         <img
           src={imgPath}
           alt={name}
-          className="w-full h-full object-cover scale-110"
+          className="w-full h-full object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
           onError={() => setImgError(true)}
           loading="lazy"
         />

@@ -71,7 +71,6 @@ export default function SimulatorPage() {
     setNotification
   } = useSimulatorStore();
 
-  const [activeCenterTab, setActiveCenterTab] = useState<'noicong' | 'thienphu'>('noicong');
   const [catalogFilterElement, setCatalogFilterElement] = useState<string>('all');
   const [catalogSearch, setCatalogSearch] = useState<string>('');
   const [reserveFilterElement, setReserveFilterElement] = useState<string>('all');
@@ -255,17 +254,18 @@ export default function SimulatorPage() {
                         : 'border-legendary bg-purple-950/20 hover:bg-purple-950/30'
                     }`}
                   >
-                    <div className="flex items-center justify-between text-[10px] text-ink-400 font-mono mb-1">
+                    <div className="flex items-center justify-between text-xs text-ink-300 font-mono mb-1">
                       <span>[{slotKey}]</span>
-                      <span className="text-gold-bright font-bold">+{item.refine}</span>
+                      <span className="text-gold-bright font-extrabold">+{item.refine}</span>
                     </div>
 
-                    <div className="font-serif text-xs font-bold text-white group-hover:text-gold-bright transition-colors truncate">
+                    <div className="font-sans text-sm font-extrabold text-white group-hover:text-gold-bright transition-colors truncate" title={item.name}>
                       {item.name}
                     </div>
 
-                    <div className="text-[9px] text-ink-300 font-mono mt-0.5">
-                      Cấp {item.level} • GS {item.gearScore}
+                    <div className="text-[11px] text-ink-300 font-mono mt-1 flex items-center justify-between">
+                      <span>Cấp {item.level}</span>
+                      <span className="text-gold font-bold">GS {item.gearScore}</span>
                     </div>
 
                     {/* Tooltip on hover */}
@@ -299,33 +299,17 @@ export default function SimulatorPage() {
         {/* ===================== CỘT 2 (GIỮA - 50% ~ 6 cols): THIỀN ĐỊNH & 6 Ô NỘI CÔNG ===================== */}
         <div className="lg:col-span-6 space-y-3">
           <div className="p-4 rounded-xl border border-gold/30 bg-ink-900/90 shadow-md flex flex-col justify-between min-h-[520px]">
-            {/* Sub-tabs: Nội Công & Thiên Phú */}
+            {/* Header: Nội Công (6 Ô Thiền Định) */}
             <div className="flex items-center justify-between pb-2 border-b border-ink-700/80 mb-3">
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setActiveCenterTab('noicong')}
-                  className={`px-3 py-1 rounded text-xs font-serif font-bold transition-all ${
-                    activeCenterTab === 'noicong'
-                      ? 'bg-gold text-ink-950 shadow-gold-glow'
-                      : 'text-ink-300 hover:text-gold'
-                  }`}
-                >
+                <span className="w-2.5 h-2.5 rounded-full bg-gold shadow-gold-glow animate-pulse" />
+                <h3 className="text-sm sm:text-base font-sans font-extrabold text-gold-bright tracking-wide">
                   Nội Công (6 Ô Thiền Định)
-                </button>
-                <button
-                  onClick={() => setActiveCenterTab('thienphu')}
-                  className={`px-3 py-1 rounded text-xs font-serif font-bold transition-all ${
-                    activeCenterTab === 'thienphu'
-                      ? 'bg-gold text-ink-950 shadow-gold-glow'
-                      : 'text-ink-300 hover:text-gold'
-                  }`}
-                >
-                  Thiên Phú & Đặc Kỹ
-                </button>
+                </h3>
               </div>
 
               {/* Ngũ Hành counter bar with authentic game glyphs */}
-              <div className="flex items-center gap-1.5 text-[11px] font-mono">
+              <div className="flex items-center gap-1.5 text-xs font-mono">
                 <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#1e1b0e] border border-[#fde047]/50 text-[#fef08a] shadow-sm">
                   <ElementGlyph element="Kim" className="w-3.5 h-3.5" glow={true} />
                   <span>{elementCounts.Kim}</span>
@@ -350,8 +334,7 @@ export default function SimulatorPage() {
             </div>
 
             {/* Main Center Display: Clean 3-Column Meditation Stage (No overlapping text) */}
-            {activeCenterTab === 'noicong' ? (
-              <div className="relative w-full flex-1 flex flex-col rounded-xl bg-ink-950/80 border border-gold/20 overflow-hidden p-4 space-y-4">
+            <div className="relative w-full flex-1 flex flex-col rounded-xl bg-ink-950/80 border border-gold/20 overflow-hidden p-4 space-y-4">
                 {/* 3 Columns: Left (Slots 1, 3, 5) | Center (Framed Shrine) | Right (Slots 2, 4, 6) */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 items-stretch">
                   {/* Cột Trái: Ô #1, Ô #3, Ô #5 */}
@@ -373,10 +356,10 @@ export default function SimulatorPage() {
                         >
                           {isOccupied ? (
                             <div className="flex items-start gap-2.5 h-full">
-                              <InnerKungfuIcon name={slot.name} element={slot.primaryElement} size={42} />
+                              <InnerKungfuIcon name={slot.name} element={slot.primaryElement} size={48} />
                               <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-mono text-gold-bright font-bold">
+                                  <span className="text-xs font-mono text-gold-bright font-extrabold tracking-wider">
                                     Ô #{index + 1}
                                   </span>
                                   <button
@@ -391,7 +374,7 @@ export default function SimulatorPage() {
                                   </button>
                                 </div>
 
-                                <div className="font-serif text-sm font-bold text-white truncate my-0.5">
+                                <div className="font-sans text-base font-extrabold text-white truncate my-0.5 tracking-wide" title={slot.name}>
                                   {slot.name}
                                 </div>
 
@@ -418,16 +401,16 @@ export default function SimulatorPage() {
                                       setEditingSlotElementIndex({ slotIndex: index, kungfu: slot });
                                     }}
                                     title="Tùy biến cả 5 node nguyên tố"
-                                    className="ml-auto px-1.5 py-0.5 rounded bg-ink-950 border border-gold/30 hover:border-gold text-[9px] font-mono text-gold-bright hover:bg-gold/20 transition-all flex items-center gap-0.5"
+                                    className="ml-auto px-1.5 py-0.5 rounded bg-ink-950 border border-gold/40 hover:border-gold text-[10px] font-mono text-gold-bright hover:bg-gold/20 transition-all flex items-center gap-0.5"
                                   >
-                                    <Sliders className="w-2.5 h-2.5" />
+                                    <Sliders className="w-3 h-3" />
                                     <span>Đổi</span>
                                   </button>
                                 </div>
 
-                                <div className="text-[10px] font-mono text-ink-300 flex items-center justify-between">
+                                <div className="text-xs font-mono text-ink-200 flex items-center justify-between pt-0.5">
                                   <span>Cấp {slot.level || 25}</span>
-                                  <span className="text-gold font-bold">+{slot.score}</span>
+                                  <span className="text-gold-bright font-extrabold text-sm">+{slot.score}</span>
                                 </div>
                               </div>
                             </div>
@@ -500,10 +483,10 @@ export default function SimulatorPage() {
                         >
                           {isOccupied ? (
                             <div className="flex items-start gap-2.5 h-full">
-                              <InnerKungfuIcon name={slot.name} element={slot.primaryElement} size={42} />
+                              <InnerKungfuIcon name={slot.name} element={slot.primaryElement} size={48} />
                               <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-mono text-gold-bright font-bold">
+                                  <span className="text-xs font-mono text-gold-bright font-extrabold tracking-wider">
                                     Ô #{index + 1}
                                   </span>
                                   <button
@@ -518,7 +501,7 @@ export default function SimulatorPage() {
                                   </button>
                                 </div>
 
-                                <div className="font-serif text-sm font-bold text-white truncate my-0.5">
+                                <div className="font-sans text-base font-extrabold text-white truncate my-0.5 tracking-wide" title={slot.name}>
                                   {slot.name}
                                 </div>
 
@@ -545,16 +528,16 @@ export default function SimulatorPage() {
                                       setEditingSlotElementIndex({ slotIndex: index, kungfu: slot });
                                     }}
                                     title="Tùy biến cả 5 node nguyên tố"
-                                    className="ml-auto px-1.5 py-0.5 rounded bg-ink-950 border border-gold/30 hover:border-gold text-[9px] font-mono text-gold-bright hover:bg-gold/20 transition-all flex items-center gap-0.5"
+                                    className="ml-auto px-1.5 py-0.5 rounded bg-ink-950 border border-gold/40 hover:border-gold text-[10px] font-mono text-gold-bright hover:bg-gold/20 transition-all flex items-center gap-0.5"
                                   >
-                                    <Sliders className="w-2.5 h-2.5" />
+                                    <Sliders className="w-3 h-3" />
                                     <span>Đổi</span>
                                   </button>
                                 </div>
 
-                                <div className="text-[10px] font-mono text-ink-300 flex items-center justify-between">
+                                <div className="text-xs font-mono text-ink-200 flex items-center justify-between pt-0.5">
                                   <span>Cấp {slot.level || 25}</span>
-                                  <span className="text-gold font-bold">+{slot.score}</span>
+                                  <span className="text-gold-bright font-extrabold text-sm">+{slot.score}</span>
                                 </div>
                               </div>
                             </div>
@@ -655,36 +638,36 @@ export default function SimulatorPage() {
                               : 'border-ink-800 bg-ink-900 hover:border-gold/60 hover:bg-ink-850'
                           }`}
                         >
-                          {/* Icon with authentic in-game crop */}
-                          <InnerKungfuIcon name={ik.name} element={ik.primaryElement} size={42} />
+                          {/* Icon with authentic in-game crop, perfectly centered in square box */}
+                          <InnerKungfuIcon name={ik.name} element={ik.primaryElement} size={48} />
 
-                          {/* Info & Glyphs */}
+                          {/* Info & Glyphs with enlarged, clear text */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-1">
-                              <span className="font-serif text-xs font-bold text-white truncate" title={ik.name}>
+                              <span className="font-sans text-sm font-extrabold text-white group-hover:text-gold-bright transition-colors truncate" title={ik.name}>
                                 {ik.name}
                               </span>
                               {isEquipped ? (
-                                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-gold text-ink-950 font-bold shrink-0">
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-gold text-ink-950 font-extrabold shrink-0 shadow-sm">
                                   Ô #{equippedSlotIdx + 1}
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono px-1 rounded bg-ink-950 text-gold border border-gold/30 shrink-0">
+                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/40 font-bold shrink-0">
                                   {ik.tier}
                                 </span>
                               )}
                             </div>
 
                             {/* 5 Authentic Elemental Glyphs */}
-                            <div className="flex items-center justify-between mt-1.5 text-[10px] font-mono">
+                            <div className="flex items-center justify-between mt-1.5 text-xs font-mono">
                               <div className="flex items-center gap-1">
                                 {ik.elements.map((el, elIdx) => (
-                                  <div key={elIdx} className="w-3.5 h-3.5 flex items-center justify-center">
-                                    <ElementGlyph element={el} className="w-3 h-3" glow={true} />
+                                  <div key={elIdx} className="w-4 h-4 flex items-center justify-center">
+                                    <ElementGlyph element={el} className="w-3.5 h-3.5" glow={true} />
                                   </div>
                                 ))}
                               </div>
-                              <span className="text-gold-bright font-bold">+{ik.score}</span>
+                              <span className="text-gold-bright font-extrabold text-xs">+{ik.score}</span>
                             </div>
                           </div>
                         </div>
@@ -693,24 +676,6 @@ export default function SimulatorPage() {
                   </div>
                 </div>
               </div>
-            ) : (
-              /* Talent / Đặc Kỹ Tab */
-              <div className="flex-1 p-4 rounded-xl bg-ink-950/60 border border-gold/15 space-y-3">
-                <h4 className="font-serif text-sm font-bold text-gold-bright">
-                  Cây Thiên Phú & Đặc Kỹ Lưu Phái {selectedSect}
-                </h4>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-lg border border-gold/30 bg-ink-850">
-                    <span className="text-gold font-bold block">Đặc Kỹ: Cuồng Kích Kiếm Quyết</span>
-                    <span className="text-ink-300 text-[11px]">Tăng 15% Sát thương kỹ năng chủ lực khi HP trên 70%.</span>
-                  </div>
-                  <div className="p-3 rounded-lg border border-gold/30 bg-ink-850">
-                    <span className="text-gold font-bold block">Đặc Kỹ: Nhập Thần Định Hồn</span>
-                    <span className="text-ink-300 text-[11px]">Giảm 10% tiêu hao nội lực, tăng 50 điểm Phá Phòng.</span>
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* Bottom Quick Controls for Meditation (as seen in game UI) */}
             <div className="mt-3 pt-3 border-t border-ink-700/70 flex items-center justify-between gap-2">

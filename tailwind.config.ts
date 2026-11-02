@@ -52,8 +52,8 @@ const config: Config = {
         }
       },
       fontFamily: {
-        serif: ["Noto Serif", "serif"],
-        sans: ["Plus Jakarta Sans", "sans-serif"],
+        serif: ["Lexend", "Noto Serif", "serif"],
+        sans: ["Lexend", "sans-serif"],
         mono: ["Space Grotesk", "monospace"],
       },
       boxShadow: {
