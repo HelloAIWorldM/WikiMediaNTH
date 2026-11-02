@@ -72,8 +72,114 @@ const ALL_GAME_STATS = [
   "Kháng Thiết Y",
   "Kháng Tố Vấn",
   "Kháng Cửu Linh",
-  "Kháng Toái Mộng"
+  "Kháng Toái Mộng",
+  "Khắc Chế Thần Tương",
+  "Khắc Chế Long Ngâm",
+  "Khắc Chế Huyết Hà",
+  "Khắc Chế Thiết Y",
+  "Khắc Chế Tố Vấn",
+  "Khắc Chế Cửu Linh",
+  "Khắc Chế Toái Mộng"
 ];
+
+/**
+ * Xóa bỏ toàn bộ ký tự rác OCR thường sinh ra ở viền ảnh: ' . | ~ - _ : , ; ! ? / \
+ */
+function cleanOcrText(str: string): string {
+  return str
+    .replace(/^[^a-zA-Z0-9\u00C0-\u1EF9]+/, '')
+    .replace(/[^a-zA-Z0-9\u00C0-\u1EF9%)]+$/, '')
+    .trim();
+}
+
+function toUnaccented(str: string): string {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .trim();
+}
+
+/**
+ * Kiểm tra xem dòng có phải là tiêu đề giao diện / header không phải là thuộc tính
+ */
+function isIgnoredHeader(text: string): boolean {
+  const norm = toUnaccented(text);
+  return (
+    norm === 'dong thuoc tinh' ||
+    norm === 'thuoc tinh' ||
+    norm === 'dong co ban' ||
+    norm === 'co ban' ||
+    norm === 'than thoai' ||
+    norm === 'doc tran' ||
+    norm === 'hoang kim' ||
+    norm === 'nguyen to' ||
+    norm === 'khuyen dung' ||
+    norm === 'ky nang' ||
+    (norm.startsWith('cap ') && norm.length < 15)
+  );
+}
+
+/**
+ * Tự động sửa lỗi chữ / thiếu dấu và phục hồi tên chỉ số tiếng Việt chuẩn
+ */
+function normalizeGameStatName(rawName: string): string {
+  const norm = rawName.toLowerCase().replace(/\s+/g, ' ').trim();
+  const unaccented = toUnaccented(norm);
+
+  // Nhận diện "Tất Cả Đỡ Đòn" (thường bị Tesseract đọc thành "tất c4 bg hon", "tat c4 bg hon", "bg hon", "tat ca do don", v.v.)
+  if (
+    norm.includes('bg hon') ||
+    norm.includes('c4 bg') ||
+    norm.includes('tat ca do don') ||
+    norm.includes('tất cả đỡ đòn') ||
+    norm.includes('tat c4') ||
+    (norm.includes('tất') && (norm.includes('đỡ') || norm.includes('đòn') || norm.includes('hon'))) ||
+    (unaccented.includes('tat ca') && unaccented.includes('don'))
+  ) {
+    return 'Tất Cả Đỡ Đòn';
+  }
+
+  // Nhận diện "Đỡ Đòn"
+  if (norm.includes('đỡ đòn') || unaccented === 'do don' || norm === 'bg hon') {
+    return 'Đỡ Đòn';
+  }
+
+  // Nhận diện "Căn Cốt" (thường bị đọc thành "can cot", "căn cot", "can cốt")
+  if (unaccented === 'can cot' || norm.includes('căn cốt') || norm.includes('can cot')) {
+    return 'Căn Cốt';
+  }
+
+  // Nhận diện "Khắc Chế Boss" (thường bị đọc thành "khac che boss", "khac che bos")
+  if (unaccented.includes('khac che boss') || unaccented.includes('khac che bos') || (norm.includes('khắc') && norm.includes('boss'))) {
+    return 'Khắc Chế Boss';
+  }
+
+  // Nhận diện "Giới Hạn HP" (thường bị đọc thành "gioi han hp", "gidi han hp", "giới hạn hp")
+  if (unaccented.includes('gioi han hp') || unaccented.includes('han hp') || norm.includes('giới hạn') || norm.includes('gioi han')) {
+    return 'Giới Hạn HP';
+  }
+
+  // Khớp chính xác với từ điển ALL_GAME_STATS không phân biệt dấu
+  for (const stat of ALL_GAME_STATS) {
+    const sUnacc = toUnaccented(stat);
+    if (unaccented === sUnacc) {
+      return stat;
+    }
+  }
+
+  // Khớp gần (contains) với từ điển
+  for (const stat of ALL_GAME_STATS) {
+    const sUnacc = toUnaccented(stat);
+    if (unaccented.length >= 5 && (unaccented.includes(sUnacc) || sUnacc.includes(unaccented))) {
+      return stat;
+    }
+  }
+
+  return rawName.charAt(0).toUpperCase() + rawName.slice(1);
+}
 
 export default function OcrScannerModal() {
   const {
@@ -319,8 +425,8 @@ export default function OcrScannerModal() {
     const seenLower = new Set<string>();
 
     const addStatLine = (textLine: string) => {
-      const clean = textLine.trim().replace(/^[-*•+•\s]+/, '').trim();
-      const norm = clean.toLowerCase();
+      const clean = cleanOcrText(textLine);
+      const norm = toUnaccented(clean);
       if (!clean || clean.length < 2) return;
       // Bắt buộc phải có chữ cái (Việt hoặc Anh)
       if (!/[a-zA-Z\u00C0-\u1EF9]/.test(clean)) return;
@@ -334,30 +440,30 @@ export default function OcrScannerModal() {
     // 3.1. Nhận diện các dòng chỉ số in-game có cấu trúc: [Tên thuộc tính] +[Số] hoặc [Tên thuộc tính]: +[Số]
     const rawLines = fullText.split(/\r?\n/);
     for (const rawLine of rawLines) {
-      const trimmed = rawLine.trim();
-      if (!/[a-zA-Z\u00C0-\u1EF9]/.test(trimmed)) continue;
-      if (trimmed.includes('TRANG MỚI')) continue;
+      const cleaned = cleanOcrText(rawLine);
+      if (!cleaned || !/[a-zA-Z\u00C0-\u1EF9]/.test(cleaned)) continue;
+      if (cleaned.includes('TRANG MỚI')) continue;
 
-      // Bỏ qua tiêu đề nhóm và header
-      if (/^(dòng thuộc tính|thuộc tính|dòng cơ bản|thần thoại|độc trân|hiếm|hoàng kim)$/i.test(trimmed)) continue;
-      if (/^nguyên\s*tố/i.test(trimmed)) continue;
-      if (/^cấp\s*\d+/i.test(trimmed) && trimmed.length < 15) continue;
-      if (trimmed.toLowerCase() === detectedName.toLowerCase()) continue;
+      // Bỏ qua tiêu đề nhóm và header giao diện
+      if (isIgnoredHeader(cleaned)) continue;
+      if (cleaned.toLowerCase() === detectedName.toLowerCase()) continue;
 
-      // Nhận diện mẫu chuẩn: "Căn Cốt +48", "Khắc Chế Boss +534", "Tất Cả Đỡ Đòn +168", "Giới Hạn HP +5389"
-      const statMatch = trimmed.match(/^([a-zA-Z\u00C0-\u1EF9\s]+?)\s*[:：]?\s*([+＋-]?\s*\d+[\d,.]*%?)$/);
+      // Nhận diện mẫu chuẩn: "Căn Cốt +48", "Khắc Chế Boss +534", "Tất C4 BG Hon +168", "Giới Hạn HP +5389"
+      const statMatch = cleaned.match(/^([a-zA-Z0-9\u00C0-\u1EF9\s]+?)\s*[:：=-]?\s*([+＋-]\s*\d+[\d,.]*%?|\b\d+[\d,.]*%?)$/);
       if (statMatch) {
         const sName = statMatch[1].trim();
         const sVal = statMatch[2].trim().replace(/\s+/g, '');
-        if (!/^(dòng thuộc tính|thuộc tính|nguyên tố)$/i.test(sName)) {
+        if (!isIgnoredHeader(sName)) {
+          const normName = normalizeGameStatName(sName);
           const formattedVal = sVal.startsWith('+') || sVal.startsWith('-') ? sVal : `+${sVal}`;
-          addStatLine(`${sName}: ${formattedVal}`);
+          addStatLine(`${normName}: ${formattedVal}`);
           continue;
         }
       }
 
-      // Nếu không khớp regex số nhưng là dòng chữ có nghĩa, vẫn nạp vào
-      addStatLine(trimmed);
+      // Nếu không khớp regex số nhưng là dòng chữ có nghĩa, chuẩn hóa và nạp vào
+      const normName = normalizeGameStatName(cleaned);
+      addStatLine(normName);
     }
 
     // 3.2. Quét tìm các thuộc tính game chuẩn (ALL_GAME_STATS) trên TOÀN BỘ văn bản (phòng trường hợp OCR gom dòng)
@@ -366,8 +472,8 @@ export default function OcrScannerModal() {
       const m = fullText.match(reg);
       if (m) {
         const val = m[1].replace(/,/g, '');
-        const normKey = statName.toLowerCase();
-        if (!Array.from(seenLower).some(s => s.startsWith(normKey))) {
+        const normKey = toUnaccented(statName);
+        if (!Array.from(seenLower).some(s => s.startsWith(normKey) || normKey.startsWith(s))) {
           addStatLine(`${statName}: +${val}`);
         }
       }
