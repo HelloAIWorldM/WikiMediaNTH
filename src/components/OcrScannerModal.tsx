@@ -11,7 +11,6 @@ import {
   RefreshCw, 
   Plus, 
   Trash2,
-  Flame,
   Info,
   Sliders,
   Archive,
@@ -355,42 +354,6 @@ export default function OcrScannerModal() {
     setParsedDesc(detectedDesc);
   };
 
-  const loadSampleMinhCanQua = () => {
-    setItemType('noicong');
-    setParsedName('Minh Can Qua');
-    setParsedLevel(25);
-    setParsedScore(2742);
-    setParsedElements(["Kim", "Kim", "Kim", "Kim", "Moc"]);
-    setParsedDesc("Khi tấn công, có xác suất tăng 4% ST lên mục tiêu trong 5 giây (Hiệu quả tăng gấp đôi đối với quái vật), hồi chiêu 10 giây (Ở dạng Tố Tâm có thể kích hoạt khi trị liệu, tăng hiệu quả trị liệu của bản thân lên 6%).");
-    setParsedSubStats([
-      "Giới Hạn HP: +3119",
-      "Tất Cả Nguyên Tố: +83",
-      "Chính Xác: +45",
-      "Kháng Boss: +58",
-      "Khắc Chế Boss: +69",
-      "Tấn Công Tối Đa: +115"
-    ]);
-  };
-
-  const loadSampleNhatNguyet = () => {
-    setItemType('noicong');
-    setParsedName('Nhật Nguyệt Lưỡng Nghi');
-    setParsedLevel(25);
-    setParsedScore(3029);
-    setParsedElements(["Kim", "Hoa", "Hoa", "Hoa", "Tho"]);
-    setParsedDesc("Khi HP trên 50%, hiệu quả gây sát thương/trị liệu tăng 5%. Khi HP dưới 50%, sát thương nhận vào giảm 5% ◆ Khi có hiệu ứng <Linh Vận>, hiệu quả tăng cường tăng thêm 50%.");
-    setParsedSubStats([
-      "Giới Hạn HP: +3119",
-      "Kháng Long Ngâm: +80",
-      "Kháng Chí Mạng Nội: +101",
-      "Khí Hải: +22",
-      "Kháng Huyết Hà: +80",
-      "Chính Xác: +45",
-      "Phòng Thủ: +137",
-      "Kháng Thần Tương: +92"
-    ]);
-  };
-
   const handleCycleElement = (index: number) => {
     const current = parsedElements[index];
     const currentIndex = ELEMENT_OPTIONS.indexOf(current);
@@ -504,51 +467,19 @@ export default function OcrScannerModal() {
 
         {/* Modal Body */}
         <div className="p-4 sm:p-6 space-y-4 overflow-y-auto">
-          {/* Quick Action Toolbar with Samples */}
-          <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-ink-950 border border-gold/25 text-xs">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-serif font-bold text-gold-bright">Nạp mẫu nhanh:</span>
-              <button
-                type="button"
-                onClick={loadSampleMinhCanQua}
-                className="px-2.5 py-1 rounded bg-amber-400/20 hover:bg-amber-400 text-amber-300 hover:text-ink-950 font-mono text-[11px] font-bold border border-amber-400/40 transition-all flex items-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Mẫu: [Minh Can Qua Lv25] (4 Kim 1 Mộc, +2742 Điểm)</span>
-              </button>
-              <button
-                type="button"
-                onClick={loadSampleNhatNguyet}
-                className="px-2.5 py-1 rounded bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-mono text-[11px] font-bold border border-rose-500/40 transition-all flex items-center gap-1.5"
-              >
-                <Flame className="w-3.5 h-3.5 text-rose-400" />
-                <span>Mẫu: [Nhật Nguyệt Lưỡng Nghi Lv25] (1 Kim 3 Hỏa 1 Thổ, +3029 Điểm)</span>
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-1 rounded bg-gold/15 hover:bg-gold text-gold-bright hover:text-ink-950 font-mono text-[11px] font-bold border border-gold/40 transition-all flex items-center gap-1.5"
-              >
-                <Upload className="w-3.5 h-3.5" />
-                <span>Tải Nhiều Ảnh (Chọn File)</span>
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files.length > 0) {
-                    addFiles(e.target.files);
-                  }
-                }}
-              />
-            </div>
-          </div>
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                addFiles(e.target.files);
+              }
+            }}
+          />
 
           {/* 2-Column Grid */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
@@ -677,8 +608,7 @@ export default function OcrScannerModal() {
                   <span>Quy tắc chuẩn nhận diện:</span>
                 </span>
                 <p className="text-ink-400 text-[11px] leading-relaxed">
-                  • <strong>Ảnh #1</strong>: Ảnh icon/vũ khí dùng làm đại diện cho vật phẩm.<br />
-                  • <strong>Ảnh #2 & #3</strong>: Ảnh bảng chỉ số. Hệ thống sẽ nhận diện dòng <strong>Nguyên Tố</strong> cho 5 chấm ngũ hành, và trích xuất tất cả dòng từ <strong>Giới Hạn HP</strong> trở xuống.
+                  • <strong>Ảnh #1</strong>: Ảnh icon/vũ khí dùng làm đại diện cho vật phẩm.
                 </p>
               </div>
             </div>

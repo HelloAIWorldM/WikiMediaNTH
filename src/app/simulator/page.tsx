@@ -67,8 +67,6 @@ export default function SimulatorPage() {
     removeGearSlot,
     addKungfuToReserve,
     removeKungfuFromReserve,
-    clearAllDatabase,
-    loadSampleData,
     openCatalogForSlot,
     closeCatalog,
     setOcrModalOpen,
@@ -175,22 +173,6 @@ export default function SimulatorPage() {
               ))}
             </div>
           </div>
-
-          {/* Preset Selector */}
-          <div className="flex items-center gap-2 pl-3 border-l border-ink-700">
-            <span className="text-xs text-gold font-mono uppercase tracking-wider">Mẫu Có Sẵn:</span>
-            <select
-              value={activePresetId}
-              onChange={(e) => loadPreset(e.target.value)}
-              className="bg-ink-800 border border-gold/30 rounded px-2.5 py-1 text-xs text-ink-100 font-sans focus:border-gold outline-none"
-            >
-              {POPULAR_PRESETS.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
 
         {/* Action Buttons */}
@@ -202,28 +184,6 @@ export default function SimulatorPage() {
           >
             <Camera className="w-3.5 h-3.5" />
             <span>Quét Ảnh (OCR)</span>
-          </button>
-
-          <button
-            onClick={loadSampleData}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-ink-700 bg-ink-800 hover:border-gold/50 text-ink-300 hover:text-gold text-xs font-mono transition-all"
-            title="Nạp dữ liệu mẫu thử nghiệm"
-          >
-            <Archive className="w-3.5 h-3.5" />
-            <span>Nạp Kho Mẫu</span>
-          </button>
-
-          <button
-            onClick={() => {
-              if (confirm("Bạn có chắc chắn muốn xóa sạch Database (đưa 10 ô đồ, 6 nội công và kho dự trữ về trống)?")) {
-                clearAllDatabase();
-              }
-            }}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-ink-700 bg-ink-800 hover:border-crimson hover:text-crimson text-ink-400 text-xs font-mono transition-all"
-            title="Xóa sạch toàn bộ trang bị và kho về 0"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Xóa Sạch DB</span>
           </button>
 
           <button
@@ -702,14 +662,6 @@ export default function SimulatorPage() {
                         >
                           <Camera className="w-3.5 h-3.5" />
                           <span>Quét Ảnh Thêm Vào Kho</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={loadSampleData}
-                          className="px-3 py-1.5 rounded-lg border border-gold/40 text-gold-bright hover:bg-gold/10 text-xs font-mono font-medium flex items-center gap-1.5 transition-all"
-                        >
-                          <Archive className="w-3.5 h-3.5" />
-                          <span>Nạp Lại Kho Mẫu (Tùy Chọn)</span>
                         </button>
                       </div>
                     </div>
