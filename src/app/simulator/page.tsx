@@ -651,7 +651,7 @@ export default function SimulatorPage() {
                       <div className="space-y-1">
                         <h4 className="font-serif text-sm font-bold text-white">Kho Nội Công Database Đang Trống</h4>
                         <p className="text-xs text-ink-400 max-w-md mx-auto">
-                          Đã xóa sạch 65 bí kíp mặc định. Sử dụng <strong>Bộ Quét Ảnh OCR</strong> (Ảnh #1 đại diện, Ảnh #2 & #3 bóc tách Nguyên Tố và Giới Hạn HP) để lưu trữ bí kíp của bạn vào Database!
+                          Đã xóa sạch 65 bí kíp mặc định. Sử dụng <strong>Bộ Quét Ảnh OCR</strong> (Ảnh #1 đại diện, Ảnh #2 & #3 bóc tách Nguyên Tố & tự động nạp tất cả dòng chữ) để lưu trữ bí kíp của bạn vào Database!
                         </p>
                       </div>
                       <div className="flex flex-wrap items-center justify-center gap-2 pt-2">

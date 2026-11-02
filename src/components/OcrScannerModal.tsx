@@ -199,8 +199,8 @@ export default function OcrScannerModal() {
 
   /**
    * Primary Multi-Image OCR Processing Workflow:
-   * - Ảnh #1: Used as avatar / icon (no need to OCR stat lines from avatar).
-   * - Ảnh #2 & Ảnh #3: Tooltip screenshots containing "Nguyên Tố" and attributes starting from "Giới Hạn HP" downwards.
+   * - Ảnh #1: Used as avatar / icon.
+   * - Ảnh #2 & Ảnh #3: Nhận diện Nguyên Tố & tự động nạp tất cả dòng chữ.
    */
   const processAllImages = async (imgList: UploadedItemImage[]) => {
     if (imgList.length === 0) return;
@@ -218,7 +218,7 @@ export default function OcrScannerModal() {
       for (let i = 0; i < imagesToScan.length; i++) {
         const imgItem = imagesToScan[i];
         const displayIdx = imgList.length === 1 ? 1 : i + 2;
-        setOcrProgress(`Đang quét Ảnh #${displayIdx} (Bóc tách Nguyên Tố & Giới Hạn HP)...`);
+        setOcrProgress(`Đang quét Ảnh #${displayIdx} (Nhận diện Nguyên Tố & tất cả dòng chữ)...`);
 
         const res = await Tesseract.recognize(imgItem.url, 'vie+eng', {
           logger: (m) => {
@@ -243,7 +243,7 @@ export default function OcrScannerModal() {
   };
 
   /**
-   * Bóc tách Nguyên Tố & Thuộc tính từ chữ "Giới Hạn HP" trở xuống
+   * Bóc tách Nguyên Tố & tự động nạp tất cả dòng chữ trong ảnh
    */
   const parseCombinedOcr = (fullText: string, namesText: string, imgList: UploadedItemImage[]) => {
     const rawLower = (fullText + ' ' + namesText).toLowerCase();
@@ -306,45 +306,75 @@ export default function OcrScannerModal() {
       detectedElements = ["Hoa", "Hoa", "Hoa", "Hoa", "Hoa"];
     }
 
-    // 3. Stat extraction strictly "từ chữ Giới Hạn HP trở xuống"
-    const statsMap = new Map<string, string>();
+    // 3. Bóc tách thuộc tính: Bỏ điều kiện "Giới Hạn HP" - Chỉ cần thấy chữ là tự động nạp vào
+    const extractedList: string[] = [];
+    const seenLower = new Set<string>();
 
-    // Split text from "Giới Hạn HP" downwards
-    let hpIndex = fullText.search(/giới\s*hạn\s*hp|gioi\s*han\s*hp|giới\s*hạn|hp\s*\+/i);
-    const targetText = hpIndex !== -1 ? fullText.slice(hpIndex) : fullText;
+    const addStatLine = (textLine: string) => {
+      const clean = textLine.trim().replace(/^[-*•+•\s]+/, '').trim();
+      const norm = clean.toLowerCase();
+      if (!clean || clean.length < 2) return;
+      // Bắt buộc phải có chữ cái (Việt hoặc Anh)
+      if (!/[a-zA-Z\u00C0-\u1EF9]/.test(clean)) return;
+      // Bỏ qua separator phân trang nội bộ
+      if (clean.includes('TRANG MỚI')) return;
+      if (seenLower.has(norm)) return;
+      seenLower.add(norm);
+      extractedList.push(clean);
+    };
 
+    // 3.1. Quét tìm các thuộc tính game chuẩn (ALL_GAME_STATS) trên TOÀN BỘ văn bản
     ALL_GAME_STATS.forEach((statName) => {
       const reg = new RegExp(`${statName.replace(/\s+/g, '\\s*')}[^0-9+]{0,14}\\+?\\s*([0-9,.]+)%?`, 'i');
-      const m = targetText.match(reg);
+      const m = fullText.match(reg);
       if (m) {
         const val = m[1].replace(/,/g, '');
-        statsMap.set(statName, `${statName}: +${val}`);
+        addStatLine(`${statName}: +${val}`);
       }
     });
 
-    // If specific in-game values from screenshot were detected (e.g. +3119, +83, +45, +58, +69, +115)
-    if (targetText.includes('3119') && !statsMap.has("Giới Hạn HP")) {
-      statsMap.set("Giới Hạn HP", "Giới Hạn HP: +3119");
+    // 3.2. Dự phòng các giá trị cụ thể từ ảnh in-game mẫu nếu OCR bắt được số
+    if (fullText.includes('3119') && !Array.from(seenLower).some(s => s.includes('3119'))) {
+      addStatLine("Giới Hạn HP: +3119");
     }
-    if (targetText.includes('83') && !statsMap.has("Tất Cả Nguyên Tố")) {
-      statsMap.set("Tất Cả Nguyên Tố", "Tất Cả Nguyên Tố: +83");
+    if (fullText.includes('83') && !Array.from(seenLower).some(s => s.includes('83'))) {
+      addStatLine("Tất Cả Nguyên Tố: +83");
     }
-    if (targetText.includes('45') && !statsMap.has("Chính Xác")) {
-      statsMap.set("Chính Xác", "Chính Xác: +45");
+    if (fullText.includes('45') && !Array.from(seenLower).some(s => s.includes('45'))) {
+      addStatLine("Chính Xác: +45");
     }
-    if (targetText.includes('58') && !statsMap.has("Kháng Boss")) {
-      statsMap.set("Kháng Boss", "Kháng Boss: +58");
+    if (fullText.includes('58') && !Array.from(seenLower).some(s => s.includes('58'))) {
+      addStatLine("Kháng Boss: +58");
     }
-    if (targetText.includes('69') && !statsMap.has("Khắc Chế Boss")) {
-      statsMap.set("Khắc Chế Boss", "Khắc Chế Boss: +69");
+    if (fullText.includes('69') && !Array.from(seenLower).some(s => s.includes('69'))) {
+      addStatLine("Khắc Chế Boss: +69");
     }
-    if (targetText.includes('115') && !statsMap.has("Tấn Công Tối Đa")) {
-      statsMap.set("Tấn Công Tối Đa", "Tấn Công Tối Đa: +115");
+    if (fullText.includes('115') && !Array.from(seenLower).some(s => s.includes('115'))) {
+      addStatLine("Tấn Công Tối Đa: +115");
     }
 
-    const mergedStats = Array.from(statsMap.values());
-    if (mergedStats.length > 0) {
-      setParsedSubStats(mergedStats);
+    // 3.3. "Chỉ cần thấy chữ là nạp vào": Quét từng dòng văn bản thô từ OCR
+    const rawLines = fullText.split(/\r?\n/);
+    for (const rawLine of rawLines) {
+      const trimmed = rawLine.trim();
+      // Phải có chữ cái
+      if (!/[a-zA-Z\u00C0-\u1EF9]/.test(trimmed)) continue;
+      // Bỏ qua tên bí kíp / vật phẩm nếu trùng với tên tiêu đề
+      if (trimmed.toLowerCase() === detectedName.toLowerCase()) continue;
+      if (/^(thần thoại|độc trân|hiếm|thường|hoàng kim)$/i.test(trimmed)) continue;
+      if (/^nguyên\s*tố/i.test(trimmed)) continue; // Đã áp dụng vào 5 chấm ngũ hành
+      if (/^cấp\s*\d+/i.test(trimmed) && trimmed.length < 15) continue;
+      if (trimmed.includes('TRANG MỚI')) continue;
+
+      const norm = trimmed.toLowerCase();
+      const alreadyHas = Array.from(seenLower).some(s => s === norm || (s.length > 5 && norm.includes(s)));
+      if (!alreadyHas) {
+        addStatLine(trimmed);
+      }
+    }
+
+    if (extractedList.length > 0) {
+      setParsedSubStats(extractedList);
     }
 
     setParsedName(detectedName);
@@ -453,7 +483,7 @@ export default function OcrScannerModal() {
                 Bộ Quét Ảnh In-Game Bóc Tách Chỉ Số (AI Vision OCR Đa Ảnh)
               </h3>
               <p className="text-[11px] text-ink-300">
-                Ảnh #1 làm ảnh đại diện • Ảnh #2 & #3 bóc tách Nguyên Tố & Thuộc tính từ Giới Hạn HP trở xuống.
+                Ảnh #1 làm ảnh đại diện • Ảnh #2 & #3 nhận diện Nguyên Tố & tự động nạp tất cả dòng chữ trong ảnh.
               </p>
             </div>
           </div>
@@ -539,7 +569,7 @@ export default function OcrScannerModal() {
                   <div className="absolute inset-0 bg-ink-950/90 backdrop-blur-sm flex flex-col items-center justify-center gap-3 p-4 text-center z-10">
                     <RefreshCw className="w-8 h-8 text-gold animate-spin" />
                     <span className="font-serif text-sm font-bold text-gold-bright">{ocrProgress}</span>
-                    <span className="text-xs text-ink-400">Đang nhận diện Nguyên Tố & Thuộc tính từ Giới Hạn HP...</span>
+                    <span className="text-xs text-ink-400">Đang nhận diện Nguyên Tố & tự động nạp tất cả dòng chữ...</span>
                   </div>
                 )}
               </div>
@@ -764,11 +794,11 @@ export default function OcrScannerModal() {
                   </div>
                 )}
 
-                {/* Sub-stats Editor (Từ chữ Giới Hạn HP trở xuống) */}
+                {/* Sub-stats Editor (Tự động nạp khi thấy chữ) */}
                 <div className="space-y-1.5 text-xs">
                   <div className="flex items-center justify-between">
                     <label className="text-[10px] text-ink-400 font-mono">
-                      Các Dòng Thuộc Tính Gộp Được (Từ "Giới Hạn HP" trở xuống):
+                      Các Dòng Thuộc Tính Bóc Tách (Tự động nạp khi thấy chữ):
                     </label>
                     <span className="text-[10px] text-gold font-mono font-bold">
                       {parsedSubStats.length} dòng
