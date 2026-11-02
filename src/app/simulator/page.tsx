@@ -18,9 +18,11 @@ import {
   ChevronDown,
   X,
   Sliders,
-  Dices
+  Dices,
+  Archive,
+  RotateCcw
 } from 'lucide-react';
-import { useSimulatorStore } from '@/store/useSimulatorStore';
+import { useSimulatorStore, EMPTY_GEAR_SLOTS } from '@/store/useSimulatorStore';
 import { 
   INNER_KUNGFU_DATABASE, 
   ElementType, 
@@ -33,6 +35,7 @@ import { InnerKungfuIcon } from '@/components/InnerKungfuIcon';
 import { ElementTrackBoard } from '@/components/ElementTrackBoard';
 
 const SECTS = ["Cửu Linh", "Toái Mộng", "Huyết Hà", "Thiết Y", "Thần Tương", "Tố Vấn", "Long Ngâm"];
+const GEAR_SLOT_KEYS = ["Vũ Khí", "Áo", "Mũ", "Đai", "Giày", "Hộ Uyển", "Nhẫn 1", "Nhẫn 2", "Dây Chuyền", "Bội Ngọc"];
 
 const ELEMENT_COLORS: Record<ElementType, { name: string; bg: string; text: string; dot: string }> = {
   Kim: { name: "Kim", bg: "bg-amber-400/20 border-amber-400/50", text: "text-amber-300", dot: "bg-amber-400 shadow-[0_0_8px_#fbbf24]" },
@@ -48,6 +51,7 @@ export default function SimulatorPage() {
     activePresetId,
     gearSlots,
     innerSlots,
+    reserveKungfus,
     elementCounts,
     resonances,
     stats,
@@ -60,6 +64,11 @@ export default function SimulatorPage() {
     removeInnerSlot,
     updateInnerSlotElement,
     setSlotElements,
+    removeGearSlot,
+    addKungfuToReserve,
+    removeKungfuFromReserve,
+    clearAllDatabase,
+    loadSampleData,
     openCatalogForSlot,
     closeCatalog,
     setOcrModalOpen,
@@ -115,8 +124,8 @@ export default function SimulatorPage() {
     return matchSearch && matchElement;
   });
 
-  // Filtered Reserve Dock list
-  const filteredReserve = INNER_KUNGFU_DATABASE.filter((ik) => {
+  // Filtered Reserve Dock list from user's persisted Database
+  const filteredReserve = reserveKungfus.filter((ik) => {
     const matchSearch = ik.name.toLowerCase().includes(reserveSearch.toLowerCase());
     const matchElement = reserveFilterElement === 'all' || ik.elements.includes(reserveFilterElement as ElementType);
     return matchSearch && matchElement;
@@ -185,14 +194,36 @@ export default function SimulatorPage() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setOcrModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-gold/40 bg-gold/15 hover:bg-gold/25 text-gold-bright text-xs font-mono font-bold transition-all"
-            title="Quét trang bị từ ảnh chụp màn hình"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-gold/40 bg-gold/15 hover:bg-gold/25 text-gold-bright text-xs font-mono font-bold transition-all shadow-sm"
+            title="Quét trang bị & nội công từ ảnh"
           >
             <Camera className="w-3.5 h-3.5" />
             <span>Quét Ảnh (OCR)</span>
+          </button>
+
+          <button
+            onClick={loadSampleData}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-ink-700 bg-ink-800 hover:border-gold/50 text-ink-300 hover:text-gold text-xs font-mono transition-all"
+            title="Nạp dữ liệu mẫu thử nghiệm"
+          >
+            <Archive className="w-3.5 h-3.5" />
+            <span>Nạp Kho Mẫu</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (confirm("Bạn có chắc chắn muốn xóa sạch Database (đưa 10 ô đồ, 6 nội công và kho dự trữ về trống)?")) {
+                clearAllDatabase();
+              }
+            }}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-ink-700 bg-ink-800 hover:border-crimson hover:text-crimson text-ink-400 text-xs font-mono transition-all"
+            title="Xóa sạch toàn bộ trang bị và kho về 0"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Xóa Sạch DB</span>
           </button>
 
           <button
@@ -232,13 +263,33 @@ export default function SimulatorPage() {
                 <span>10 Ô Trang Bị Đeo</span>
               </span>
               <span className="text-[10px] font-mono text-gold-bright bg-gold/15 px-2 py-0.5 rounded border border-gold/30">
-                10/10 Đầy Đủ
+                {Object.values(gearSlots).filter(Boolean).length}/10 {Object.values(gearSlots).filter(Boolean).length === 10 ? 'Đầy Đủ' : 'Đã Đeo'}
               </span>
             </div>
 
             {/* 10 Gear slots in 2 columns */}
             <div className="grid grid-cols-2 gap-2">
-              {Object.entries(gearSlots).map(([slotKey, item]) => {
+              {GEAR_SLOT_KEYS.map((slotKey) => {
+                const item = gearSlots[slotKey];
+                if (!item) {
+                  return (
+                    <div
+                      key={slotKey}
+                      onClick={() => setOcrModalOpen(true)}
+                      className="relative p-2.5 rounded-lg border border-dashed border-ink-700 bg-ink-950/60 hover:border-gold/60 hover:bg-gold/5 transition-all cursor-pointer flex flex-col justify-between min-h-[76px] group"
+                    >
+                      <div className="flex items-center justify-between text-xs text-ink-400 font-mono mb-1">
+                        <span>[{slotKey}]</span>
+                        <span className="text-[10px] text-ink-500">(Trống)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-ink-400 group-hover:text-gold transition-colors py-1">
+                        <Plus className="w-3.5 h-3.5 text-gold/60" />
+                        <span className="font-mono text-[11px]">Lắp đồ</span>
+                      </div>
+                    </div>
+                  );
+                }
+
                 const isMythic = item.tier.includes("Thần Thoại");
                 const isDocTran = item.tier.includes("Độc Trân");
                 return (
@@ -254,11 +305,28 @@ export default function SimulatorPage() {
                   >
                     <div className="flex items-center justify-between text-xs text-ink-300 font-mono mb-1">
                       <span>[{slotKey}]</span>
-                      <span className="text-gold-bright font-extrabold">+{item.refine}</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-gold-bright font-extrabold">+{item.refine}</span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeGearSlot(slotKey);
+                          }}
+                          className="text-ink-400 hover:text-crimson-bright p-0.5"
+                          title="Gỡ trang bị này"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="font-sans text-sm font-extrabold text-white group-hover:text-gold-bright transition-colors truncate" title={item.name}>
-                      {item.name}
+                    <div className="flex items-center gap-1.5">
+                      {item.imageUrl && (
+                        <img src={item.imageUrl} alt={item.name} className="w-6 h-6 object-contain rounded bg-ink-950 p-0.5 border border-gold/30 shrink-0" />
+                      )}
+                      <div className="font-sans text-sm font-extrabold text-white group-hover:text-gold-bright transition-colors truncate" title={item.name}>
+                        {item.name}
+                      </div>
                     </div>
 
                     <div className="text-[11px] text-ink-300 font-mono mt-1 flex items-center justify-between">
@@ -354,7 +422,7 @@ export default function SimulatorPage() {
                         >
                           {isOccupied ? (
                             <div className="flex items-start gap-2.5 h-full">
-                              <InnerKungfuIcon name={slot.name} element={slot.primaryElement} size={48} />
+                              <InnerKungfuIcon name={slot.name} element={slot.primaryElement} size={48} customImageUrl={slot.imageUrl} />
                               <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs font-mono text-gold-bright font-extrabold tracking-wider">
@@ -481,7 +549,7 @@ export default function SimulatorPage() {
                         >
                           {isOccupied ? (
                             <div className="flex items-start gap-2.5 h-full">
-                              <InnerKungfuIcon name={slot.name} element={slot.primaryElement} size={48} />
+                              <InnerKungfuIcon name={slot.name} element={slot.primaryElement} size={48} customImageUrl={slot.imageUrl} />
                               <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs font-mono text-gold-bright font-extrabold tracking-wider">
@@ -552,16 +620,17 @@ export default function SimulatorPage() {
                   </div>
                 </div>
 
-                {/* Kho Nội Công Dự Trữ (Bố Cục Rõ Ràng, Cân Đối, Đầy Đủ Tên & Ảnh Thật) */}
+                {/* Kho Nội Công Dự Trữ (Bố Cục Rõ Ràng, Cân Đối, Đầy Đủ Tên & Ảnh Thật - Đọc từ Database) */}
                 <div className="pt-3 border-t border-ink-800 space-y-2.5">
                   {/* Header Toolbar */}
                   <div className="flex flex-wrap items-center justify-between gap-2 bg-ink-900/90 p-2.5 rounded-xl border border-ink-800">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-serif font-bold text-gold-bright flex items-center gap-1.5">
-                        <span>📦 Kho Nội Công Dự Trữ</span>
+                        <Archive className="w-4 h-4 text-gold" />
+                        <span>Kho Nội Công Dự Trữ (Database)</span>
                       </span>
                       <span className="text-[10px] font-mono text-ink-300 px-2 py-0.5 rounded-full bg-ink-950 border border-ink-700">
-                        {filteredReserve.length} / {INNER_KUNGFU_DATABASE.length} bí kíp
+                        {filteredReserve.length} / {reserveKungfus.length} bí kíp
                       </span>
                     </div>
 
@@ -613,65 +682,110 @@ export default function SimulatorPage() {
                     </div>
                   </div>
 
-                  {/* 3-Column Balanced Card Matrix */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-72 overflow-y-auto pr-1">
-                    {filteredReserve.map((ik) => {
-                      const equippedSlotIdx = innerSlots.findIndex((s) => s?.id === ik.id);
-                      const isEquipped = equippedSlotIdx !== -1;
-                      return (
-                        <div
-                          key={ik.id}
-                          onClick={() => {
-                            if (isEquipped) {
-                              removeInnerSlot(equippedSlotIdx);
-                            } else {
-                              const emptyIdx = innerSlots.findIndex((s) => s === null);
-                              const targetIdx = emptyIdx !== -1 ? emptyIdx : (selectedInnerSlotIndex !== null ? selectedInnerSlotIndex : 0);
-                              setInnerSlot(targetIdx, ik);
-                            }
-                          }}
-                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-3 relative overflow-hidden ${
-                            isEquipped
-                              ? 'border-gold bg-gradient-to-r from-gold/20 via-ink-900 to-ink-900 shadow-gold-glow'
-                              : 'border-ink-800 bg-ink-900 hover:border-gold/60 hover:bg-ink-850'
-                          }`}
+                  {/* Empty Database State or 3-Column Balanced Card Matrix */}
+                  {reserveKungfus.length === 0 ? (
+                    <div className="p-8 rounded-xl border border-dashed border-ink-700 bg-ink-950/60 text-center space-y-3">
+                      <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center text-gold mx-auto">
+                        <Archive className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-serif text-sm font-bold text-white">Kho Nội Công Database Đang Trống</h4>
+                        <p className="text-xs text-ink-400 max-w-md mx-auto">
+                          Đã xóa sạch 65 bí kíp mặc định. Sử dụng <strong>Bộ Quét Ảnh OCR</strong> (Ảnh #1 đại diện, Ảnh #2 & #3 bóc tách Nguyên Tố và Giới Hạn HP) để lưu trữ bí kíp của bạn vào Database!
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setOcrModalOpen(true)}
+                          className="px-3.5 py-1.5 rounded-lg bg-gold text-ink-950 text-xs font-mono font-bold flex items-center gap-1.5 shadow-gold-glow hover:brightness-110 transition-all"
                         >
-                          {/* Icon with authentic in-game crop, perfectly centered in square box */}
-                          <InnerKungfuIcon name={ik.name} element={ik.primaryElement} size={48} />
+                          <Camera className="w-3.5 h-3.5" />
+                          <span>Quét Ảnh Thêm Vào Kho</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={loadSampleData}
+                          className="px-3 py-1.5 rounded-lg border border-gold/40 text-gold-bright hover:bg-gold/10 text-xs font-mono font-medium flex items-center gap-1.5 transition-all"
+                        >
+                          <Archive className="w-3.5 h-3.5" />
+                          <span>Nạp Lại Kho Mẫu (Tùy Chọn)</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-72 overflow-y-auto pr-1">
+                      {filteredReserve.map((ik) => {
+                        const equippedSlotIdx = innerSlots.findIndex((s) => s?.id === ik.id);
+                        const isEquipped = equippedSlotIdx !== -1;
+                        return (
+                          <div
+                            key={ik.id}
+                            onClick={() => {
+                              if (isEquipped) {
+                                removeInnerSlot(equippedSlotIdx);
+                              } else {
+                                const emptyIdx = innerSlots.findIndex((s) => s === null);
+                                const targetIdx = emptyIdx !== -1 ? emptyIdx : (selectedInnerSlotIndex !== null ? selectedInnerSlotIndex : 0);
+                                setInnerSlot(targetIdx, ik);
+                              }
+                            }}
+                            className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-3 relative overflow-hidden group ${
+                              isEquipped
+                                ? 'border-gold bg-gradient-to-r from-gold/20 via-ink-900 to-ink-900 shadow-gold-glow'
+                                : 'border-ink-800 bg-ink-900 hover:border-gold/60 hover:bg-ink-850'
+                            }`}
+                          >
+                            {/* Icon with authentic in-game crop or scanned avatar */}
+                            <InnerKungfuIcon name={ik.name} element={ik.primaryElement} size={48} customImageUrl={ik.imageUrl} />
 
-                          {/* Info & Glyphs with enlarged, clear text */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-1">
-                              <span className="font-sans text-sm font-extrabold text-white group-hover:text-gold-bright transition-colors truncate" title={ik.name}>
-                                {ik.name}
-                              </span>
-                              {isEquipped ? (
-                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-gold text-ink-950 font-extrabold shrink-0 shadow-sm">
-                                  Ô #{equippedSlotIdx + 1}
+                            {/* Info & Glyphs with enlarged, clear text */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="font-sans text-sm font-extrabold text-white group-hover:text-gold-bright transition-colors truncate" title={ik.name}>
+                                  {ik.name}
                                 </span>
-                              ) : (
-                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/40 font-bold shrink-0">
-                                  {ik.tier}
-                                </span>
-                              )}
-                            </div>
-
-                            {/* 5 Authentic Elemental Glyphs */}
-                            <div className="flex items-center justify-between mt-1.5 text-xs font-mono">
-                              <div className="flex items-center gap-1">
-                                {ik.elements.map((el, elIdx) => (
-                                  <div key={elIdx} className="w-4 h-4 flex items-center justify-center">
-                                    <ElementGlyph element={el} className="w-3.5 h-3.5" glow={true} />
-                                  </div>
-                                ))}
+                                <div className="flex items-center gap-1 shrink-0">
+                                  {isEquipped ? (
+                                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-gold text-ink-950 font-extrabold shadow-sm">
+                                      Ô #{equippedSlotIdx + 1}
+                                    </span>
+                                  ) : (
+                                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/40 font-bold">
+                                      {ik.tier}
+                                    </span>
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      removeKungfuFromReserve(ik.id);
+                                    }}
+                                    className="text-ink-500 hover:text-crimson-bright p-0.5 rounded transition-colors"
+                                    title="Xóa bí kíp này khỏi Database"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
                               </div>
-                              <span className="text-gold-bright font-extrabold text-xs">+{ik.score}</span>
+
+                              {/* 5 Authentic Elemental Glyphs */}
+                              <div className="flex items-center justify-between mt-1.5 text-xs font-mono">
+                                <div className="flex items-center gap-1">
+                                  {ik.elements.map((el, elIdx) => (
+                                    <div key={elIdx} className="w-4 h-4 flex items-center justify-center">
+                                      <ElementGlyph element={el} className="w-3.5 h-3.5" glow={true} />
+                                    </div>
+                                  ))}
+                                </div>
+                                <span className="text-gold-bright font-extrabold text-xs">+{ik.score}</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -801,7 +915,7 @@ export default function SimulatorPage() {
                         : 'border-ink-700 bg-ink-850 hover:border-gold/60 hover:bg-ink-800'
                     }`}
                   >
-                    <InnerKungfuIcon name={kungfu.name} element={kungfu.primaryElement} size={44} />
+                    <InnerKungfuIcon name={kungfu.name} element={kungfu.primaryElement} size={44} customImageUrl={kungfu.imageUrl} />
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
                         <div className="flex items-center justify-between mb-1">
@@ -875,7 +989,7 @@ export default function SimulatorPage() {
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-gold/25">
               <div className="flex items-center gap-2.5">
-                <InnerKungfuIcon name={editingSlotElementIndex.kungfu.name} element={editingSlotElementIndex.kungfu.primaryElement} size={42} />
+                <InnerKungfuIcon name={editingSlotElementIndex.kungfu.name} element={editingSlotElementIndex.kungfu.primaryElement} size={42} customImageUrl={editingSlotElementIndex.kungfu.imageUrl} />
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-gold/15 text-gold border border-gold/30">

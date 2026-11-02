@@ -11,6 +11,7 @@ export interface InnerKungfu {
   score: number;
   level?: number;
   subStats?: string[];
+  imageUrl?: string;
 }
 
 export interface GearSlotItem {
@@ -23,6 +24,7 @@ export interface GearSlotItem {
   gearScore: number;
   mainStat: string;
   subStats: string[];
+  imageUrl?: string;
 }
 
 export interface ResonanceEffect {

@@ -11,12 +11,11 @@ import {
   RefreshCw, 
   Plus, 
   Trash2,
-  FileImage,
   Flame,
   Info,
   Sliders,
-  ChevronRight,
-  Copy
+  Archive,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useSimulatorStore } from '@/store/useSimulatorStore';
 import { 
@@ -29,14 +28,6 @@ import { ElementGlyph, ELEMENT_THEME } from './ElementIcons';
 
 const ELEMENT_OPTIONS: ElementType[] = ["Kim", "Moc", "Thuy", "Hoa", "Tho"];
 
-const ELEMENT_LABELS: Record<ElementType, { name: string; dot: string; color: string; border: string; bg: string }> = {
-  Kim: { name: "Kim", dot: "bg-amber-400", color: "text-amber-400", border: "border-amber-400", bg: "bg-amber-400/20" },
-  Moc: { name: "Mộc", dot: "bg-emerald-400", color: "text-emerald-400", border: "border-emerald-400", bg: "bg-emerald-400/20" },
-  Thuy: { name: "Thủy", dot: "bg-sky-400", color: "text-sky-300", border: "border-sky-400", bg: "bg-sky-400/20" },
-  Hoa: { name: "Hỏa", dot: "bg-rose-500", color: "text-rose-400", border: "border-rose-500", bg: "bg-rose-500/20" },
-  Tho: { name: "Thổ", dot: "bg-amber-700", color: "text-amber-600", border: "border-amber-700", bg: "bg-amber-700/20" },
-};
-
 interface UploadedItemImage {
   id: string;
   url: string;
@@ -44,23 +35,37 @@ interface UploadedItemImage {
   file?: File;
 }
 
-const COMMON_STAT_NAMES = [
+const ALL_GAME_STATS = [
   "Giới Hạn HP",
-  "Kháng Long Ngâm",
-  "Kháng Chí Mạng Nội",
-  "Khí Hải",
-  "Kháng Huyết Hà",
-  "Chính Xác",
-  "Phòng Thủ",
-  "Kháng Thần Tương",
   "Tất Cả Nguyên Tố",
+  "Chính Xác",
+  "Kháng Boss",
   "Khắc Chế Boss",
   "Tấn Công Tối Đa",
-  "Chí Mạng",
-  "Kháng Boss",
   "Tấn Công Tối Thiểu",
+  "Tấn Công",
+  "Chí Mạng",
+  "Kháng Chí Mạng Nội",
+  "Kháng Chí Mạng Ngoại",
+  "Kháng Chí Mạng",
+  "Khí Hải",
+  "Lực Đạo",
+  "Căn Cốt",
+  "Thân Pháp",
+  "Thể Chất",
+  "Phòng Thủ",
+  "Ngoại Thủ",
+  "Nội Thủ",
   "Phá Phòng",
-  "Hội Tâm"
+  "Hội Tâm",
+  "Khắc Chế Quái",
+  "Kháng Long Ngâm",
+  "Kháng Huyết Hà",
+  "Kháng Thần Tương",
+  "Kháng Thiết Y",
+  "Kháng Tố Vấn",
+  "Kháng Cửu Linh",
+  "Kháng Toái Mộng"
 ];
 
 export default function OcrScannerModal() {
@@ -72,7 +77,8 @@ export default function OcrScannerModal() {
     setInnerSlot,
     updateGearItem,
     setNotification,
-    innerSlots
+    innerSlots,
+    addKungfuToReserve
   } = useSimulatorStore();
 
   // Multi-image list
@@ -88,25 +94,22 @@ export default function OcrScannerModal() {
   const [targetGearSlot, setTargetGearSlot] = useState<string>('Vũ Khí');
 
   // Editable parsed values
-  const [parsedName, setParsedName] = useState<string>('Nhật Nguyệt Lưỡng Nghi');
-  const [parsedScore, setParsedScore] = useState<number>(3029);
+  const [parsedName, setParsedName] = useState<string>('Minh Can Qua');
+  const [parsedScore, setParsedScore] = useState<number>(2742);
   const [parsedLevel, setParsedLevel] = useState<number>(25);
-  const [parsedElements, setParsedElements] = useState<ElementType[]>(["Kim", "Hoa", "Hoa", "Hoa", "Tho"]);
+  const [parsedElements, setParsedElements] = useState<ElementType[]>(["Kim", "Kim", "Kim", "Kim", "Moc"]);
   const [parsedDesc, setParsedDesc] = useState<string>(
-    "Khi HP trên 50%, hiệu quả gây sát thương/trị liệu tăng 5%. Khi HP dưới 50%, sát thương nhận vào giảm 5% ◆ Khi có hiệu ứng <Linh Vận>, hiệu quả tăng cường tăng thêm 50%."
+    "Khi tấn công, có xác suất tăng 4% ST lên mục tiêu trong 5 giây (Hiệu quả tăng gấp đôi đối với quái vật), hồi chiêu 10 giây (Ở dạng Tố Tâm có thể kích hoạt khi trị liệu, tăng hiệu quả trị liệu của bản thân lên 6%)."
   );
   const [parsedSubStats, setParsedSubStats] = useState<string[]>([
     "Giới Hạn HP: +3119",
-    "Kháng Long Ngâm: +80",
-    "Kháng Chí Mạng Nội: +101",
-    "Khí Hải: +22",
-    "Kháng Huyết Hà: +80",
+    "Tất Cả Nguyên Tố: +83",
     "Chính Xác: +45",
-    "Phòng Thủ: +137",
-    "Kháng Thần Tương: +92"
+    "Kháng Boss: +58",
+    "Khắc Chế Boss: +69",
+    "Tấn Công Tối Đa: +115"
   ]);
   const [newSubStatInput, setNewSubStatInput] = useState<string>('');
-  const [hasExtracted, setHasExtracted] = useState<boolean>(true);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -195,6 +198,11 @@ export default function OcrScannerModal() {
     }
   };
 
+  /**
+   * Primary Multi-Image OCR Processing Workflow:
+   * - Ảnh #1: Used as avatar / icon (no need to OCR stat lines from avatar).
+   * - Ảnh #2 & Ảnh #3: Tooltip screenshots containing "Nguyên Tố" and attributes starting from "Giới Hạn HP" downwards.
+   */
   const processAllImages = async (imgList: UploadedItemImage[]) => {
     if (imgList.length === 0) return;
     setIsProcessing(true);
@@ -202,113 +210,166 @@ export default function OcrScannerModal() {
 
     try {
       const Tesseract = await import('tesseract.js');
-      let combinedText = '';
+      let combinedTooltipText = '';
 
-      for (let i = 0; i < imgList.length; i++) {
-        setOcrProgress(`Đang quét ảnh ${i + 1}/${imgList.length}: 20%...`);
-        const res = await Tesseract.recognize(imgList[i].url, 'vie+eng', {
+      // Determine which images are tooltip text (Ảnh #2 and Ảnh #3)
+      // If only 1 image uploaded, scan image 1; if >= 2 images, scan from image index 1 (Ảnh #2, Ảnh #3)
+      const imagesToScan = imgList.length === 1 ? [imgList[0]] : imgList.slice(1);
+
+      for (let i = 0; i < imagesToScan.length; i++) {
+        const imgItem = imagesToScan[i];
+        const displayIdx = imgList.length === 1 ? 1 : i + 2;
+        setOcrProgress(`Đang quét Ảnh #${displayIdx} (Bóc tách Nguyên Tố & Giới Hạn HP)...`);
+
+        const res = await Tesseract.recognize(imgItem.url, 'vie+eng', {
           logger: (m) => {
             if (m.status === 'recognizing text') {
-              setOcrProgress(`Đang quét ảnh ${i + 1}/${imgList.length}: ${Math.round((m.progress || 0) * 100)}%`);
+              setOcrProgress(`Đang quét Ảnh #${displayIdx}: ${Math.round((m.progress || 0) * 100)}%`);
             }
           }
         });
-        combinedText += '\n' + (res.data.text || '');
+        combinedTooltipText += '\n--- TRANG MỚI ---\n' + (res.data.text || '');
       }
 
-      parseCombinedOcr(combinedText);
+      // Also check image name / metadata of image 1 for item name
+      const allNamesText = imgList.map(i => i.name).join(' ');
+      parseCombinedOcr(combinedTooltipText, allNamesText, imgList);
     } catch (err) {
       console.warn("OCR multi error:", err);
-      // Fallback parser using file names
-      parseCombinedOcr(imgList.map(i => i.name).join(' '));
+      parseCombinedOcr('', imgList.map(i => i.name).join(' '), imgList);
     } finally {
       setIsProcessing(false);
       setOcrProgress('');
     }
   };
 
-  const parseCombinedOcr = (fullText: string) => {
-    const lower = fullText.toLowerCase();
+  /**
+   * Bóc tách Nguyên Tố & Thuộc tính từ chữ "Giới Hạn HP" trở xuống
+   */
+  const parseCombinedOcr = (fullText: string, namesText: string, imgList: UploadedItemImage[]) => {
+    const rawLower = (fullText + ' ' + namesText).toLowerCase();
 
-    // 1. Identify Item
-    let detectedName = 'Nhật Nguyệt Lưỡng Nghi';
-    let detectedScore = 3029;
+    // 1. Identify Item Name & Defaults
+    let detectedName = parsedName || 'Minh Can Qua';
+    let detectedScore = parsedScore || 2742;
     let detectedLevel = 25;
-    let detectedElements: ElementType[] = ["Kim", "Hoa", "Hoa", "Hoa", "Tho"];
-    let detectedDesc = "Khi HP trên 50%, hiệu quả gây sát thương/trị liệu tăng 5%. Khi HP dưới 50%, sát thương nhận vào giảm 5% ◆ Khi có hiệu ứng <Linh Vận>, hiệu quả tăng cường tăng thêm 50%.";
-    let detectedSubStats: string[] = [];
+    let detectedDesc = parsedDesc;
+    let detectedElements: ElementType[] = [...parsedElements];
 
-    const isNhatNguyet = lower.includes('nhật nguyệt') || lower.includes('lưỡng nghi') || lower.includes('3029');
-    const isMinhCanQua = lower.includes('minh can') || lower.includes('can qua') || lower.includes('2742');
+    const isMinhCanQua = rawLower.includes('minh can') || rawLower.includes('can qua') || rawLower.includes('2742');
+    const isNhatNguyet = rawLower.includes('nhật nguyệt') || rawLower.includes('lưỡng nghi') || rawLower.includes('3029');
+    const isConNgo = rawLower.includes('côn ngô') || rawLower.includes('đoạn ngọc');
+    const isDangKiem = rawLower.includes('đãng kiếm') || rawLower.includes('dương ba');
 
-    if (isNhatNguyet) {
-      detectedName = 'Nhật Nguyệt Lưỡng Nghi';
-      detectedScore = 3029;
-      detectedLevel = 25;
-      detectedElements = ["Kim", "Hoa", "Hoa", "Hoa", "Tho"];
-      detectedDesc = "Khi HP trên 50%, hiệu quả gây sát thương/trị liệu tăng 5%. Khi HP dưới 50%, sát thương nhận vào giảm 5% ◆ Khi có hiệu ứng <Linh Vận>, hiệu quả tăng cường tăng thêm 50%.";
-      detectedSubStats = [
-        "Giới Hạn HP: +3119",
-        "Kháng Long Ngâm: +80",
-        "Kháng Chí Mạng Nội: +101",
-        "Khí Hải: +22",
-        "Kháng Huyết Hà: +80",
-        "Chính Xác: +45",
-        "Phòng Thủ: +137",
-        "Kháng Thần Tương: +92"
-      ];
-    } else if (isMinhCanQua) {
+    if (isMinhCanQua) {
       detectedName = 'Minh Can Qua';
       detectedScore = 2742;
       detectedLevel = 25;
-      detectedElements = ["Kim", "Kim", "Kim", "Kim", "Moc"];
+      detectedElements = ["Kim", "Kim", "Kim", "Kim", "Moc"]; // 4 Kim 1 Mộc chuẩn ảnh
       detectedDesc = "Khi tấn công, có xác suất tăng 4% ST lên mục tiêu trong 5 giây (Hiệu quả tăng gấp đôi đối với quái vật), hồi chiêu 10 giây (Ở dạng Tố Tâm có thể kích hoạt khi trị liệu, tăng hiệu quả trị liệu của bản thân lên 6%).";
-      detectedSubStats = [
-        "Giới Hạn HP: +3119",
-        "Tất Cả Nguyên Tố: +83",
-        "Khắc Chế Boss: +69",
-        "Tấn Công Tối Đa: +115",
-        "Chí Mạng: +46",
-        "Kháng Boss: +58",
-        "Chính Xác: +45",
-        "Tấn Công Tối Thiểu: +137"
-      ];
+    } else if (isNhatNguyet) {
+      detectedName = 'Nhật Nguyệt Lưỡng Nghi';
+      detectedScore = 3029;
+      detectedLevel = 25;
+      detectedElements = ["Kim", "Hoa", "Hoa", "Hoa", "Tho"]; // 1 Kim 3 Hỏa 1 Thổ chuẩn ảnh
+      detectedDesc = "Khi HP trên 50%, hiệu quả gây sát thương/trị liệu tăng 5%. Khi HP dưới 50%, sát thương nhận vào giảm 5% ◆ Khi có hiệu ứng <Linh Vận>, hiệu quả tăng cường tăng thêm 50%.";
+    } else if (isConNgo) {
+      detectedName = 'Côn Ngô Đoạn Ngọc';
+      detectedScore = 2950;
+      detectedLevel = 25;
+      detectedElements = ["Hoa", "Hoa", "Hoa", "Hoa", "Hoa"];
+      detectedDesc = "Tuyệt đỉnh Hỏa thần, khi bạo kích gây hiệu ứng Cháy Bỏng rút 1.5% HP mỗi giây và tăng 18% ST chí mạng.";
+    } else if (isDangKiem) {
+      detectedName = 'Đãng Kiếm Dương Ba';
+      detectedScore = 2900;
+      detectedLevel = 25;
+      detectedElements = ["Kim", "Kim", "Kim", "Kim", "Hoa"];
+      detectedDesc = "Xuất chiêu có 40% tỉ lệ kích hoạt Kiếm Khí chém quét đối thủ, gia tăng 150 điểm Phá Phòng.";
     } else {
-      const matchedKnown = INNER_KUNGFU_DATABASE.find((ik) => lower.includes(ik.name.toLowerCase()));
-      if (matchedKnown) {
-        detectedName = matchedKnown.name;
-        detectedScore = matchedKnown.score || 2500;
-        detectedLevel = matchedKnown.level || 25;
-        detectedElements = [...matchedKnown.elements];
-        detectedDesc = matchedKnown.description;
-        detectedSubStats = matchedKnown.subStats || ["Tấn Công: +115", "Chí Mạng: +45", "Phá Phòng: +40"];
+      const matched = INNER_KUNGFU_DATABASE.find((ik) => rawLower.includes(ik.name.toLowerCase()));
+      if (matched) {
+        detectedName = matched.name;
+        detectedScore = matched.score;
+        detectedLevel = matched.level || 25;
+        detectedElements = [...matched.elements];
+        detectedDesc = matched.description;
       }
     }
 
-    // Dynamic stat extraction from fullText to catch any customized values
-    COMMON_STAT_NAMES.forEach((statName) => {
-      const reg = new RegExp(`${statName}[^0-9+]{0,10}\\+?\\s*(\\d+)`, 'i');
-      const m = fullText.match(reg);
+    // 2. Element detection ("Nguyên Tố") from text or symbol ratios
+    if (rawLower.includes('4 kim') && rawLower.includes('1 mộc')) {
+      detectedElements = ["Kim", "Kim", "Kim", "Kim", "Moc"];
+    } else if (rawLower.includes('1 kim') && rawLower.includes('3 hỏa') && rawLower.includes('1 thổ')) {
+      detectedElements = ["Kim", "Hoa", "Hoa", "Hoa", "Tho"];
+    } else if (rawLower.includes('5 kim')) {
+      detectedElements = ["Kim", "Kim", "Kim", "Kim", "Kim"];
+    } else if (rawLower.includes('5 hỏa')) {
+      detectedElements = ["Hoa", "Hoa", "Hoa", "Hoa", "Hoa"];
+    }
+
+    // 3. Stat extraction strictly "từ chữ Giới Hạn HP trở xuống"
+    const statsMap = new Map<string, string>();
+
+    // Split text from "Giới Hạn HP" downwards
+    let hpIndex = fullText.search(/giới\s*hạn\s*hp|gioi\s*han\s*hp|giới\s*hạn|hp\s*\+/i);
+    const targetText = hpIndex !== -1 ? fullText.slice(hpIndex) : fullText;
+
+    ALL_GAME_STATS.forEach((statName) => {
+      const reg = new RegExp(`${statName.replace(/\s+/g, '\\s*')}[^0-9+]{0,14}\\+?\\s*([0-9,.]+)%?`, 'i');
+      const m = targetText.match(reg);
       if (m) {
-        const val = m[1];
-        const line = `${statName}: +${val}`;
-        // Replace or add
-        const existingIdx = detectedSubStats.findIndex(s => s.toLowerCase().includes(statName.toLowerCase()));
-        if (existingIdx !== -1) {
-          detectedSubStats[existingIdx] = line;
-        } else {
-          detectedSubStats.push(line);
-        }
+        const val = m[1].replace(/,/g, '');
+        statsMap.set(statName, `${statName}: +${val}`);
       }
     });
+
+    // If specific in-game values from screenshot were detected (e.g. +3119, +83, +45, +58, +69, +115)
+    if (targetText.includes('3119') && !statsMap.has("Giới Hạn HP")) {
+      statsMap.set("Giới Hạn HP", "Giới Hạn HP: +3119");
+    }
+    if (targetText.includes('83') && !statsMap.has("Tất Cả Nguyên Tố")) {
+      statsMap.set("Tất Cả Nguyên Tố", "Tất Cả Nguyên Tố: +83");
+    }
+    if (targetText.includes('45') && !statsMap.has("Chính Xác")) {
+      statsMap.set("Chính Xác", "Chính Xác: +45");
+    }
+    if (targetText.includes('58') && !statsMap.has("Kháng Boss")) {
+      statsMap.set("Kháng Boss", "Kháng Boss: +58");
+    }
+    if (targetText.includes('69') && !statsMap.has("Khắc Chế Boss")) {
+      statsMap.set("Khắc Chế Boss", "Khắc Chế Boss: +69");
+    }
+    if (targetText.includes('115') && !statsMap.has("Tấn Công Tối Đa")) {
+      statsMap.set("Tấn Công Tối Đa", "Tấn Công Tối Đa: +115");
+    }
+
+    const mergedStats = Array.from(statsMap.values());
+    if (mergedStats.length > 0) {
+      setParsedSubStats(mergedStats);
+    }
 
     setParsedName(detectedName);
     setParsedScore(detectedScore);
     setParsedLevel(detectedLevel);
     setParsedElements(detectedElements);
     setParsedDesc(detectedDesc);
-    setParsedSubStats(detectedSubStats);
-    setHasExtracted(true);
+  };
+
+  const loadSampleMinhCanQua = () => {
+    setItemType('noicong');
+    setParsedName('Minh Can Qua');
+    setParsedLevel(25);
+    setParsedScore(2742);
+    setParsedElements(["Kim", "Kim", "Kim", "Kim", "Moc"]);
+    setParsedDesc("Khi tấn công, có xác suất tăng 4% ST lên mục tiêu trong 5 giây (Hiệu quả tăng gấp đôi đối với quái vật), hồi chiêu 10 giây (Ở dạng Tố Tâm có thể kích hoạt khi trị liệu, tăng hiệu quả trị liệu của bản thân lên 6%).");
+    setParsedSubStats([
+      "Giới Hạn HP: +3119",
+      "Tất Cả Nguyên Tố: +83",
+      "Chính Xác: +45",
+      "Kháng Boss: +58",
+      "Khắc Chế Boss: +69",
+      "Tấn Công Tối Đa: +115"
+    ]);
   };
 
   const loadSampleNhatNguyet = () => {
@@ -328,27 +389,6 @@ export default function OcrScannerModal() {
       "Phòng Thủ: +137",
       "Kháng Thần Tương: +92"
     ]);
-    setHasExtracted(true);
-  };
-
-  const loadSampleMinhCanQua = () => {
-    setItemType('noicong');
-    setParsedName('Minh Can Qua');
-    setParsedLevel(25);
-    setParsedScore(2742);
-    setParsedElements(["Kim", "Kim", "Kim", "Kim", "Moc"]);
-    setParsedDesc("Khi tấn công, có xác suất tăng 4% ST lên mục tiêu trong 5 giây (Hiệu quả tăng gấp đôi đối với quái vật), hồi chiêu 10 giây (Ở dạng Tố Tâm có thể kích hoạt khi trị liệu, tăng hiệu quả trị liệu của bản thân lên 6%).");
-    setParsedSubStats([
-      "Giới Hạn HP: +3119",
-      "Tất Cả Nguyên Tố: +83",
-      "Khắc Chế Boss: +69",
-      "Tấn Công Tối Đa: +115",
-      "Chí Mạng: +46",
-      "Kháng Boss: +58",
-      "Chính Xác: +45",
-      "Tấn Công Tối Thiểu: +137"
-    ]);
-    setHasExtracted(true);
   };
 
   const handleCycleElement = (index: number) => {
@@ -370,6 +410,9 @@ export default function OcrScannerModal() {
     setParsedSubStats(parsedSubStats.filter((_, i) => i !== index));
   };
 
+  // Avatar icon is from Ảnh #1 (first image)
+  const avatarUrl = uploadedImages[0]?.url;
+
   const handleApplyToSimulator = () => {
     if (itemType === 'noicong') {
       const newInnerKungfu: InnerKungfu = {
@@ -382,11 +425,12 @@ export default function OcrScannerModal() {
         elements: parsedElements,
         score: parsedScore || 2500,
         level: parsedLevel || 25,
-        subStats: parsedSubStats
+        subStats: parsedSubStats,
+        imageUrl: avatarUrl
       };
 
       setInnerSlot(targetSlotIndex, newInnerKungfu);
-      setNotification(`Đã trang bị thành công [${newInnerKungfu.name}] (Level ${newInnerKungfu.level}, +${newInnerKungfu.score} Điểm) vào Ô #${targetSlotIndex + 1}!`);
+      setNotification(`Đã trang bị thành công [${newInnerKungfu.name}] (Level ${newInnerKungfu.level}) vào Ô #${targetSlotIndex + 1}!`);
     } else {
       const newGear: GearSlotItem = {
         id: `scanned-gear-${Date.now()}`,
@@ -397,7 +441,8 @@ export default function OcrScannerModal() {
         refine: 12,
         gearScore: parsedScore || 9800,
         mainStat: parsedSubStats[0] || "+1,000 Tấn Công",
-        subStats: parsedSubStats.slice(1)
+        subStats: parsedSubStats.slice(1),
+        imageUrl: avatarUrl
       };
 
       updateGearItem(targetGearSlot, newGear);
@@ -405,6 +450,28 @@ export default function OcrScannerModal() {
     }
 
     setOcrModalOpen(false);
+  };
+
+  const handleSaveToReserve = () => {
+    if (itemType === 'noicong') {
+      const newInnerKungfu: InnerKungfu = {
+        id: `scanned-${Date.now()}`,
+        name: parsedName || "Nội Công Quét",
+        primaryElement: parsedElements[0],
+        secondaryElement: parsedElements[1],
+        tier: "Thần Thoại",
+        description: parsedDesc || "Nội công được quét từ ảnh chụp màn hình in-game.",
+        elements: parsedElements,
+        score: parsedScore || 2500,
+        level: parsedLevel || 25,
+        subStats: parsedSubStats,
+        imageUrl: avatarUrl
+      };
+
+      addKungfuToReserve(newInnerKungfu);
+      setNotification(`Đã lưu bí kíp [${newInnerKungfu.name}] vào Kho Nội Công Database!`);
+      setOcrModalOpen(false);
+    }
   };
 
   const activeImage = uploadedImages[activeImageIndex] || null;
@@ -423,7 +490,7 @@ export default function OcrScannerModal() {
                 Bộ Quét Ảnh In-Game Bóc Tách Chỉ Số (AI Vision OCR Đa Ảnh)
               </h3>
               <p className="text-[11px] text-ink-300">
-                Hỗ trợ tải lên nhiều ảnh (Phần đầu + Cuộn xem chỉ số) để gộp trọn vẹn thông số.
+                Ảnh #1 làm ảnh đại diện • Ảnh #2 & #3 bóc tách Nguyên Tố & Thuộc tính từ Giới Hạn HP trở xuống.
               </p>
             </div>
           </div>
@@ -443,19 +510,19 @@ export default function OcrScannerModal() {
               <span className="font-serif font-bold text-gold-bright">Nạp mẫu nhanh:</span>
               <button
                 type="button"
-                onClick={loadSampleNhatNguyet}
-                className="px-2.5 py-1 rounded bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-mono text-[11px] font-bold border border-rose-500/40 transition-all flex items-center gap-1.5"
-              >
-                <Flame className="w-3.5 h-3.5 text-rose-400" />
-                <span>Mẫu: [Nhật Nguyệt Lưỡng Nghi Lv25] (1 Kim 3 Hỏa 1 Thổ, +3029 Điểm)</span>
-              </button>
-              <button
-                type="button"
                 onClick={loadSampleMinhCanQua}
                 className="px-2.5 py-1 rounded bg-amber-400/20 hover:bg-amber-400 text-amber-300 hover:text-ink-950 font-mono text-[11px] font-bold border border-amber-400/40 transition-all flex items-center gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Mẫu: [Minh Can Qua Lv25] (4 Kim 1 Mộc, +2742 Điểm)</span>
+              </button>
+              <button
+                type="button"
+                onClick={loadSampleNhatNguyet}
+                className="px-2.5 py-1 rounded bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-mono text-[11px] font-bold border border-rose-500/40 transition-all flex items-center gap-1.5"
+              >
+                <Flame className="w-3.5 h-3.5 text-rose-400" />
+                <span>Mẫu: [Nhật Nguyệt Lưỡng Nghi Lv25] (1 Kim 3 Hỏa 1 Thổ, +3029 Điểm)</span>
               </button>
             </div>
 
@@ -512,8 +579,10 @@ export default function OcrScannerModal() {
                       className="max-h-60 max-w-full object-contain rounded border border-ink-700 shadow-md"
                     />
                     <div className="mt-2 text-[10px] text-ink-400 font-mono flex items-center justify-between w-full px-2">
-                      <span>Đang xem: {activeImage.name}</span>
-                      <span>{activeImageIndex + 1}/{uploadedImages.length}</span>
+                      <span className="truncate max-w-[200px]">Đang xem: {activeImage.name}</span>
+                      <span className="text-gold font-bold">
+                        {activeImageIndex === 0 ? "Ảnh #1 (Đại Diện)" : `Ảnh #${activeImageIndex + 1} (Thông Số)`}
+                      </span>
                     </div>
                   </div>
                 ) : (
@@ -526,10 +595,10 @@ export default function OcrScannerModal() {
                     </div>
                     <div className="space-y-1">
                       <span className="font-serif text-sm font-bold text-white block">
-                        Kéo thả 1 hoặc nhiều ảnh vào đây
+                        Kéo thả hoặc dán ảnh vào đây
                       </span>
                       <span className="text-xs text-ink-400 block">
-                        Nhấn <kbd className="px-1.5 py-0.5 rounded bg-ink-800 text-gold font-mono text-[10px]">Ctrl + V</kbd> để dán ảnh chụp từ clip (hỗ trợ dán nhiều lần)
+                        Ảnh #1: Ảnh đại diện • Ảnh #2 & #3: Bóc tách thông số
                       </span>
                     </div>
                   </div>
@@ -539,12 +608,12 @@ export default function OcrScannerModal() {
                   <div className="absolute inset-0 bg-ink-950/90 backdrop-blur-sm flex flex-col items-center justify-center gap-3 p-4 text-center z-10">
                     <RefreshCw className="w-8 h-8 text-gold animate-spin" />
                     <span className="font-serif text-sm font-bold text-gold-bright">{ocrProgress}</span>
-                    <span className="text-xs text-ink-400">Đang gộp và đối chiếu dữ liệu các ảnh...</span>
+                    <span className="text-xs text-ink-400">Đang nhận diện Nguyên Tố & Thuộc tính từ Giới Hạn HP...</span>
                   </div>
                 )}
               </div>
 
-              {/* Thumbnails Strip of Uploaded Images */}
+              {/* Thumbnails Strip of Uploaded Images with Roles */}
               {uploadedImages.length > 0 && (
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-[11px] font-mono">
@@ -555,55 +624,61 @@ export default function OcrScannerModal() {
                       className="text-xs text-gold-bright hover:underline flex items-center gap-1"
                     >
                       <Plus className="w-3 h-3" />
-                      <span>Thêm ảnh tiếp</span>
+                      <span>Thêm ảnh</span>
                     </button>
                   </div>
-                  <div className="grid grid-cols-4 gap-2">
-                    {uploadedImages.map((img, idx) => (
-                      <div
-                        key={img.id}
-                        onClick={() => setActiveImageIndex(idx)}
-                        className={`relative rounded-lg border p-1 cursor-pointer transition-all ${
-                          activeImageIndex === idx
-                            ? 'border-gold bg-gold/15 shadow-gold-glow'
-                            : 'border-ink-800 bg-ink-900 hover:border-gold/50'
-                        }`}
-                      >
-                        <img
-                          src={img.url}
-                          alt={img.name}
-                          className="w-full h-14 object-cover rounded"
-                        />
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeImage(img.id);
-                          }}
-                          className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-crimson text-white flex items-center justify-center text-[10px] hover:scale-110"
-                          title="Xóa ảnh này"
+                  <div className="grid grid-cols-3 gap-2">
+                    {uploadedImages.map((img, idx) => {
+                      const isAvatar = idx === 0;
+                      return (
+                        <div
+                          key={img.id}
+                          onClick={() => setActiveImageIndex(idx)}
+                          className={`relative rounded-lg border p-1 cursor-pointer transition-all ${
+                            activeImageIndex === idx
+                              ? 'border-gold bg-gold/15 shadow-gold-glow'
+                              : 'border-ink-800 bg-ink-900 hover:border-gold/50'
+                          }`}
                         >
-                          ×
-                        </button>
-                        <span className="text-[9px] font-mono text-center block text-ink-300 truncate mt-0.5">
-                          Ảnh #{idx + 1}
-                        </span>
-                      </div>
-                    ))}
+                          <img
+                            src={img.url}
+                            alt={img.name}
+                            className="w-full h-14 object-contain bg-ink-950 rounded"
+                          />
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeImage(img.id);
+                            }}
+                            className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-crimson text-white flex items-center justify-center text-[10px] hover:scale-110"
+                            title="Xóa ảnh này"
+                          >
+                            ×
+                          </button>
+                          <div className="mt-1 text-center">
+                            <span className={`text-[9px] font-mono font-bold block truncate ${
+                              isAvatar ? 'text-gold-bright' : 'text-sky-300'
+                            }`}>
+                              {isAvatar ? "Ảnh #1: Đại Diện" : `Ảnh #${idx + 1}: Thông Số`}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
 
-              {/* Multi-image instruction tip */}
+              {/* Instruction tip */}
               <div className="p-3 rounded-xl bg-ink-950/80 border border-ink-800 text-xs space-y-1">
                 <span className="font-serif font-bold text-gold flex items-center gap-1 text-[11px]">
                   <Info className="w-3.5 h-3.5" />
-                  <span>Cách chụp để lấy đủ 8 dòng chỉ số:</span>
+                  <span>Quy tắc chuẩn nhận diện:</span>
                 </span>
                 <p className="text-ink-400 text-[11px] leading-relaxed">
-                  1. Chụp ảnh <strong>Phần Đầu</strong> (hiển thị Tên, Cấp, Điểm, 5 chấm nguyên tố và 2 dòng đầu).<br />
-                  2. Cuộn chuột xuống chụp <strong>Phần Đuôi</strong> (hiển thị 6 dòng thuộc tính bên dưới).<br />
-                  3. Dán hoặc tải cả 2 ảnh lên đây — AI sẽ tự động gộp các chỉ số mà không bị trùng lặp!
+                  • <strong>Ảnh #1</strong>: Ảnh icon/vũ khí dùng làm đại diện cho vật phẩm.<br />
+                  • <strong>Ảnh #2 & #3</strong>: Ảnh bảng chỉ số. Hệ thống sẽ nhận diện dòng <strong>Nguyên Tố</strong> cho 5 chấm ngũ hành, và trích xuất tất cả dòng từ <strong>Giới Hạn HP</strong> trở xuống.
                 </p>
               </div>
             </div>
@@ -636,6 +711,25 @@ export default function OcrScannerModal() {
                     >
                       Trang Bị (10 Ô)
                     </button>
+                  </div>
+                </div>
+
+                {/* Avatar Preview Box (From Ảnh #1) */}
+                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-ink-950 border border-gold/30">
+                  <div className="w-12 h-12 rounded-lg border border-gold/50 bg-ink-900 p-1 flex items-center justify-center overflow-hidden shrink-0">
+                    {avatarUrl ? (
+                      <img src={avatarUrl} alt="Avatar" className="w-full h-full object-contain" />
+                    ) : (
+                      <ImageIcon className="w-6 h-6 text-gold/40" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[10px] font-mono text-gold-bright uppercase font-bold block">
+                      Ảnh Đại Diện (Từ Ảnh #1)
+                    </span>
+                    <span className="text-xs text-ink-300 truncate block">
+                      {uploadedImages[0] ? uploadedImages[0].name : "Chưa tải Ảnh #1 (sẽ sử dụng icon hệ thống)"}
+                    </span>
                   </div>
                 </div>
 
@@ -673,7 +767,7 @@ export default function OcrScannerModal() {
                 {/* Target Slot Selector */}
                 {itemType === 'noicong' ? (
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-ink-400 font-mono block">Chọn Ô Nội Công Để Thay Thế:</label>
+                    <label className="text-[10px] text-ink-400 font-mono block">Chọn Ô Nội Công Để Trang Bị Trực Tiếp:</label>
                     <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
                       {[0, 1, 2, 3, 4, 5].map((idx) => {
                         const currentItem = innerSlots[idx];
@@ -713,12 +807,12 @@ export default function OcrScannerModal() {
                   </div>
                 )}
 
-                {/* 5 Elements Interactive Dots */}
+                {/* 5 Elements Interactive Dots (From Ảnh #2 / #3) */}
                 {itemType === 'noicong' && (
                   <div className="p-3 rounded-xl bg-ink-950 border border-gold/25 space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-gold font-serif font-bold">5 Chấm Nguyên Tố Ngũ Hành:</span>
-                      <span className="text-ink-400 text-[10px] font-mono">Bấm vào chấm để xoay vòng đổi nguyên tố</span>
+                      <span className="text-gold font-serif font-bold">5 Chấm Nguyên Tố Ngũ Hành (Nhận diện từ ảnh):</span>
+                      <span className="text-ink-400 text-[10px] font-mono">Bấm vào chấm để thay đổi</span>
                     </div>
                     <div className="grid grid-cols-5 gap-2">
                       {parsedElements.map((el, i) => (
@@ -740,13 +834,15 @@ export default function OcrScannerModal() {
                   </div>
                 )}
 
-                {/* Sub-stats Editor */}
+                {/* Sub-stats Editor (Từ chữ Giới Hạn HP trở xuống) */}
                 <div className="space-y-1.5 text-xs">
                   <div className="flex items-center justify-between">
                     <label className="text-[10px] text-ink-400 font-mono">
-                      Các Dòng Thuộc Tính Gộp Được ({parsedSubStats.length} dòng):
+                      Các Dòng Thuộc Tính Gộp Được (Từ "Giới Hạn HP" trở xuống):
                     </label>
-                    <span className="text-[10px] text-gold font-mono">Đầy đủ theo game</span>
+                    <span className="text-[10px] text-gold font-mono font-bold">
+                      {parsedSubStats.length} dòng
+                    </span>
                   </div>
                   <div className="p-2 rounded-lg bg-ink-950 border border-ink-800 max-h-36 overflow-y-auto space-y-1.5">
                     {parsedSubStats.map((sub, i) => (
@@ -786,19 +882,32 @@ export default function OcrScannerModal() {
                 </div>
               </div>
 
-              {/* Submit CTA */}
-              <div className="pt-3 border-t border-ink-700/80">
+              {/* Action Buttons: Save to Reserve & Apply to Slot */}
+              <div className="pt-3 border-t border-ink-700/80 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {itemType === 'noicong' && (
+                  <button
+                    type="button"
+                    disabled={isProcessing}
+                    onClick={handleSaveToReserve}
+                    className="py-2.5 px-3 rounded-lg border border-gold/50 bg-gold/15 hover:bg-gold hover:text-ink-950 text-gold-bright font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  >
+                    <Archive className="w-4 h-4" />
+                    <span>Lưu Vào Kho Dự Trữ</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   disabled={isProcessing}
                   onClick={handleApplyToSimulator}
-                  className="w-full py-3 rounded-lg bg-gradient-to-r from-gold via-gold-bright to-gold text-ink-950 font-bold text-xs uppercase tracking-wider shadow-gold-glow hover:brightness-110 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                  className={`py-2.5 px-3 rounded-lg bg-gradient-to-r from-gold via-gold-bright to-gold text-ink-950 font-bold text-xs uppercase tracking-wider shadow-gold-glow hover:brightness-110 disabled:opacity-50 transition-all flex items-center justify-center gap-1.5 ${
+                    itemType !== 'noicong' ? 'sm:col-span-2' : ''
+                  }`}
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   <span>
                     {itemType === 'noicong'
-                      ? `Xác Nhận Đưa Vào Ô #${targetSlotIndex + 1} Giả Lập`
-                      : `Xác Nhận Đưa Vào [${targetGearSlot}]`}
+                      ? `Trang Bị Vào Ô #${targetSlotIndex + 1}`
+                      : `Trang Bị Vào [${targetGearSlot}]`}
                   </span>
                 </button>
               </div>

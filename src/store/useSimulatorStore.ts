@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import {
   ElementType,
   InnerKungfu,
@@ -22,11 +23,27 @@ export interface CalculatedStats {
   dpsEstimate: number;
 }
 
+export const EMPTY_GEAR_SLOTS: Record<string, GearSlotItem | null> = {
+  "Vũ Khí": null,
+  "Áo": null,
+  "Mũ": null,
+  "Đai": null,
+  "Giày": null,
+  "Hộ Uyển": null,
+  "Nhẫn 1": null,
+  "Nhẫn 2": null,
+  "Dây Chuyền": null,
+  "Bội Ngọc": null,
+};
+
+export const EMPTY_INNER_SLOTS: (InnerKungfu | null)[] = [null, null, null, null, null, null];
+
 interface SimulatorState {
   selectedSect: string;
   activePresetId: string;
-  gearSlots: Record<string, GearSlotItem>;
+  gearSlots: Record<string, GearSlotItem | null>;
   innerSlots: (InnerKungfu | null)[];
+  reserveKungfus: InnerKungfu[];
   elementCounts: Record<ElementType, number>;
   resonances: ResonanceEffect[];
   stats: CalculatedStats;
@@ -44,6 +61,13 @@ interface SimulatorState {
   updateInnerSlotElement: (slotIndex: number, elementIndex: number, newElement?: ElementType) => void;
   setSlotElements: (slotIndex: number, elements: ElementType[]) => void;
   updateGearItem: (slot: string, item: GearSlotItem) => void;
+  removeGearSlot: (slot: string) => void;
+  addKungfuToReserve: (kungfu: InnerKungfu) => void;
+  removeKungfuFromReserve: (kungfuId: string) => void;
+  updateReserveKungfu: (kungfu: InnerKungfu) => void;
+  clearReserve: () => void;
+  clearAllDatabase: () => void;
+  loadSampleData: () => void;
   openCatalogForSlot: (slotIndex: number) => void;
   closeCatalog: () => void;
   setOcrModalOpen: (open: boolean) => void;
@@ -145,13 +169,15 @@ function calculateElementsAndResonances(innerSlots: (InnerKungfu | null)[]) {
 }
 
 function calculateStats(
-  gearSlots: Record<string, GearSlotItem>,
+  gearSlots: Record<string, GearSlotItem | null>,
   innerSlots: (InnerKungfu | null)[],
   resonances: ResonanceEffect[]
 ): CalculatedStats {
   let gearPower = 0;
   Object.values(gearSlots).forEach((g) => {
-    gearPower += g.gearScore;
+    if (g) {
+      gearPower += g.gearScore;
+    }
   });
 
   let innerScore = 0;
@@ -174,7 +200,7 @@ function calculateStats(
             bonusAttack += val;
           } else if (lower.includes('chí mạng') || lower.includes('hội tâm')) {
             bonusCrit += (val > 10 ? +(val * 0.05).toFixed(1) : val);
-          } else if (lower.includes('khắc chế boss')) {
+          } else if (lower.includes('khắc chế boss') || lower.includes('khắc chế quái')) {
             bonusBossDmg += (val > 10 ? +(val * 0.04).toFixed(1) : val);
           }
         });
@@ -190,13 +216,13 @@ function calculateStats(
   });
 
   const totalPower = Math.round(gearPower * 0.75 + innerScore + resBonus);
-  const attack = 4200 + Math.round(totalPower * 0.014) + bonusAttack;
-  const defense = 2800 + Math.round(totalPower * 0.009);
-  const critRate = +(28.5 + (innerSlots.filter((s) => s?.primaryElement === "Kim" || s?.primaryElement === "Hoa").length * 1.5) + bonusCrit).toFixed(1);
-  const critDamage = +(175.0 + (innerSlots.filter((s) => s?.primaryElement === "Hoa").length * 4.2)).toFixed(1);
-  const bossBreakthrough = +(14.2 + (resonances.find((r) => r.name === "Đãng Kiếm Dương Ba")?.active ? 4.0 : 0) + bonusBossDmg).toFixed(1);
-  const hp = 78000 + Math.round(totalPower * 0.16) + bonusHp;
-  const dpsEstimate = Math.round(attack * (1 + (critRate / 100) * (critDamage / 100)) * (1 + bossBreakthrough / 100) * 12.5);
+  const attack = totalPower > 0 ? (4200 + Math.round(totalPower * 0.014) + bonusAttack) : 0;
+  const defense = totalPower > 0 ? (2800 + Math.round(totalPower * 0.009)) : 0;
+  const critRate = totalPower > 0 ? +(28.5 + (innerSlots.filter((s) => s?.primaryElement === "Kim" || s?.primaryElement === "Hoa").length * 1.5) + bonusCrit).toFixed(1) : 0;
+  const critDamage = totalPower > 0 ? +(175.0 + (innerSlots.filter((s) => s?.primaryElement === "Hoa").length * 4.2)).toFixed(1) : 0;
+  const bossBreakthrough = totalPower > 0 ? +(14.2 + (resonances.find((r) => r.name === "Đãng Kiếm Dương Ba")?.active ? 4.0 : 0) + bonusBossDmg).toFixed(1) : 0;
+  const hp = totalPower > 0 ? (78000 + Math.round(totalPower * 0.16) + bonusHp) : 0;
+  const dpsEstimate = attack > 0 ? Math.round(attack * (1 + (critRate / 100) * (critDamage / 100)) * (1 + bossBreakthrough / 100) * 12.5) : 0;
 
   return {
     totalPower,
@@ -210,243 +236,369 @@ function calculateStats(
   };
 }
 
-const initialInnerSlots = [
-  INNER_KUNGFU_DATABASE[0], // Tỏa Phong
-  INNER_KUNGFU_DATABASE[3], // Linh Tê
-  INNER_KUNGFU_DATABASE[4], // Phá Phủ
-  INNER_KUNGFU_DATABASE[5], // Trảm Tinh
-  INNER_KUNGFU_DATABASE[6], // Xung Hư
-  INNER_KUNGFU_DATABASE[7], // Côn Ngô Đoạn Ngọc
-];
+const { counts: initialCounts, resonances: initialResonances } = calculateElementsAndResonances(EMPTY_INNER_SLOTS);
+const initialStats = calculateStats(EMPTY_GEAR_SLOTS, EMPTY_INNER_SLOTS, initialResonances);
 
-const { counts: initialCounts, resonances: initialResonances } = calculateElementsAndResonances(initialInnerSlots);
-const initialStats = calculateStats(DEFAULT_GEAR_SLOTS, initialInnerSlots, initialResonances);
-
-export const useSimulatorStore = create<SimulatorState>((set, get) => ({
-  selectedSect: "Cửu Linh",
-  activePresetId: "preset-cuulinh-s2",
-  gearSlots: { ...DEFAULT_GEAR_SLOTS },
-  innerSlots: initialInnerSlots,
-  elementCounts: initialCounts,
-  resonances: initialResonances,
-  stats: initialStats,
-  selectedInnerSlotIndex: null,
-  isCatalogOpen: false,
-  isOcrModalOpen: false,
-  pendingOcrImage: null,
-  notificationMessage: null,
-
-  setSelectedSect: (sect) => {
-    set({ selectedSect: sect });
-    get().setNotification(`Đã chuyển lưu phái sang: ${sect}`);
-  },
-
-  loadPreset: (presetId) => {
-    const preset = POPULAR_PRESETS.find((p) => p.id === presetId);
-    if (!preset) return;
-
-    const newInnerSlots = [...preset.innerKungfuList];
-    const { counts, resonances } = calculateElementsAndResonances(newInnerSlots);
-    const newStats = calculateStats(preset.gearItems, newInnerSlots, resonances);
-
-    set({
-      activePresetId: presetId,
-      selectedSect: preset.sect,
-      gearSlots: { ...preset.gearItems },
-      innerSlots: newInnerSlots,
-      elementCounts: counts,
-      resonances,
-      stats: newStats,
-    });
-
-    get().setNotification(`Đã áp dụng bảng mẫu: ${preset.name}`);
-  },
-
-  setInnerSlot: (slotIndex, kungfu) => {
-    const currentSlots = [...get().innerSlots];
-    currentSlots[slotIndex] = kungfu;
-
-    const { counts, resonances } = calculateElementsAndResonances(currentSlots);
-    const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
-
-    set({
-      innerSlots: currentSlots,
-      elementCounts: counts,
-      resonances,
-      stats: newStats,
-      isCatalogOpen: false,
+export const useSimulatorStore = create<SimulatorState>()(
+  persist(
+    (set, get) => ({
+      selectedSect: "Cửu Linh",
+      activePresetId: "custom-db",
+      gearSlots: { ...EMPTY_GEAR_SLOTS },
+      innerSlots: [...EMPTY_INNER_SLOTS],
+      reserveKungfus: [],
+      elementCounts: initialCounts,
+      resonances: initialResonances,
+      stats: initialStats,
       selectedInnerSlotIndex: null,
-    });
-
-    get().setNotification(`Đã trang bị Nội Công: ${kungfu.name}`);
-  },
-
-  removeInnerSlot: (slotIndex) => {
-    const currentSlots = [...get().innerSlots];
-    const removedName = currentSlots[slotIndex]?.name || "";
-    currentSlots[slotIndex] = null;
-
-    const { counts, resonances } = calculateElementsAndResonances(currentSlots);
-    const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
-
-    set({
-      innerSlots: currentSlots,
-      elementCounts: counts,
-      resonances,
-      stats: newStats,
-    });
-
-    get().setNotification(`Đã gỡ Nội Công: ${removedName}`);
-  },
-
-  updateInnerSlotElement: (slotIndex, elementIndex, newElement) => {
-    const currentSlots = [...get().innerSlots];
-    const targetSlot = currentSlots[slotIndex];
-    if (!targetSlot) return;
-
-    const ELEMENT_CYCLE: ElementType[] = ['Kim', 'Moc', 'Thuy', 'Hoa', 'Tho'];
-    const currentEl = targetSlot.elements[elementIndex] || 'Kim';
-    const nextEl = newElement || ELEMENT_CYCLE[(ELEMENT_CYCLE.indexOf(currentEl) + 1) % ELEMENT_CYCLE.length];
-
-    const newElements = [...targetSlot.elements];
-    newElements[elementIndex] = nextEl;
-
-    // Deep copy slot to avoid mutating reference
-    currentSlots[slotIndex] = {
-      ...targetSlot,
-      elements: newElements,
-    };
-
-    const { counts, resonances } = calculateElementsAndResonances(currentSlots);
-    const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
-
-    set({
-      innerSlots: currentSlots,
-      elementCounts: counts,
-      resonances,
-      stats: newStats,
-    });
-
-    get().setNotification(`Node #${elementIndex + 1} [${targetSlot.name}] đổi thành: ${nextEl}`);
-  },
-
-  setSlotElements: (slotIndex, elements) => {
-    const currentSlots = [...get().innerSlots];
-    const targetSlot = currentSlots[slotIndex];
-    if (!targetSlot) return;
-
-    currentSlots[slotIndex] = {
-      ...targetSlot,
-      elements: [...elements],
-    };
-
-    const { counts, resonances } = calculateElementsAndResonances(currentSlots);
-    const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
-
-    set({
-      innerSlots: currentSlots,
-      elementCounts: counts,
-      resonances,
-      stats: newStats,
-    });
-
-    get().setNotification(`Đã áp dụng bộ nguyên tố mới cho [${targetSlot.name}]`);
-  },
-
-  updateGearItem: (slot, item) => {
-    const currentGear = { ...get().gearSlots, [slot]: item };
-    const newStats = calculateStats(currentGear, get().innerSlots, get().resonances);
-
-    set({
-      gearSlots: currentGear,
-      stats: newStats,
-    });
-
-    get().setNotification(`Đã cập nhật trang bị ô [${slot}]: ${item.name}`);
-  },
-
-  openCatalogForSlot: (slotIndex) => {
-    set({
-      selectedInnerSlotIndex: slotIndex,
-      isCatalogOpen: true,
-    });
-  },
-
-  closeCatalog: () => {
-    set({
       isCatalogOpen: false,
-      selectedInnerSlotIndex: null,
-    });
-  },
+      isOcrModalOpen: false,
+      pendingOcrImage: null,
+      notificationMessage: null,
 
-  setOcrModalOpen: (open) => {
-    set({ isOcrModalOpen: open });
-  },
+      setSelectedSect: (sect) => {
+        set({ selectedSect: sect });
+        get().setNotification(`Đã chuyển lưu phái sang: ${sect}`);
+      },
 
-  setPendingOcrImage: (fileOrUrl) => {
-    set({ pendingOcrImage: fileOrUrl });
-  },
+      loadPreset: (presetId) => {
+        const preset = POPULAR_PRESETS.find((p) => p.id === presetId);
+        if (!preset) return;
 
-  exportBuildJSON: () => {
-    const data = {
-      version: "2.0",
-      sect: get().selectedSect,
-      gearSlots: get().gearSlots,
-      innerSlots: get().innerSlots.map((s) => s ? s.name : null),
-      stats: get().stats,
-      exportedAt: new Date().toISOString(),
-    };
-    return JSON.stringify(data, null, 2);
-  },
+        const newInnerSlots = [...preset.innerKungfuList];
+        const { counts, resonances } = calculateElementsAndResonances(newInnerSlots);
+        const newStats = calculateStats(preset.gearItems, newInnerSlots, resonances);
 
-  importBuildJSON: (jsonStr) => {
-    try {
-      const data = JSON.parse(jsonStr);
-      if (!data || !data.sect) return false;
-
-      let newInner: (InnerKungfu | null)[] = [];
-      if (Array.isArray(data.innerSlots)) {
-        newInner = data.innerSlots.map((name: string | null) => {
-          if (!name) return null;
-          return INNER_KUNGFU_DATABASE.find((ik) => ik.name === name) || null;
+        set({
+          activePresetId: presetId,
+          selectedSect: preset.sect,
+          gearSlots: { ...preset.gearItems },
+          innerSlots: newInnerSlots,
+          elementCounts: counts,
+          resonances,
+          stats: newStats,
         });
-      }
 
-      while (newInner.length < 6) {
-        newInner.push(null);
-      }
+        get().setNotification(`Đã áp dụng bảng mẫu: ${preset.name}`);
+      },
 
-      const gear = data.gearSlots || get().gearSlots;
-      const { counts, resonances } = calculateElementsAndResonances(newInner);
-      const stats = calculateStats(gear, newInner, resonances);
+      setInnerSlot: (slotIndex, kungfu) => {
+        const currentSlots = [...get().innerSlots];
+        currentSlots[slotIndex] = kungfu;
 
-      set({
-        selectedSect: data.sect,
-        gearSlots: gear,
-        innerSlots: newInner,
-        elementCounts: counts,
-        resonances,
-        stats,
-      });
-
-      get().setNotification("Nhập cấu hình Build thành công!");
-      return true;
-    } catch (e) {
-      console.error(e);
-      get().setNotification("Lỗi giải mã cấu hình JSON!");
-      return false;
-    }
-  },
-
-  setNotification: (msg) => {
-    set({ notificationMessage: msg });
-    if (msg) {
-      setTimeout(() => {
-        if (get().notificationMessage === msg) {
-          set({ notificationMessage: null });
+        // Auto-add to reserve database if not already there
+        const reserve = [...get().reserveKungfus];
+        if (!reserve.some((r) => r.id === kungfu.id)) {
+          reserve.push(kungfu);
         }
-      }, 3500);
-    }
-  },
-}));
 
+        const { counts, resonances } = calculateElementsAndResonances(currentSlots);
+        const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
+
+        set({
+          innerSlots: currentSlots,
+          reserveKungfus: reserve,
+          elementCounts: counts,
+          resonances,
+          stats: newStats,
+          isCatalogOpen: false,
+          selectedInnerSlotIndex: null,
+        });
+
+        get().setNotification(`Đã trang bị Nội Công: ${kungfu.name}`);
+      },
+
+      removeInnerSlot: (slotIndex) => {
+        const currentSlots = [...get().innerSlots];
+        const removedName = currentSlots[slotIndex]?.name || "";
+        currentSlots[slotIndex] = null;
+
+        const { counts, resonances } = calculateElementsAndResonances(currentSlots);
+        const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
+
+        set({
+          innerSlots: currentSlots,
+          elementCounts: counts,
+          resonances,
+          stats: newStats,
+        });
+
+        get().setNotification(`Đã gỡ Nội Công: ${removedName}`);
+      },
+
+      updateInnerSlotElement: (slotIndex, elementIndex, newElement) => {
+        const currentSlots = [...get().innerSlots];
+        const targetSlot = currentSlots[slotIndex];
+        if (!targetSlot) return;
+
+        const ELEMENT_CYCLE: ElementType[] = ['Kim', 'Moc', 'Thuy', 'Hoa', 'Tho'];
+        const currentEl = targetSlot.elements[elementIndex] || 'Kim';
+        const nextEl = newElement || ELEMENT_CYCLE[(ELEMENT_CYCLE.indexOf(currentEl) + 1) % ELEMENT_CYCLE.length];
+
+        const newElements = [...targetSlot.elements];
+        newElements[elementIndex] = nextEl;
+
+        const updatedKungfu: InnerKungfu = {
+          ...targetSlot,
+          elements: newElements,
+        };
+        currentSlots[slotIndex] = updatedKungfu;
+
+        // Also sync in reserve if present
+        const reserve = get().reserveKungfus.map((ik) => ik.id === targetSlot.id ? updatedKungfu : ik);
+
+        const { counts, resonances } = calculateElementsAndResonances(currentSlots);
+        const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
+
+        set({
+          innerSlots: currentSlots,
+          reserveKungfus: reserve,
+          elementCounts: counts,
+          resonances,
+          stats: newStats,
+        });
+
+        get().setNotification(`Node #${elementIndex + 1} [${targetSlot.name}] đổi thành: ${nextEl}`);
+      },
+
+      setSlotElements: (slotIndex, elements) => {
+        const currentSlots = [...get().innerSlots];
+        const targetSlot = currentSlots[slotIndex];
+        if (!targetSlot) return;
+
+        const updatedKungfu: InnerKungfu = {
+          ...targetSlot,
+          elements: [...elements],
+        };
+        currentSlots[slotIndex] = updatedKungfu;
+
+        const reserve = get().reserveKungfus.map((ik) => ik.id === targetSlot.id ? updatedKungfu : ik);
+
+        const { counts, resonances } = calculateElementsAndResonances(currentSlots);
+        const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
+
+        set({
+          innerSlots: currentSlots,
+          reserveKungfus: reserve,
+          elementCounts: counts,
+          resonances,
+          stats: newStats,
+        });
+
+        get().setNotification(`Đã áp dụng bộ nguyên tố mới cho [${targetSlot.name}]`);
+      },
+
+      updateGearItem: (slot, item) => {
+        const currentGear = { ...get().gearSlots, [slot]: item };
+        const newStats = calculateStats(currentGear, get().innerSlots, get().resonances);
+
+        set({
+          gearSlots: currentGear,
+          stats: newStats,
+        });
+
+        get().setNotification(`Đã trang bị vào ô [${slot}]: ${item.name}`);
+      },
+
+      removeGearSlot: (slot) => {
+        const currentGear = { ...get().gearSlots, [slot]: null };
+        const newStats = calculateStats(currentGear, get().innerSlots, get().resonances);
+
+        set({
+          gearSlots: currentGear,
+          stats: newStats,
+        });
+
+        get().setNotification(`Đã gỡ trang bị ô [${slot}]`);
+      },
+
+      addKungfuToReserve: (kungfu) => {
+        const reserve = [...get().reserveKungfus];
+        const existingIdx = reserve.findIndex((k) => k.id === kungfu.id);
+        if (existingIdx !== -1) {
+          reserve[existingIdx] = kungfu;
+        } else {
+          reserve.unshift(kungfu);
+        }
+
+        set({ reserveKungfus: reserve });
+        get().setNotification(`Đã lưu [${kungfu.name}] vào Kho Nội Công Database!`);
+      },
+
+      removeKungfuFromReserve: (kungfuId) => {
+        const reserve = get().reserveKungfus.filter((k) => k.id !== kungfuId);
+        // Also unequip from slots if equipped
+        const currentSlots = get().innerSlots.map((s) => (s?.id === kungfuId ? null : s));
+        const { counts, resonances } = calculateElementsAndResonances(currentSlots);
+        const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
+
+        set({
+          reserveKungfus: reserve,
+          innerSlots: currentSlots,
+          elementCounts: counts,
+          resonances,
+          stats: newStats,
+        });
+
+        get().setNotification(`Đã xóa bí kíp khỏi Kho Database`);
+      },
+
+      updateReserveKungfu: (kungfu) => {
+        const reserve = get().reserveKungfus.map((k) => (k.id === kungfu.id ? kungfu : k));
+        const currentSlots = get().innerSlots.map((s) => (s?.id === kungfu.id ? kungfu : s));
+        const { counts, resonances } = calculateElementsAndResonances(currentSlots);
+        const newStats = calculateStats(get().gearSlots, currentSlots, resonances);
+
+        set({
+          reserveKungfus: reserve,
+          innerSlots: currentSlots,
+          elementCounts: counts,
+          resonances,
+          stats: newStats,
+        });
+      },
+
+      clearReserve: () => {
+        set({ reserveKungfus: [] });
+        get().setNotification(`Đã làm trống Kho Nội Công Dự Trữ`);
+      },
+
+      clearAllDatabase: () => {
+        set({
+          gearSlots: { ...EMPTY_GEAR_SLOTS },
+          innerSlots: [...EMPTY_INNER_SLOTS],
+          reserveKungfus: [],
+          elementCounts: { Kim: 0, Moc: 0, Thuy: 0, Hoa: 0, Tho: 0 },
+          stats: calculateStats(EMPTY_GEAR_SLOTS, EMPTY_INNER_SLOTS, []),
+        });
+        get().setNotification(`Đã xóa sạch Database (Đưa 10 ô đồ, 6 nội công và kho về 0)`);
+      },
+
+      loadSampleData: () => {
+        const sampleKungfus = [...INNER_KUNGFU_DATABASE];
+        const sampleGear = { ...DEFAULT_GEAR_SLOTS };
+        const sampleInner = [
+          sampleKungfus[0],
+          sampleKungfus[3],
+          sampleKungfus[4],
+          sampleKungfus[5],
+          sampleKungfus[6],
+          sampleKungfus[7],
+        ];
+        const { counts, resonances } = calculateElementsAndResonances(sampleInner);
+        const stats = calculateStats(sampleGear, sampleInner, resonances);
+
+        set({
+          gearSlots: sampleGear,
+          innerSlots: sampleInner,
+          reserveKungfus: sampleKungfus,
+          elementCounts: counts,
+          resonances,
+          stats,
+        });
+        get().setNotification(`Đã nạp kho mẫu dữ liệu (65 bí kíp & 10 trang bị)`);
+      },
+
+      openCatalogForSlot: (slotIndex) => {
+        set({
+          selectedInnerSlotIndex: slotIndex,
+          isCatalogOpen: true,
+        });
+      },
+
+      closeCatalog: () => {
+        set({
+          isCatalogOpen: false,
+          selectedInnerSlotIndex: null,
+        });
+      },
+
+      setOcrModalOpen: (open) => {
+        set({ isOcrModalOpen: open });
+      },
+
+      setPendingOcrImage: (fileOrUrl) => {
+        set({ pendingOcrImage: fileOrUrl });
+      },
+
+      exportBuildJSON: () => {
+        const data = {
+          version: "2.1",
+          type: "NTH_WIKI_DATABASE_EXPORT",
+          sect: get().selectedSect,
+          gearSlots: get().gearSlots,
+          innerSlots: get().innerSlots,
+          reserveKungfus: get().reserveKungfus,
+          stats: get().stats,
+          exportedAt: new Date().toISOString(),
+        };
+        return JSON.stringify(data, null, 2);
+      },
+
+      importBuildJSON: (jsonStr) => {
+        try {
+          const data = JSON.parse(jsonStr);
+          if (!data) return false;
+
+          const gear = data.gearSlots || { ...EMPTY_GEAR_SLOTS };
+          let newInner: (InnerKungfu | null)[] = [];
+
+          if (Array.isArray(data.innerSlots)) {
+            newInner = data.innerSlots.map((item: any) => {
+              if (!item) return null;
+              if (typeof item === 'string') {
+                return INNER_KUNGFU_DATABASE.find((ik) => ik.name === item) || null;
+              }
+              return item;
+            });
+          }
+
+          while (newInner.length < 6) {
+            newInner.push(null);
+          }
+
+          const reserve = Array.isArray(data.reserveKungfus) ? data.reserveKungfus : [];
+          const { counts, resonances } = calculateElementsAndResonances(newInner);
+          const stats = calculateStats(gear, newInner, resonances);
+
+          set({
+            selectedSect: data.sect || get().selectedSect,
+            gearSlots: gear,
+            innerSlots: newInner,
+            reserveKungfus: reserve,
+            elementCounts: counts,
+            resonances,
+            stats,
+          });
+
+          get().setNotification("Nhập cấu hình & Database thành công!");
+          return true;
+        } catch (e) {
+          console.error(e);
+          get().setNotification("Lỗi giải mã cấu hình JSON!");
+          return false;
+        }
+      },
+
+      setNotification: (msg) => {
+        set({ notificationMessage: msg });
+        if (msg) {
+          setTimeout(() => {
+            if (get().notificationMessage === msg) {
+              set({ notificationMessage: null });
+            }
+          }, 3500);
+        }
+      },
+    }),
+    {
+      name: 'nth_wiki_database_v2',
+      partialize: (state) => ({
+        selectedSect: state.selectedSect,
+        gearSlots: state.gearSlots,
+        innerSlots: state.innerSlots,
+        reserveKungfus: state.reserveKungfus,
+      }),
+    }
+  )
+);

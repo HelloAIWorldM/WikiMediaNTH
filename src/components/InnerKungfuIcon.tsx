@@ -9,6 +9,7 @@ interface InnerKungfuIconProps {
   element?: ElementType;
   className?: string;
   size?: number;
+  customImageUrl?: string;
 }
 
 /**
@@ -119,14 +120,20 @@ export function InnerKungfuIcon({
   name,
   element = 'Kim',
   className = "w-8 h-8",
-  size
+  size,
+  customImageUrl
 }: InnerKungfuIconProps) {
   const [imgError, setImgError] = useState(false);
 
   const clean = normalizeName(name);
 
+  // If customImageUrl provided (from OCR scan Ảnh #1), use it first!
+  let imgPath = customImageUrl;
+
   // 1. Direct match with full normalized name (including variant)
-  let imgPath = KUNGFU_IMAGE_MAP[clean];
+  if (!imgPath) {
+    imgPath = KUNGFU_IMAGE_MAP[clean];
+  }
 
   // 2. Try match without variant (e.g. "Bất Động Minh Vương (Thổ)" -> "Bất Động Minh Vương")
   if (!imgPath) {
