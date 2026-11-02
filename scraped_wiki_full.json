@@ -1,0 +1,139 @@
+{
+  "categories": [
+    {
+      "title": "Ngoại Trang",
+      "desc": "Ngoại trang, thời trang nhân vật, ngoại hình và hiệu ứng diện mạo.",
+      "count": 8,
+      "href": "/wiki/category/ngoai-trang"
+    },
+    {
+      "title": "Lưu phái",
+      "desc": "7 lưu phái: kỹ năng, build PvE/PvP, rotation, combo.",
+      "count": 7,
+      "href": "/luu-phai"
+    },
+    {
+      "title": "Tân Thủ",
+      "desc": "Hướng dẫn cho người mới: khởi đầu, mẹo, lộ trình nhập môn.",
+      "count": 6,
+      "href": "/wiki/category/tan-thu"
+    },
+    {
+      "title": "Môn phái Giang Hồ",
+      "desc": "Môn phái Giang Hồ: gia nhập, tín vật, cốt truyện.",
+      "count": 6,
+      "href": "/wiki/category/mon-phai"
+    },
+    {
+      "title": "Trang Bị &amp; Nội Công",
+      "desc": "Trang bị, vũ khí, áo giáp và nội công, tâm pháp tu luyện.",
+      "count": 15,
+      "href": "/wiki/category/trang-bi-noi-cong"
+    },
+    {
+      "title": "Kỹ Năng &amp; Đặc Kỹ",
+      "desc": "Kỹ năng chiến đấu, đặc kỹ và cách phối hợp combo.",
+      "count": 7,
+      "href": "/wiki/category/ky-nang-dac-ky"
+    },
+    {
+      "title": "Nghịch Thủy Hiệp Kỳ",
+      "desc": "Hệ thống parkour 3D, bám tường, lướt dài.",
+      "count": 1,
+      "href": "/wiki/nghich-thuy-hiep-ky"
+    },
+    {
+      "title": "PvE - Phó bản",
+      "desc": "Boss thế giới, dungeon 5/10/25 người và raid.",
+      "count": 8,
+      "href": "/wiki/category/pho-ban"
+    },
+    {
+      "title": "PvP - Đối kháng",
+      "desc": "1v1, 3v3, đấu trường công thành, bang chiến.",
+      "count": 3,
+      "href": "/wiki/category/pvp"
+    },
+    {
+      "title": "Nghề nghiệp",
+      "desc": "Nông gia, đầu bếp, dược sư, rèn đúc, đào mỏ.",
+      "count": 2,
+      "href": "/wiki/category/nghe-nghiep"
+    },
+    {
+      "title": "Xã giao",
+      "desc": "Bang hội, tình duyên, kết nghĩa, sư đồ.",
+      "count": 3,
+      "href": "/wiki/category/xa-giao"
+    },
+    {
+      "title": "Sự kiện",
+      "desc": "Sự kiện thời gian thực, lễ hội, tournament.",
+      "count": 2,
+      "href": "/wiki/category/su-kien"
+    },
+    {
+      "title": "Thế giới mở",
+      "desc": "Loot map, phong vật, toạ độ buff, phong cảnh.",
+      "count": 9,
+      "href": "/wiki/category/the-gioi-mo"
+    },
+    {
+      "title": "Nhiệm Vụ",
+      "desc": "Nhiệm vụ chính tuyến, nhánh, hằng ngày và chuỗi nhiệm vụ.",
+      "count": 68,
+      "href": "/wiki/category/nhiem-vu"
+    },
+    {
+      "title": "Cốt truyện",
+      "desc": "Tóm tắt cốt truyện chính tuyến và phụ bản.",
+      "count": 5,
+      "href": "/wiki/category/cot-truyen"
+    },
+    {
+      "title": "Hoạt Động",
+      "desc": "Hoạt động hằng ngày, độ sôi nổi, nhiệm vụ, phúc lợi.",
+      "count": 2,
+      "href": "/wiki/category/hoat-dong"
+    },
+    {
+      "title": "Phiên Bản &amp; Hệ Thống",
+      "desc": "Nội dung phiên bản, patch note, tài khoản, cài đặt và FAQ.",
+      "count": 5,
+      "href": "/wiki/category/phien-ban-he-thong"
+    }
+  ],
+  "featured_articles": [
+    {
+      "title": "Phó Bản Thiên Cơ Mê Thành (Thủ Lĩnh 1-3) - Hướng Dẫn Khai Hoang",
+      "summary": "Chuẩn bị khai hoang Thiên Cơ Mê Thành: hiệu ứng tăng cường, Cầu Nguyện Độc Trân, cơ chế và cách ứng phó Huỳnh Hoặc, Phi Mệnh Nhung Xa, Khôi Vũ Tam Cơ.",
+      "date": "1-00",
+      "href": "/wiki/pho-ban-thien-co-me-thanh-thu-linh-1-3-huong-dan-khai-hoang"
+    },
+    {
+      "title": "Tổng Hợp Thiên Phú &amp; Kỹ Năng - Hệ Thống Thần Khí Thiên Cơ Ngọc Hạch",
+      "summary": "Giới thiệu hệ thống Thần Khí Thiên Cơ Ngọc Hạch: Thiên Phú Kỹ Năng của toàn bộ Lưu Phái, năng lực đặc hóa, cách nhận Điểm Thiên Cơ, Tuyệt Kỹ Đại Náo Thiên Cung và Đồng Hành Vân Khoát Thiê...",
+      "date": "30-10",
+      "href": "/wiki/tong-hop-thien-phu-ky-nang-than-khi-thien-co-ngoc-hach"
+    },
+    {
+      "title": "Phó Bản Thế Ngoại Tầm Ẩn - Hướng Dẫn Thủ Lĩnh 1-4",
+      "summary": "Cơ chế và cách ứng phó bốn thủ lĩnh Thế Ngoại Tầm Ẩn: Phượng Thiên Cẩm, Lư Ẩn, Thiên Sơn Tuyết Thạch và Ngân Trạch.",
+      "date": "1-4",
+      "href": "/wiki/pho-ban-the-ngoai-tam-an-thu-linh-1-4"
+    },
+    {
+      "title": "HƯỚNG DẪN BUILD LONG NGÂM CHI TIẾT - PB 2.1.1",
+      "summary": "Build Long Ngâm phiên bản 2.1.1: PVE khai hoang Thiên Cơ Mê Thành và Đại Hội Tỉ Võ 6v6.",
+      "date": "Patch 2.1.1",
+      "href": "/luu-phai/build-long-ngam"
+    },
+    {
+      "title": "HƯỚNG DẪN BUILD HUYẾT HÀ CHI TIẾT - PB 2.1.1",
+      "summary": "Build Huyết Hà phiên bản 2.1.1: PVE khai hoang Thiên Cơ Mê Thành và Đại Hội Tỉ Võ 6v6.",
+      "date": "Patch 2.1.1",
+      "href": "/luu-phai/build-huyet-ha"
+    }
+  ],
+  "sidebar_items": []
+}

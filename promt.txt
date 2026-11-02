@@ -1,0 +1,166 @@
+https://wikinghichthuyhan.com/wiki/category/phien-ban-he-thong
+
+## 1. Giải mã UX/UI của LevelUp VNG & Cách áp dụng vào Web
+
+Giao diện LevelUp tạo cảm giác "đơn giản nhưng xịn" nhờ 4 nguyên tắc thiết kế cốt lõi mà bạn có thể bê nguyên sang dự án này:
+
+| Thành phần UX/UI | Đặc trưng của LevelUp | Cách áp dụng cho Website Niên Du |
+| --- | --- | --- |
+| **Bảng màu (Color Palette)** | Nền tối sâu (`#0F1115`), thẻ nội dung xám đen (`#181B22`), viền mảnh (`1px solid #2A2E39`), điểm nhấn màu Vàng đồng / Đỏ cam hoặc Xanh ngọc. | Giữ nền tối để làm nổi bật màu sắc rực rỡ của icon Nội Công (Kim, Mộc, Thủy, Hỏa, Thổ) và phẩm chất trang bị (Tím, Đỏ, Độc Trân).
+
+ |
+| **Thanh điều hướng (Navigation)** | Thanh Header cố định (Sticky) hoặc Sidebar gọn bên trái, chuyển đổi nội dung bằng **Tab ngang (Pills)** không cần tải lại trang. | Chỉ chia đúng **4 Tab chính** trên thanh điều hướng: `Trang Chủ` • `Giả Lập (Simulator)` • `Cẩm Nang (Guides)` • `Niên Du Hub`.
+
+ |
+| **Bố cục nội dung (Layout)** | Dùng hệ thống thẻ (Cards) bo góc `12px`, khoảng trắng (padding/gap) rộng rãi, giới hạn tối đa 3–4 thẻ trên một hàng ngang. | Không nhồi nhét chữ ra ngoài mặt tiền; mọi thông số chi tiết (chỉ số trang bị, mô tả Nội Công) chỉ hiển thị qua **Tooltip khi di chuột** hoặc **Drawer/Modal trượt từ cạnh phải**.
+
+ |
+| **Hành động nhanh (Quick Actions)** | Cụm 3 nút nổi bật ngay dưới Hero Banner (`Tải game`, `Nhập code`, `Nạp game`). | Thay bằng 3 nút điều hướng cốt lõi: **`Tạo Build Mới`** • **`Sổ Tay Newbie`** • **`Ứng Tuyển Niên Du`**.
+
+ |
+
+---
+
+## 2. Chi tiết các Chức năng (Functions) nên làm theo 3 Phân khu
+
+### Phân khu 1: Bộ Giả Lập (Gear / Nội Công / Thiên Phú Simulator)
+
+Thay vì làm từng bộ cố định cho mỗi class khiến việc cập nhật theo từng mùa meta trở nên quá tải, bạn chỉ cần xây dựng **1 Engine Giả Lập dùng chung** và cấp quyền xuất ra các **Bảng Mẫu (Preset Builds)** để bạn cùng Vỹ nhúng thẳng vào bài Guide hoặc cho người chơi tự phối thử.
+
+* **Trình phối Nội Công & Chu Thiên (Willpower & Resonance Builder):**
+* **Khung lắp 6 ô Nội Công:** Mô phỏng giao diện thiền định trong game dưới dạng bảng 6 slot trực quan, kèm 5 chấm nguyên tố (Kim, Mộc, Thủy, Hỏa, Thổ) bên dưới mỗi viên Nội Công.
+
+
+* **Kho Nội Công (Catalog Drawer):** Khi bấm vào nút `Đổi Nội Công` hoặc `Bách Khoa Nội Công`, mở ra bảng chọn dạng lưới 3 cột gọn gàng như trong game (*Tỏa Phong, Sâm La Trận, Linh Tê, Phá Phủ, Trảm Tinh, Xung Hư, Điểm Minh Lô, Phược Nhẫn, Mộc Xuân Phong...*). Bổ sung bộ lọc nhanh theo **Ngũ Hành** (Kim/Mộc/Thủy/Hỏa/Thổ) và thanh tìm kiếm theo tên để người dùng không phải cuộn tìm thủ công.
+
+
+* **Tự động tính Chu Thiên:** Hệ thống tự đếm tổng số nguyên tố từ 6 Nội Công đang đeo để báo sáng các bậc kích hoạt Chu Thiên tương ứng (*Đãng Kiếm Dương Ba, Nhật Nguyệt Lưỡng Nghi, Phủ Ngưỡng Thái Hư, Bất Động Minh Vương, Vạn Hóa Minh Hợp, Tuyệt Điện Phi Quang, Côn Ngô Đoạn Ngọc*) ở cấp độ 1, 2 hoặc 3.
+
+
+
+
+* **Trình phối Trang Bị (Gear) & Bảng Thiên Phú (Talent):**
+* Cho phép chọn Lưu Phái (Cửu Linh, Tố Vấn, Thần Tương, Toái Mộng, Huyết Hà, Thiết Y, Long Ngâm, Huyền Cơ...) để tự động lọc đúng nhánh Thiên Phú / Đặc Chất và trang bị tương ứng.
+
+
+* **Bảng tính Stats tương đối (Real-time Stat Panel):** Gắn cố định ở cột bên phải, tự động cộng dồn Tấn Công, Hội Tâm, Phá Phòng, Kháng, Khí Huyết... mỗi khi người dùng thay đổi món đồ hoặc đổi viên Nội Công.
+
+
+
+
+* **Tính năng "Tạo Gear/Nội Công bằng Ảnh chụp" (AI Vision / OCR Import):**
+* Để biến tính năng tạo gear từ ảnh chụp trong game thành hiện thực một cách nhẹ nhàng nhất, hãy tích hợp một nút **`Quét Ảnh In-game (Import Screenshot)`**.
+
+
+* **Cách hoạt động:** Người chơi chỉ cần bấm `Win + Shift + S` trong game, chụp khung thông tin món đồ hoặc bảng Nội Công rồi nhấn `Ctrl + V` (dán thẳng ảnh vào web). Backend sử dụng **Gemini Flash API (Vision)** hoặc **Tesseract OCR** đọc tên món đồ, dòng chỉ số phụ (Dòng Tím/Cam) và nguyên tố Nội Công để tự động điền vào Simulator mà không cần nhập tay từng con số.
+
+
+
+
+* **Hệ thống Lưu Bảng Mẫu (Preset Templates) & Chia sẻ 1-Click:**
+* Nút **`Xuất Bảng Mẫu (Publish Preset)`**: Cho phép bạn và Vỹ lưu một cách phối đồ kèm ghi chú (ví dụ: *"Cửu Linh PvE Meta Mùa 2 - Chu Thiên 3 Kim 3 Hỏa"*).
+
+
+* Mỗi bảng mẫu sinh ra một **Shortlink / Mã nhúng (Embed Card)** hoặc cho phép xuất toàn bộ build thành **1 tấm ảnh Infographic chuẩn 16:9** để người chơi tải về khoe lên Facebook/Discord mà không cần chụp nhiều màn hình.
+
+
+
+
+
+---
+
+### Phân khu 2: Trung tâm Cẩm Nang (Guide Hub)
+
+Giao diện trang Guide nên học theo phần Tin Tức của LevelUp: dùng **Tag lọc nhanh** ở đầu trang và trình bày bài viết dạng **Wiki 2 cột** (bên trái là bài viết, bên phải là Mục lục neo cố định).
+
+* **Bản đồ Rơi Đồ (Interactive Lootmap):**
+* Thay vì viết chữ dài dòng, thiết kế dạng **Filter theo Phó Bản / Boss** (Tước Ẩn Trùng Lâu, Thế Ngoại Tầm Ẩn, Thiên Cơ Mê Thành, Boss Thế Giới...). Bấm vào Boss nào sẽ hiện ngay danh sách trang bị Độc Trân rơi ra cùng điều kiện kích hoạt dòng ẩn.
+
+
+
+
+* **Hướng dẫn Combo các Class & Nhúng trực tiếp Simulator:**
+* Trong bài hướng dẫn combo của từng lưu phái, thiết kế một **Thanh Chuỗi Kỹ Năng (Skill Rotation Bar)** hiển thị thứ tự bấm chiêu trực quan + video GIF minh họa ngắn.
+
+
+* Nhúng trực tiếp **Bảng Mẫu Simulator** của bài viết đó ngay dưới phần combo: người đọc vừa xem hướng dẫn xong có thể bấm *"Mở trong Simulator"* để tự chỉnh sửa theo kho đồ thực tế của bản thân.
+
+
+
+
+* **Sổ tay Newbie, Tips & Tricks & Checklist Thành Tựu:**
+* Đối với mục **Guide Thành Tựu**, thêm nút **`Đánh dấu đã hoàn thành` (Checkbox)** trên từng thành tựu. Dữ liệu đánh dấu được lưu thẳng vào `localStorage` trên trình duyệt của người dùng (không bắt buộc tạo tài khoản đăng nhập), giúp người chơi theo dõi tiến độ cày thành tựu cực kỳ tiện lợi.
+
+
+
+
+
+---
+
+### Phân khu 3: Content Niên Du (Community & Media Hub)
+
+Đây là nơi xây dựng thương hiệu riêng cho bang/nhóm **Niên Du**, kết hợp giữa giải trí và tuyển quân.
+
+* **Thư viện Video (Media Grid - Combo / Raid / TTVD - Sử Thi):**
+* Thiết kế dạng lưới thẻ (Card Grid) giống khu vực sự kiện của LevelUp, có bộ lọc theo Tag: `#ClipCombo`, `#Raid`, `#TTVD-SửThi`, `#Highlight`.
+
+
+* Khi bấm vào thẻ sẽ mở trình phát video (nhúng từ YouTube/TikTok/Bilibili) trong cửa sổ **Lightbox Modal** ngay trên trang để xem liền mạch mà không bị văng sang tab khác.
+
+
+
+
+* **Góc Tuyển Dụng (Smart Recruitment Form) & Phòng Trưng Bày Ảnh:**
+* **Gallery Ảnh Bang:** Hiển thị dạng Masonry Grid (lưới ảnh nghệ thuật) lưu giữ ảnh chụp tập thể, ảnh thời trang hoặc kỷ niệm đi raid của Niên Du.
+
+
+* **Form Ứng Tuyển Nhanh:** Thiết kế một biểu mẫu ngắn gọn (Tên nhân vật, Lưu phái, Lực chiến/DPS, Mục tiêu PvE/PvP, Khung giờ online) và kết nối trực tiếp với **Discord Webhook** để mỗi khi có người nộp đơn trên web, thông tin sẽ bắn thẳng về kênh tuyển dụng trong Discord của Niên Du.
+
+
+
+
+
+---
+
+## 3. Sơ đồ Bố cục (Wireframe) Gợi ý cho Trang Giả Lập (Simulator)
+
+Để màn hình Simulator chứa được cả Trang bị, Nội Công, Chu Thiên và Bảng chỉ số mà vẫn thoáng đãng như LevelUp, bạn nên chia màn hình PC thành **Bố cục 3 cột (3-Column Dashboard)** không cuộn dọc (No-Scroll Viewport):
+
+```text
++-----------------------------------------------------------------------------------+
+| [Logo Niên Du]     [Trang Chủ]  [Giả Lập*]  [Cẩm Nang]  [Niên Du Hub]   [Tạo Mẫu] |
++-----------------------------------------------------------------------------------+
+| [Chọn Phái: Cửu Linh v]  [Mẫu có sẵn: Meta PvE S2 v]   [📷 Quét Ảnh] [🔗 Chia Sẻ] |
++-----------------------+-----------------------------------+-----------------------+
+| CỘT TRÁI (25%)        | CỘT GIỮA (50%)                    | CỘT PHẢI (25%)        |
+|                       | [Tab: Nội Công] [Tab: Thiên Phú]  |                       |
+| [ Vũ Khí ] [ Áo     ] |                                   | BẢNG CHỈ SỐ (STATS)   |
+| [ Mũ     ] [ Đai    ] |      (1)               (4)        | - Tấn Công:   xxxx    |
+| [ Giày   ] [ Hộ Uyển] |   (2)   [ Nhân Vật ]      (5)     | - Phá Phòng:  xxxx    |
+| [ Nhẫn 1 ] [ Nhẫn 2 ] |      (3)   Ngồi Thiền  (6)        | - Hội Tâm:    xx.x%   |
+| [ Dây    ] [ Ngọc   ] |                                   | - Khắc Chế:   xxxx    |
+|                       | --------------------------------- | --------------------- |
+| (Click vào ô để mở    | NGUYÊN TỐ: 🟡12 🔴12 🔵4 🟢0 🟤1  | CHU THIÊN KÍCH HOẠT   |
+|  bảng chọn Trang Bị   |                                   | [x] Đãng Kiếm (Cấp 3) |
+|  hoặc dán ảnh chụp)   | [Đổi Nội Công] [Bách Khoa Nội Công]| [x] Côn Ngô (Cấp 3)   |
+|                       | (Mở Grid 3 cột chọn nhanh ở dưới) | [x] Nhật Nguyệt (Cấp 1)|
++-----------------------+-----------------------------------+-----------------------+
+
+```
+
+* **Điểm đắt giá của bố cục này:** Người dùng chỉ cần nhìn vào 1 màn hình duy nhất là thấy ngay sự thay đổi: bấm đổi thử viên *Linh Tê* hay *Phá Phủ* ở cột giữa, cột phải lập tức nhảy điểm Ngũ Hành và báo sáng dòng Chu Thiên (*Đãng Kiếm Dương Ba*, *Côn Ngô Đoạn Ngọc*...) cũng như cập nhật bảng Stats ngay tức thì.
+
+
+
+---
+
+## 4. Gợi ý Công nghệ (Tech Stack) để bạn & Vỹ dễ quản trị
+
+Vì mục tiêu lớn nhất của bạn là **giảm tải công sức update mỗi khi game đổi meta**:
+
+1. **Frontend:** Dùng **Next.js (React) + Tailwind CSS + Shadcn UI**. Bộ công cụ này có sẵn các Component tối giản (Tabs, Drawer, Tooltip, Dialog) mang phong cách hệt như trang LevelUp của VNG.
+2. **Quản lý dữ liệu (Database & CMS):**
+* Dữ liệu **Nội Công, Chu Thiên, Trang Bị**: Lưu dưới dạng file cấu trúc JSON hoặc bảng trên **Supabase / Firebase** (hoặc thậm chí liên kết với **Google Sheets API** để mỗi khi game ra Nội Công hay đồ Độc Trân mới, bạn và Vỹ chỉ cần điền thêm 1 dòng vào Google Sheet là web tự động cập nhật mà không cần đụng vào code).
+
+
+* Bài viết **Guide & Content Niên Du**: Dùng **Notion** hoặc **Markdown (MDX)** làm nơi soạn thảo bài viết để dễ dàng kéo thả ảnh, chèn clip và cập nhật bài mới trong vài phút.
