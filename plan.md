@@ -97,7 +97,45 @@
 
 ---
 
-## 5. Bổ Sung Toàn Bộ Danh Sách Nội Công & Tái Hiện Icon, Node Nguyên Tố Chuẩn Game (Theo 4 Ảnh Mới)
+
+---
+
+## 9. Kế Hoạch Tích Hợp Supabase Database Cho Website
+
+### 9.1. Đánh giá tính năng từ GitHub `supabase/supabase` có thể ứng dụng
+- **PostgreSQL Database Engine & JSONB:** Lưu trữ linh hoạt toàn bộ cấu trúc vật phẩm (10 trang bị, 6 nội công, 5 nguyên tố ngũ hành, sub-stats) mà không cần migrate schema phức tạp.
+- **PostgREST REST API Client (`@supabase/supabase-js`):** Kết nối trực tiếp từ Frontend và Edge Cloudflare Workers qua HTTPS nhẹ nhàng, không bị đứt gãy socket.
+- **Row Level Security (RLS):** Phân quyền đọc/ghi ngay tại tầng cơ sở dữ liệu.
+- **Short-link Code & Community Builds:** Cho phép người dùng lưu và chia sẻ bộ build bằng mã định danh ngắn gọn thay vì chuỗi JSON dài.
+
+### 9.2. Kiến Trúc Dữ Liệu
+1. Bảng `community_builds`:
+   - `id`: UUID (Primary Key)
+   - `share_code`: TEXT (Unique, ví dụ `CL-M2-9988`)
+   - `title`: TEXT
+   - `sect`: TEXT
+   - `creator_name`: TEXT
+   - `inner_slots`: JSONB
+   - `gear_slots`: JSONB
+   - `element_counts`: JSONB
+   - `resonances`: JSONB
+   - `stats`: JSONB
+   - `created_at`: TIMESTAMPTZ
+
+2. Bảng `user_inventories`:
+   - `id`: UUID (Primary Key)
+   - `user_key`: TEXT (Unique)
+   - `reserve_kungfus`: JSONB
+   - `gear_slots`: JSONB
+   - `updated_at`: TIMESTAMPTZ
+
+### 9.3. Trạng Thái Triển Khai
+- [x] Cài đặt thư viện `@supabase/supabase-js`.
+- [ ] Thiết lập client `src/lib/supabase.ts` với chế độ dự phòng thông minh (Graceful degradation).
+- [ ] Xây dựng dịch vụ `src/services/buildService.ts`.
+- [ ] Tạo file migration SQL `supabase/migrations/01_init_schema.sql`.
+- [ ] Tích hợp nút Chia Sẻ Cloud & Lưu Đám Mây vào giao diện Giả Lập.
+
 
 1. **Bổ Sung 100% Nội Công Từ Game (Hơn 55+ Bí Kíp Võ Học):**
    - Đã cập nhật [simulatorData.ts](file:///d:/MyProjects/Webinstructnth/src/data/simulatorData.ts) bổ sung toàn bộ danh sách nội công xuất hiện trong 3 ảnh in-game:

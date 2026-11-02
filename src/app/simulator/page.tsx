@@ -20,7 +20,9 @@ import {
   Sliders,
   Dices,
   Archive,
-  RotateCcw
+  RotateCcw,
+  Cloud,
+  Globe
 } from 'lucide-react';
 import { useSimulatorStore, EMPTY_GEAR_SLOTS } from '@/store/useSimulatorStore';
 import { 
@@ -33,6 +35,8 @@ import {
 import { ElementGlyph, ELEMENT_THEME } from '@/components/ElementIcons';
 import { InnerKungfuIcon } from '@/components/InnerKungfuIcon';
 import { ElementTrackBoard } from '@/components/ElementTrackBoard';
+import { CloudBuildModal } from '@/components/CloudBuildModal';
+import { fetchBuildByCode } from '@/services/buildService';
 
 const SECTS = ["Cửu Linh", "Toái Mộng", "Huyết Hà", "Thiết Y", "Thần Tương", "Tố Vấn", "Long Ngâm"];
 const GEAR_SLOT_KEYS = ["Vũ Khí", "Áo", "Mũ", "Đai", "Giày", "Hộ Uyển", "Nhẫn 1", "Nhẫn 2", "Dây Chuyền", "Bội Ngọc"];
@@ -64,6 +68,7 @@ export default function SimulatorPage() {
     removeInnerSlot,
     updateInnerSlotElement,
     setSlotElements,
+    updateGearItem,
     removeGearSlot,
     addKungfuToReserve,
     removeKungfuFromReserve,
@@ -82,13 +87,41 @@ export default function SimulatorPage() {
   const [reserveSearch, setReserveSearch] = useState<string>('');
   const [importModalOpen, setImportModalOpen] = useState<boolean>(false);
   const [importJsonText, setImportJsonText] = useState<string>('');
+  const [importShareCode, setImportShareCode] = useState<string>('');
+  const [isFetchingImportCode, setIsFetchingImportCode] = useState<boolean>(false);
+  const [cloudModalOpen, setCloudModalOpen] = useState<boolean>(false);
+  const [cloudModalInitialTab, setCloudModalInitialTab] = useState<'share' | 'explore'>('share');
   const [hoveredInner, setHoveredInner] = useState<InnerKungfu | null>(null);
   const [editingSlotElementIndex, setEditingSlotElementIndex] = useState<{ slotIndex: number; kungfu: InnerKungfu } | null>(null);
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+
+    // Auto-load shared build from URL ?build=XXXX if present
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const buildCode = urlParams.get('build');
+      if (buildCode) {
+        fetchBuildByCode(buildCode).then((build) => {
+          if (build) {
+            if (build.sect) setSelectedSect(build.sect);
+            if (Array.isArray(build.inner_slots)) {
+              build.inner_slots.forEach((ik, idx) => {
+                if (ik) setInnerSlot(idx, ik);
+              });
+            }
+            if (build.gear_slots && typeof build.gear_slots === 'object') {
+              Object.entries(build.gear_slots).forEach(([slotKey, item]) => {
+                if (item) updateGearItem(slotKey, item);
+              });
+            }
+            setNotification(`Đã tự động nạp bộ build [${build.title}] (${buildCode}) từ Supabase Cloud!`);
+          }
+        });
+      }
+    }
+  }, [setInnerSlot, updateGearItem, setSelectedSect, setNotification]);
 
   // Keyboard shortcut for OCR dán ảnh (Ctrl+V)
   useEffect(() => {
@@ -203,11 +236,27 @@ export default function SimulatorPage() {
           </button>
 
           <button
-            onClick={handleShareClick}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-ink-600 bg-ink-800 hover:border-gold text-ink-200 hover:text-gold text-xs font-mono transition-all"
+            onClick={() => {
+              setCloudModalInitialTab('share');
+              setCloudModalOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-gold/50 bg-gold/20 hover:bg-gold text-gold-bright hover:text-ink-950 text-xs font-mono font-bold transition-all shadow-gold-glow"
+            title="Lưu và chia sẻ mã bộ build lên Supabase Cloud Database"
           >
-            <Share2 className="w-3.5 h-3.5" />
-            <span>Chia Sẻ</span>
+            <Cloud className="w-3.5 h-3.5" />
+            <span>Chia Sẻ (Cloud)</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setCloudModalInitialTab('explore');
+              setCloudModalOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-ink-600 bg-ink-800 hover:border-gold text-ink-200 hover:text-gold text-xs font-mono transition-all"
+            title="Khám phá các bộ build hot của cộng đồng trên Cloud"
+          >
+            <Globe className="w-3.5 h-3.5 text-gold" />
+            <span>Cộng Đồng</span>
           </button>
 
           <button
@@ -922,19 +971,86 @@ export default function SimulatorPage() {
         </div>
       )}
 
-      {/* ===================== IMPORT JSON MODAL ===================== */}
+      {/* ===================== IMPORT JSON / SUPABASE CODE MODAL ===================== */}
       {importModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/85 backdrop-blur-md">
-          <div className="w-full max-w-md rounded-2xl border border-gold/40 bg-ink-900 p-5 shadow-2xl space-y-3">
-            <h3 className="font-serif text-base font-bold text-white">Nhập Cấu Hình Build JSON</h3>
-            <textarea
-              rows={8}
-              placeholder="Dán mã JSON cấu hình bộ build vào đây..."
-              value={importJsonText}
-              onChange={(e) => setImportJsonText(e.target.value)}
-              className="w-full p-3 rounded-lg border border-gold/30 bg-ink-950 text-xs font-mono text-ink-100 outline-none focus:border-gold"
-            />
-            <div className="flex justify-end gap-2">
+          <div className="w-full max-w-md rounded-2xl border border-gold/40 bg-ink-900 p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-gold/20">
+              <h3 className="font-serif text-base font-bold text-white flex items-center gap-2">
+                <Upload className="w-4 h-4 text-gold" />
+                <span>Nhập Cấu Hình Bộ Build</span>
+              </h3>
+              <button onClick={() => setImportModalOpen(false)} className="text-ink-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Quick Supabase Code Input */}
+            <div className="p-3 rounded-xl bg-ink-950 border border-gold/30 space-y-2">
+              <span className="text-[11px] font-mono text-gold-bright uppercase tracking-wider block">
+                Cách 1: Nạp Bằng Mã Chia Sẻ Supabase Cloud
+              </span>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Nhập mã (vd: CL-9K3H)..."
+                  value={importShareCode}
+                  onChange={(e) => setImportShareCode(e.target.value)}
+                  className="flex-1 px-3 py-1.5 rounded bg-ink-900 border border-ink-700 text-xs font-mono text-white placeholder-ink-500 uppercase outline-none focus:border-gold"
+                />
+                <button
+                  type="button"
+                  disabled={isFetchingImportCode || !importShareCode.trim()}
+                  onClick={async () => {
+                    const code = importShareCode.trim().toUpperCase();
+                    if (!code) return;
+                    setIsFetchingImportCode(true);
+                    try {
+                      const build = await fetchBuildByCode(code);
+                      if (build) {
+                        if (build.sect) setSelectedSect(build.sect);
+                        if (Array.isArray(build.inner_slots)) {
+                          build.inner_slots.forEach((ik, idx) => {
+                            if (ik) setInnerSlot(idx, ik);
+                          });
+                        }
+                        if (build.gear_slots && typeof build.gear_slots === 'object') {
+                          Object.entries(build.gear_slots).forEach(([slotKey, item]) => {
+                            if (item) updateGearItem(slotKey, item);
+                          });
+                        }
+                        setNotification(`Đã nạp thành công bộ build [${build.title}] từ Supabase Database!`);
+                        setImportModalOpen(false);
+                        setImportShareCode('');
+                      } else {
+                        alert(`Không tìm thấy bộ build với mã: "${code}"`);
+                      }
+                    } finally {
+                      setIsFetchingImportCode(false);
+                    }
+                  }}
+                  className="px-3 py-1.5 rounded bg-gold text-ink-950 font-bold text-xs font-mono disabled:opacity-50 transition-all shrink-0"
+                >
+                  {isFetchingImportCode ? 'Đang Nạp...' : 'Nạp Cloud'}
+                </button>
+              </div>
+            </div>
+
+            {/* JSON Code Input */}
+            <div className="space-y-1.5">
+              <span className="text-[11px] font-mono text-ink-300 uppercase tracking-wider block">
+                Cách 2: Dán Mã JSON Cấu Hình
+              </span>
+              <textarea
+                rows={5}
+                placeholder="Dán mã JSON cấu hình bộ build vào đây..."
+                value={importJsonText}
+                onChange={(e) => setImportJsonText(e.target.value)}
+                className="w-full p-2.5 rounded-lg border border-gold/30 bg-ink-950 text-xs font-mono text-ink-100 outline-none focus:border-gold"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-ink-800">
               <button
                 onClick={() => setImportModalOpen(false)}
                 className="px-4 py-2 rounded border border-ink-600 text-xs text-ink-300 hover:bg-ink-800"
@@ -945,12 +1061,19 @@ export default function SimulatorPage() {
                 onClick={handleImportSubmit}
                 className="px-4 py-2 rounded bg-gold text-ink-950 font-bold text-xs shadow-gold-glow hover:brightness-110"
               >
-                Xác Nhận Nạp
+                Xác Nhận Nạp JSON
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* ===================== CLOUD BUILD MODAL (SUPABASE) ===================== */}
+      <CloudBuildModal
+        isOpen={cloudModalOpen}
+        onClose={() => setCloudModalOpen(false)}
+        initialTab={cloudModalInitialTab}
+      />
       {/* ===================== ELEMENT CUSTOMIZER MODAL ===================== */}
       {editingSlotElementIndex && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/85 backdrop-blur-md">
