@@ -18,7 +18,7 @@ export function ElementTrackBoard({ elementCounts }: ElementTrackBoardProps) {
   return (
     <div className="w-full space-y-2 select-none">
       {ELEMENT_ROWS.map((element) => {
-        const count = elementCounts[element] || 0;
+        const count = (elementCounts && elementCounts[element]) || 0;
         const theme = ELEMENT_THEME[element];
 
         // Chu thiên level: >= 10 is Lv3, >= 7 is Lv2, >= 4 is Lv1, else inactive

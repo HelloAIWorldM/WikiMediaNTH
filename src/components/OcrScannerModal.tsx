@@ -512,20 +512,67 @@ export default function OcrScannerModal() {
   // Avatar icon is from Ảnh #1 (first image)
   const avatarUrl = uploadedImages[0]?.url;
 
-  const handleApplyToSimulator = () => {
+  const getCompressedAvatar = async (url?: string): Promise<string | undefined> => {
+    if (!url) return undefined;
+    if (!url.startsWith('data:image')) return url;
+    return new Promise((resolve) => {
+      try {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const maxDim = 120;
+            let { width, height } = img;
+            if (width > maxDim || height > maxDim) {
+              if (width > height) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              } else {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+            canvas.width = Math.max(1, width);
+            canvas.height = Math.max(1, height);
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, width, height);
+              resolve(canvas.toDataURL('image/jpeg', 0.8));
+            } else {
+              resolve(url);
+            }
+          } catch {
+            resolve(url);
+          }
+        };
+        img.onerror = () => resolve(url);
+        img.src = url;
+      } catch {
+        resolve(url);
+      }
+    });
+  };
+
+  const handleApplyToSimulator = async () => {
+    const compactAvatar = await getCompressedAvatar(avatarUrl);
+    const validElements: ElementType[] = (parsedElements && parsedElements.length === 5)
+      ? parsedElements
+      : ['Kim', 'Kim', 'Kim', 'Kim', 'Kim'];
+    const safeSubStats = Array.isArray(parsedSubStats) ? parsedSubStats : [];
+
     if (itemType === 'noicong') {
       const newInnerKungfu: InnerKungfu = {
         id: `scanned-${Date.now()}`,
         name: parsedName || "Nội Công Quét",
-        primaryElement: parsedElements[0],
-        secondaryElement: parsedElements[1],
+        primaryElement: validElements[0] || 'Kim',
+        secondaryElement: validElements[1] || 'Kim',
         tier: "Thần Thoại",
         description: parsedDesc || "Nội công được quét từ ảnh chụp màn hình in-game.",
-        elements: parsedElements,
+        elements: validElements,
         score: parsedScore || 2500,
         level: parsedLevel || 25,
-        subStats: parsedSubStats,
-        imageUrl: avatarUrl
+        subStats: safeSubStats,
+        imageUrl: compactAvatar
       };
 
       setInnerSlot(targetSlotIndex, newInnerKungfu);
@@ -539,9 +586,9 @@ export default function OcrScannerModal() {
         level: 79,
         refine: 12,
         gearScore: parsedScore || 9800,
-        mainStat: parsedSubStats[0] || "+1,000 Tấn Công",
-        subStats: parsedSubStats.slice(1),
-        imageUrl: avatarUrl
+        mainStat: safeSubStats[0] || "+1,000 Tấn Công",
+        subStats: safeSubStats.slice(1),
+        imageUrl: compactAvatar
       };
 
       updateGearItem(targetGearSlot, newGear);
@@ -551,20 +598,26 @@ export default function OcrScannerModal() {
     setOcrModalOpen(false);
   };
 
-  const handleSaveToReserve = () => {
+  const handleSaveToReserve = async () => {
     if (itemType === 'noicong') {
+      const compactAvatar = await getCompressedAvatar(avatarUrl);
+      const validElements: ElementType[] = (parsedElements && parsedElements.length === 5)
+        ? parsedElements
+        : ['Kim', 'Kim', 'Kim', 'Kim', 'Kim'];
+      const safeSubStats = Array.isArray(parsedSubStats) ? parsedSubStats : [];
+
       const newInnerKungfu: InnerKungfu = {
         id: `scanned-${Date.now()}`,
         name: parsedName || "Nội Công Quét",
-        primaryElement: parsedElements[0],
-        secondaryElement: parsedElements[1],
+        primaryElement: validElements[0] || 'Kim',
+        secondaryElement: validElements[1] || 'Kim',
         tier: "Thần Thoại",
         description: parsedDesc || "Nội công được quét từ ảnh chụp màn hình in-game.",
-        elements: parsedElements,
+        elements: validElements,
         score: parsedScore || 2500,
         level: parsedLevel || 25,
-        subStats: parsedSubStats,
-        imageUrl: avatarUrl
+        subStats: safeSubStats,
+        imageUrl: compactAvatar
       };
 
       addKungfuToReserve(newInnerKungfu);

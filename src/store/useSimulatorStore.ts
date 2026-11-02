@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import {
   ElementType,
   InnerKungfu,
@@ -11,6 +11,68 @@ import {
   CHU_THIEN_RESONANCES,
   POPULAR_PRESETS
 } from '@/data/simulatorData';
+
+const safeLocalStorage: StateStorage = {
+  getItem: (name: string): string | null => {
+    try {
+      if (typeof window === 'undefined') return null;
+      return window.localStorage.getItem(name);
+    } catch (e) {
+      console.warn(`[useSimulatorStore] getItem("${name}") failed:`, e);
+      return null;
+    }
+  },
+  setItem: (name: string, value: string): void => {
+    try {
+      if (typeof window === 'undefined') return;
+      window.localStorage.setItem(name, value);
+    } catch (e) {
+      console.warn(`[useSimulatorStore] setItem("${name}") failed (e.g. quota exceeded):`, e);
+    }
+  },
+  removeItem: (name: string): void => {
+    try {
+      if (typeof window === 'undefined') return;
+      window.localStorage.removeItem(name);
+    } catch (e) {
+      console.warn(`[useSimulatorStore] removeItem("${name}") failed:`, e);
+    }
+  },
+};
+
+const sanitizeKungfu = (k: any): InnerKungfu | null => {
+  if (!k || typeof k !== 'object') return null;
+  const elements = Array.isArray(k.elements) && k.elements.length === 5 ? k.elements : ['Kim', 'Kim', 'Kim', 'Kim', 'Kim'];
+  return {
+    id: String(k.id || `kf-${Date.now()}`),
+    name: String(k.name || 'Nội Công'),
+    primaryElement: k.primaryElement || elements[0] || 'Kim',
+    secondaryElement: k.secondaryElement || elements[1] || 'Kim',
+    tier: k.tier === 'Hoàng Kim' ? 'Hoàng Kim' : 'Thần Thoại',
+    description: String(k.description || ''),
+    elements,
+    score: typeof k.score === 'number' && !isNaN(k.score) ? k.score : 2500,
+    level: typeof k.level === 'number' && !isNaN(k.level) ? k.level : 25,
+    subStats: Array.isArray(k.subStats) ? k.subStats.filter((s: any) => typeof s === 'string') : [],
+    imageUrl: typeof k.imageUrl === 'string' ? k.imageUrl : undefined
+  };
+};
+
+const sanitizeGear = (g: any): GearSlotItem | null => {
+  if (!g || typeof g !== 'object') return null;
+  return {
+    id: String(g.id || `gear-${Date.now()}`),
+    slot: g.slot || 'Vũ Khí',
+    name: String(g.name || 'Trang Bị'),
+    tier: (g.tier === 'Thần Thoại Kim' || g.tier === 'Hoàng Kim') ? g.tier : 'Độc Trân',
+    level: typeof g.level === 'number' && !isNaN(g.level) ? g.level : 79,
+    refine: typeof g.refine === 'number' && !isNaN(g.refine) ? g.refine : 12,
+    gearScore: typeof g.gearScore === 'number' && !isNaN(g.gearScore) ? g.gearScore : 9800,
+    mainStat: String(g.mainStat || '+1,000 Tấn Công'),
+    subStats: Array.isArray(g.subStats) ? g.subStats.filter((s: any) => typeof s === 'string') : [],
+    imageUrl: typeof g.imageUrl === 'string' ? g.imageUrl : undefined
+  };
+};
 
 export interface CalculatedStats {
   totalPower: number;
@@ -77,7 +139,7 @@ interface SimulatorState {
   setNotification: (msg: string | null) => void;
 }
 
-function calculateElementsAndResonances(innerSlots: (InnerKungfu | null)[]) {
+function calculateElementsAndResonances(innerSlots: (InnerKungfu | null)[] = []) {
   const counts: Record<ElementType, number> = {
     Kim: 0,
     Moc: 0,
@@ -86,8 +148,8 @@ function calculateElementsAndResonances(innerSlots: (InnerKungfu | null)[]) {
     Tho: 0,
   };
 
-  innerSlots.forEach((slot) => {
-    if (slot && slot.elements) {
+  (innerSlots || []).forEach((slot) => {
+    if (slot && Array.isArray(slot.elements)) {
       slot.elements.forEach((el) => {
         if (counts[el] !== undefined) {
           counts[el] += 1;
@@ -169,13 +231,13 @@ function calculateElementsAndResonances(innerSlots: (InnerKungfu | null)[]) {
 }
 
 function calculateStats(
-  gearSlots: Record<string, GearSlotItem | null>,
-  innerSlots: (InnerKungfu | null)[],
-  resonances: ResonanceEffect[]
+  gearSlots: Record<string, GearSlotItem | null> = {},
+  innerSlots: (InnerKungfu | null)[] = [],
+  resonances: ResonanceEffect[] = []
 ): CalculatedStats {
   let gearPower = 0;
-  Object.values(gearSlots).forEach((g) => {
-    if (g) {
+  Object.values(gearSlots || {}).forEach((g) => {
+    if (g && typeof g.gearScore === 'number') {
       gearPower += g.gearScore;
     }
   });
@@ -186,11 +248,12 @@ function calculateStats(
   let bonusCrit = 0;
   let bonusBossDmg = 0;
 
-  innerSlots.forEach((slot) => {
+  (innerSlots || []).forEach((slot) => {
     if (slot) {
-      innerScore += slot.score;
-      if (slot.subStats) {
+      innerScore += (typeof slot.score === 'number' ? slot.score : 0);
+      if (Array.isArray(slot.subStats)) {
         slot.subStats.forEach((sub) => {
+          if (typeof sub !== 'string') return;
           const lower = sub.toLowerCase();
           const matchNum = sub.match(/\+?\s*([0-9,]+)/);
           const val = matchNum ? parseInt(matchNum[1].replace(/,/g, ''), 10) : 0;
@@ -209,30 +272,31 @@ function calculateStats(
   });
 
   let resBonus = 0;
-  resonances.forEach((r) => {
-    if (r.active) {
-      resBonus += r.level * 850;
+  (resonances || []).forEach((r) => {
+    if (r && r.active) {
+      resBonus += (r.level || 0) * 850;
     }
   });
 
+  const validInner = (innerSlots || []).filter(Boolean);
   const totalPower = Math.round(gearPower * 0.75 + innerScore + resBonus);
   const attack = totalPower > 0 ? (4200 + Math.round(totalPower * 0.014) + bonusAttack) : 0;
   const defense = totalPower > 0 ? (2800 + Math.round(totalPower * 0.009)) : 0;
-  const critRate = totalPower > 0 ? +(28.5 + (innerSlots.filter((s) => s?.primaryElement === "Kim" || s?.primaryElement === "Hoa").length * 1.5) + bonusCrit).toFixed(1) : 0;
-  const critDamage = totalPower > 0 ? +(175.0 + (innerSlots.filter((s) => s?.primaryElement === "Hoa").length * 4.2)).toFixed(1) : 0;
-  const bossBreakthrough = totalPower > 0 ? +(14.2 + (resonances.find((r) => r.name === "Đãng Kiếm Dương Ba")?.active ? 4.0 : 0) + bonusBossDmg).toFixed(1) : 0;
+  const critRate = totalPower > 0 ? +(28.5 + (validInner.filter((s) => s?.primaryElement === "Kim" || s?.primaryElement === "Hoa").length * 1.5) + bonusCrit).toFixed(1) : 0;
+  const critDamage = totalPower > 0 ? +(175.0 + (validInner.filter((s) => s?.primaryElement === "Hoa").length * 4.2)).toFixed(1) : 0;
+  const bossBreakthrough = totalPower > 0 ? +(14.2 + ((resonances || []).find((r) => r && r.name === "Đãng Kiếm Dương Ba")?.active ? 4.0 : 0) + bonusBossDmg).toFixed(1) : 0;
   const hp = totalPower > 0 ? (78000 + Math.round(totalPower * 0.16) + bonusHp) : 0;
   const dpsEstimate = attack > 0 ? Math.round(attack * (1 + (critRate / 100) * (critDamage / 100)) * (1 + bossBreakthrough / 100) * 12.5) : 0;
 
   return {
-    totalPower,
-    attack,
-    defense,
-    critRate,
-    critDamage,
-    bossBreakthrough,
-    hp,
-    dpsEstimate,
+    totalPower: isNaN(totalPower) ? 0 : totalPower,
+    attack: isNaN(attack) ? 0 : attack,
+    defense: isNaN(defense) ? 0 : defense,
+    critRate: isNaN(critRate) ? 0 : critRate,
+    critDamage: isNaN(critDamage) ? 0 : critDamage,
+    bossBreakthrough: isNaN(bossBreakthrough) ? 0 : bossBreakthrough,
+    hp: isNaN(hp) ? 0 : hp,
+    dpsEstimate: isNaN(dpsEstimate) ? 0 : dpsEstimate,
   };
 }
 
@@ -593,12 +657,50 @@ export const useSimulatorStore = create<SimulatorState>()(
     }),
     {
       name: 'nth_wiki_database_v2',
+      storage: createJSONStorage(() => safeLocalStorage),
       partialize: (state) => ({
         selectedSect: state.selectedSect,
         gearSlots: state.gearSlots,
         innerSlots: state.innerSlots,
         reserveKungfus: state.reserveKungfus,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        try {
+          // Sanitize innerSlots
+          let rawInner = Array.isArray(state.innerSlots) ? state.innerSlots : [];
+          while (rawInner.length < 6) rawInner.push(null);
+          const cleanInner = rawInner.slice(0, 6).map((k) => (k ? sanitizeKungfu(k) : null));
+          state.innerSlots = cleanInner;
+
+          // Sanitize gearSlots
+          const cleanGear: Record<string, GearSlotItem | null> = { ...EMPTY_GEAR_SLOTS };
+          if (state.gearSlots && typeof state.gearSlots === 'object') {
+            Object.keys(EMPTY_GEAR_SLOTS).forEach((slotKey) => {
+              const item = state.gearSlots[slotKey];
+              cleanGear[slotKey] = item ? sanitizeGear(item) : null;
+            });
+          }
+          state.gearSlots = cleanGear;
+
+          // Sanitize reserveKungfus
+          const cleanReserve: InnerKungfu[] = [];
+          if (Array.isArray(state.reserveKungfus)) {
+            state.reserveKungfus.forEach((k) => {
+              const sanitized = sanitizeKungfu(k);
+              if (sanitized) cleanReserve.push(sanitized);
+            });
+          }
+          state.reserveKungfus = cleanReserve;
+
+          const { counts, resonances } = calculateElementsAndResonances(cleanInner);
+          state.elementCounts = counts;
+          state.resonances = resonances;
+          state.stats = calculateStats(cleanGear, cleanInner, resonances);
+        } catch (e) {
+          console.error("Hydration recovery error:", e);
+        }
+      }
     }
   )
 );

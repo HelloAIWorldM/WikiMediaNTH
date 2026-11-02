@@ -125,7 +125,8 @@ export function InnerKungfuIcon({
 }: InnerKungfuIconProps) {
   const [imgError, setImgError] = useState(false);
 
-  const clean = normalizeName(name);
+  const safeName = name || 'Nội Công';
+  const clean = normalizeName(safeName);
 
   // If customImageUrl provided (from OCR scan Ảnh #1), use it first!
   let imgPath = customImageUrl;
@@ -137,7 +138,7 @@ export function InnerKungfuIcon({
 
   // 2. Try match without variant (e.g. "Bất Động Minh Vương (Thổ)" -> "Bất Động Minh Vương")
   if (!imgPath) {
-    const baseName = normalizeName(name.replace(/\(.*?\)/g, ''));
+    const baseName = normalizeName(safeName.replace(/\(.*?\)/g, ''));
     imgPath = KUNGFU_IMAGE_MAP[baseName];
   }
 
@@ -172,12 +173,12 @@ export function InnerKungfuIcon({
     <div
       style={styleObj}
       className={`relative rounded-lg overflow-hidden border ${getElementBorder()} bg-gradient-to-b from-[#18263a] to-[#0a101a] flex items-center justify-center flex-shrink-0 transition-transform select-none p-1 ${className}`}
-      title={name}
+      title={safeName}
     >
       {imgPath && !imgError ? (
         <img
           src={imgPath}
-          alt={name}
+          alt={safeName}
           className="w-full h-full object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
           onError={() => setImgError(true)}
           loading="lazy"
@@ -185,7 +186,7 @@ export function InnerKungfuIcon({
       ) : (
         /* Fallback if image fails to load */
         <div className="w-full h-full flex items-center justify-center bg-[#152338] text-gold font-serif font-bold text-xs">
-          {name.slice(0, 2)}
+          {safeName.slice(0, 2)}
         </div>
       )}
     </div>

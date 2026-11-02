@@ -84,6 +84,11 @@ export default function SimulatorPage() {
   const [importJsonText, setImportJsonText] = useState<string>('');
   const [hoveredInner, setHoveredInner] = useState<InnerKungfu | null>(null);
   const [editingSlotElementIndex, setEditingSlotElementIndex] = useState<{ slotIndex: number; kungfu: InnerKungfu } | null>(null);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Keyboard shortcut for OCR dán ảnh (Ctrl+V)
   useEffect(() => {
@@ -116,16 +121,18 @@ export default function SimulatorPage() {
   }, [setOcrModalOpen, setPendingOcrImage]);
 
   // Filtered Inner Kungfu catalog list
-  const filteredCatalog = INNER_KUNGFU_DATABASE.filter((ik) => {
-    const matchSearch = ik.name.toLowerCase().includes(catalogSearch.toLowerCase());
-    const matchElement = catalogFilterElement === 'all' || ik.elements.includes(catalogFilterElement as ElementType);
+  const filteredCatalog = (INNER_KUNGFU_DATABASE || []).filter((ik) => {
+    if (!ik) return false;
+    const matchSearch = (ik.name || '').toLowerCase().includes(catalogSearch.toLowerCase());
+    const matchElement = catalogFilterElement === 'all' || (Array.isArray(ik.elements) && ik.elements.includes(catalogFilterElement as ElementType));
     return matchSearch && matchElement;
   });
 
   // Filtered Reserve Dock list from user's persisted Database
-  const filteredReserve = reserveKungfus.filter((ik) => {
-    const matchSearch = ik.name.toLowerCase().includes(reserveSearch.toLowerCase());
-    const matchElement = reserveFilterElement === 'all' || ik.elements.includes(reserveFilterElement as ElementType);
+  const filteredReserve = (reserveKungfus || []).filter((ik) => {
+    if (!ik) return false;
+    const matchSearch = (ik.name || '').toLowerCase().includes(reserveSearch.toLowerCase());
+    const matchElement = reserveFilterElement === 'all' || (Array.isArray(ik.elements) && ik.elements.includes(reserveFilterElement as ElementType));
     return matchSearch && matchElement;
   });
 
@@ -148,6 +155,15 @@ export default function SimulatorPage() {
       setImportJsonText('');
     }
   };
+
+  if (!isMounted) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center gap-3">
+        <div className="w-10 h-10 rounded-full border-2 border-gold/40 border-t-gold animate-spin" />
+        <span className="font-serif text-sm text-gold-soft tracking-wider">Đang khởi tạo Giả Lập Tu Luyện...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4 pb-12">
@@ -223,14 +239,14 @@ export default function SimulatorPage() {
                 <span>10 Ô Trang Bị Đeo</span>
               </span>
               <span className="text-[10px] font-mono text-gold-bright bg-gold/15 px-2 py-0.5 rounded border border-gold/30">
-                {Object.values(gearSlots).filter(Boolean).length}/10 {Object.values(gearSlots).filter(Boolean).length === 10 ? 'Đầy Đủ' : 'Đã Đeo'}
+                {Object.values(gearSlots || {}).filter(Boolean).length}/10 {Object.values(gearSlots || {}).filter(Boolean).length === 10 ? 'Đầy Đủ' : 'Đã Đeo'}
               </span>
             </div>
 
             {/* 10 Gear slots in 2 columns */}
             <div className="grid grid-cols-2 gap-2">
               {GEAR_SLOT_KEYS.map((slotKey) => {
-                const item = gearSlots[slotKey];
+                const item = gearSlots ? gearSlots[slotKey] : null;
                 if (!item) {
                   return (
                     <div
@@ -250,8 +266,9 @@ export default function SimulatorPage() {
                   );
                 }
 
-                const isMythic = item.tier.includes("Thần Thoại");
-                const isDocTran = item.tier.includes("Độc Trân");
+                const tierStr = item.tier || '';
+                const isMythic = tierStr.includes("Thần Thoại");
+                const isDocTran = tierStr.includes("Độc Trân");
                 return (
                   <div
                     key={slotKey}
@@ -266,7 +283,7 @@ export default function SimulatorPage() {
                     <div className="flex items-center justify-between text-xs text-ink-300 font-mono mb-1">
                       <span>[{slotKey}]</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-gold-bright font-extrabold">+{item.refine}</span>
+                        <span className="text-gold-bright font-extrabold">+{item.refine || 0}</span>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -290,19 +307,19 @@ export default function SimulatorPage() {
                     </div>
 
                     <div className="text-[11px] text-ink-300 font-mono mt-1 flex items-center justify-between">
-                      <span>Cấp {item.level}</span>
-                      <span className="text-gold font-bold">GS {item.gearScore}</span>
+                      <span>Cấp {item.level || 79}</span>
+                      <span className="text-gold font-bold">GS {item.gearScore || 0}</span>
                     </div>
 
                     {/* Tooltip on hover */}
                     <div className="absolute left-full top-0 ml-2 w-56 p-2.5 rounded-lg border border-gold/40 bg-ink-950 text-xs shadow-2xl z-40 hidden group-hover:block pointer-events-none">
                       <div className="font-serif font-bold text-gold-bright text-xs">{item.name}</div>
-                      <div className="text-[10px] text-ink-400 font-mono">Phẩm chất: {item.tier} | Cấp {item.level}</div>
+                      <div className="text-[10px] text-ink-400 font-mono">Phẩm chất: {item.tier || 'Thường'} | Cấp {item.level || 79}</div>
                       <div className="my-1.5 pt-1.5 border-t border-ink-700 text-white font-medium text-[11px]">
-                        {item.mainStat}
+                        {item.mainStat || 'Không có chỉ số chính'}
                       </div>
                       <div className="space-y-0.5 text-[10px] text-jade-bright font-mono">
-                        {item.subStats.map((sub, i) => (
+                        {(item.subStats || []).map((sub, i) => (
                           <div key={i}>{sub}</div>
                         ))}
                       </div>
@@ -406,7 +423,7 @@ export default function SimulatorPage() {
 
                                 {/* 5 Elemental Glyphs with Click-to-Cycle & Quick Customization */}
                                 <div className="flex items-center gap-1 py-1">
-                                  {slot.elements.map((el, elIdx) => (
+                                  {((slot && slot.elements) || []).map((el, elIdx) => (
                                     <button
                                       key={elIdx}
                                       type="button"
@@ -477,7 +494,7 @@ export default function SimulatorPage() {
                         Chu Thiên Thiền Định
                       </div>
                       <div className="mt-2 text-xs font-mono px-2.5 py-0.5 rounded bg-ink-900 border border-gold/30 text-gold shadow-sm">
-                        Đã kích hoạt: {innerSlots.reduce((acc, s) => acc + (s ? s.elements.length : 0), 0)} / 30 Nguyên Tố
+                        Đã kích hoạt: {(innerSlots || []).reduce((acc, s) => acc + (s && s.elements ? s.elements.length : 0), 0)} / 30 Nguyên Tố
                       </div>
                     </div>
 
@@ -485,7 +502,7 @@ export default function SimulatorPage() {
                     <div className="w-full pt-2 border-t border-ink-800 text-[10px] font-mono text-ink-300">
                       <span>Chu thiên:&nbsp;</span>
                       <span className="text-gold-bright font-bold">
-                        {resonances.filter((r) => r.active).map((r) => r.name).join(', ') || 'Chưa kích hoạt'}
+                        {(resonances || []).filter((r) => r && r.active).map((r) => r.name).join(', ') || 'Chưa kích hoạt'}
                       </span>
                     </div>
                   </div>
@@ -533,7 +550,7 @@ export default function SimulatorPage() {
 
                                 {/* 5 Elemental Glyphs with Click-to-Cycle & Quick Customization */}
                                 <div className="flex items-center gap-1 py-1">
-                                  {slot.elements.map((el, elIdx) => (
+                                  {((slot && slot.elements) || []).map((el, elIdx) => (
                                     <button
                                       key={elIdx}
                                       type="button"
@@ -724,7 +741,7 @@ export default function SimulatorPage() {
                               {/* 5 Authentic Elemental Glyphs */}
                               <div className="flex items-center justify-between mt-1.5 text-xs font-mono">
                                 <div className="flex items-center gap-1">
-                                  {ik.elements.map((el, elIdx) => (
+                                  {((ik && ik.elements) || []).map((el, elIdx) => (
                                     <div key={elIdx} className="w-4 h-4 flex items-center justify-center">
                                       <ElementGlyph element={el} className="w-3.5 h-3.5" glow={true} />
                                     </div>
@@ -762,7 +779,7 @@ export default function SimulatorPage() {
               </div>
 
               <div className="text-xs font-mono text-ink-400">
-                Đã trang bị: <span className="text-gold-bright font-bold">{innerSlots.filter(Boolean).length}/6</span>
+                Đã trang bị: <span className="text-gold-bright font-bold">{(innerSlots || []).filter(Boolean).length}/6</span>
               </div>
             </div>
           </div>
@@ -778,7 +795,7 @@ export default function SimulatorPage() {
                 <span>Thanh Chu Thiên Ngũ Hành</span>
               </span>
               <span className="text-[10px] font-mono text-gold px-1.5 py-0.5 rounded bg-gold/10 border border-gold/30">
-                {innerSlots.reduce((acc, s) => acc + (s ? s.elements.length : 0), 0)}/30 Node
+                {(innerSlots || []).reduce((acc, s) => acc + (s && s.elements ? s.elements.length : 0), 0)}/30 Node
               </span>
             </div>
             {/* 5-Row Element Resonance Track Board */}
@@ -852,7 +869,7 @@ export default function SimulatorPage() {
             {/* 3-Column Grid of Inner Kungfu (Identical to user uploaded game screens 1, 2, 3) */}
             <div className="p-4 overflow-y-auto flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {filteredCatalog.map((kungfu) => {
-                const isSelected = innerSlots.some((s) => s?.id === kungfu.id);
+                const isSelected = (innerSlots || []).some((s) => s?.id === kungfu.id);
                 return (
                   <div
                     key={kungfu.id}
@@ -886,7 +903,7 @@ export default function SimulatorPage() {
                       <div className="mt-2.5 pt-2 border-t border-ink-700/60 flex items-center justify-between">
                         {/* 5 Elemental Glyphs */}
                         <div className="flex items-center gap-1.5">
-                          {kungfu.elements.map((el, i) => (
+                          {((kungfu && kungfu.elements) || []).map((el, i) => (
                             <div key={i} className="w-4 h-4 flex items-center justify-center">
                               <ElementGlyph element={el} className="w-3.5 h-3.5" glow={true} />
                             </div>
@@ -967,7 +984,7 @@ export default function SimulatorPage() {
               <span className="text-[11px] font-mono text-gold-bright uppercase tracking-wider block">
                 Chọn Thuộc Tính Từng Node (1 Đến 5):
               </span>
-              {editingSlotElementIndex.kungfu.elements.map((currentEl, nodeIdx) => (
+              {((editingSlotElementIndex?.kungfu?.elements) || []).map((currentEl, nodeIdx) => (
                 <div key={nodeIdx} className="p-2 rounded-xl bg-ink-950 border border-ink-800 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-[70px]">
                     <span className="text-xs font-mono text-ink-400">Node #{nodeIdx + 1}:</span>
