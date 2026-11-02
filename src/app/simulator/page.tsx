@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { 
   Shield, 
   Swords, 
-  Zap, 
   Sparkles, 
   Camera, 
   Share2, 
@@ -17,7 +16,6 @@ import {
   Info,
   CheckCircle2,
   ChevronDown,
-  Layers,
   X,
   Sliders,
   Dices
@@ -719,108 +717,6 @@ export default function SimulatorPage() {
             </div>
             {/* 5-Row Element Resonance Track Board */}
             <ElementTrackBoard elementCounts={elementCounts} />
-          </div>
-
-          {/* Section 1: Chu Thiên Kích Hoạt (Resonances Matrix) */}
-          <div className="p-3.5 rounded-xl border border-gold/30 bg-ink-900/90 shadow-md space-y-2.5">
-            <div className="flex items-center justify-between pb-2 border-b border-ink-700/80">
-              <span className="font-serif text-sm font-bold text-white flex items-center gap-1.5">
-                <Layers className="w-4 h-4 text-gold-bright" />
-                <span>Hiệu Ứng Chu Thiên Kích Hoạt</span>
-              </span>
-              <span className="text-[10px] font-mono text-gold px-1.5 py-0.5 rounded bg-gold/10 border border-gold/30">
-                {resonances.filter((r) => r.active).length} Kích Hoạt
-              </span>
-            </div>
-
-            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-              {resonances.map((res) => (
-                <div
-                  key={res.id}
-                  className={`p-2 rounded-lg border transition-all text-xs ${
-                    res.active
-                      ? 'border-gold/50 bg-gold/10 text-white shadow-gold-glow'
-                      : 'border-ink-700 bg-ink-950/40 text-ink-400 opacity-60'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-0.5">
-                    <span className={`font-serif font-bold ${res.active ? 'text-gold-bright' : 'text-ink-400'}`}>
-                      {res.name}
-                    </span>
-                    <span className="text-[10px] font-mono px-1.5 rounded bg-ink-950">
-                      {res.active ? `Cấp ${res.level}` : 'Chưa mở'}
-                    </span>
-                  </div>
-                  <div className="text-[10px] text-ink-300 leading-snug">
-                    {res.effectText}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Section 2: Real-time Stats Breakdown Panel */}
-          <div className="p-3.5 rounded-xl border border-gold/30 bg-ink-900/90 shadow-md space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-ink-700/80">
-              <span className="font-serif text-sm font-bold text-white flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-gold-bright" />
-                <span>Bảng Chỉ Số (Stats Live)</span>
-              </span>
-              <span className="text-[10px] font-mono text-jade-bright font-bold">
-                Chuẩn VNG
-              </span>
-            </div>
-
-            {/* Total Power & Estimated DPS Hero Badges */}
-            <div className="grid grid-cols-2 gap-2">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-gold/20 via-ink-850 to-ink-900 border border-gold/40 text-center">
-                <span className="text-[10px] text-gold font-mono uppercase block">Tổng Lực Chiến</span>
-                <span className="font-mono text-lg font-bold text-gold-bright">
-                  {stats.totalPower.toLocaleString()}
-                </span>
-              </div>
-              <div className="p-2 rounded-lg bg-gradient-to-br from-crimson/20 via-ink-850 to-ink-900 border border-crimson/40 text-center">
-                <span className="text-[10px] text-crimson-bright font-mono uppercase block">Ước Tính DPS</span>
-                <span className="font-mono text-lg font-bold text-white">
-                  {stats.dpsEstimate.toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            {/* Specific Attributes List */}
-            <div className="space-y-1.5 text-xs font-mono">
-              <div className="flex items-center justify-between p-1.5 rounded bg-ink-800/60">
-                <span className="text-ink-300">Tấn Công:</span>
-                <span className="font-bold text-white">{stats.attack.toLocaleString()}</span>
-              </div>
-              <div className="flex items-center justify-between p-1.5 rounded bg-ink-800/60">
-                <span className="text-ink-300">Phá Phòng:</span>
-                <span className="font-bold text-amber-300">1,890 (+150)</span>
-              </div>
-              <div className="flex items-center justify-between p-1.5 rounded bg-ink-800/60">
-                <span className="text-ink-300">Tỉ Lệ Hội Tâm:</span>
-                <span className="font-bold text-rose-400">{stats.critRate}%</span>
-              </div>
-              <div className="flex items-center justify-between p-1.5 rounded bg-ink-800/60">
-                <span className="text-ink-300">Sát Thương Bạo:</span>
-                <span className="font-bold text-rose-400">{stats.critDamage}%</span>
-              </div>
-              <div className="flex items-center justify-between p-1.5 rounded bg-ink-800/60">
-                <span className="text-ink-300">Khắc Chế Quái:</span>
-                <span className="font-bold text-jade-bright">+{stats.bossBreakthrough}%</span>
-              </div>
-              <div className="flex items-center justify-between p-1.5 rounded bg-ink-800/60">
-                <span className="text-ink-300">Khí Huyết (HP):</span>
-                <span className="font-bold text-white">{stats.hp.toLocaleString()}</span>
-              </div>
-            </div>
-
-            <button
-              onClick={handleShareClick}
-              className="w-full py-2 rounded-lg bg-gradient-to-r from-gold via-gold-bright to-gold text-ink-950 font-bold text-xs uppercase tracking-wider shadow-gold-glow hover:brightness-110 transition-all"
-            >
-              Lưu & Xuất Bảng Mẫu (Publish)
-            </button>
           </div>
         </div>
       </div>

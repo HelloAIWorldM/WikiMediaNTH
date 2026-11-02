@@ -20,9 +20,7 @@ import {
   Calendar, 
   Sliders, 
   ChevronRight, 
-  Gift, 
   Users, 
-  ExternalLink,
   Search,
   CheckCircle2,
   Layers,
@@ -31,12 +29,8 @@ import {
 import { 
   SECTS_DETAILED_DATA, 
   WIKI_CATEGORIES, 
-  FEATURED_ARTICLES, 
-  TOP_CONTRIBUTORS_DATA,
   SectDetail
 } from '@/data/wikiData';
-import SectRadarChart from '@/components/SectRadarChart';
-import GiftCodeModal from '@/components/GiftCodeModal';
 import { useSimulatorStore } from '@/store/useSimulatorStore';
 
 const CATEGORY_ICONS: Record<string, any> = {
@@ -62,7 +56,6 @@ const CATEGORY_ICONS: Record<string, any> = {
 export default function HomePage() {
   const [selectedSectSlug, setSelectedSectSlug] = useState<string>("to-van");
   const [sidebarFilter, setSidebarFilter] = useState<string>("");
-  const [isGiftModalOpen, setIsGiftModalOpen] = useState<boolean>(false);
   const setOcrModalOpen = useSimulatorStore((state) => state.setOcrModalOpen);
   const setSelectedSect = useSimulatorStore((state) => state.setSelectedSect);
 
@@ -72,9 +65,6 @@ export default function HomePage() {
   const filteredCategories = WIKI_CATEGORIES.filter((c) =>
     c.name.toLowerCase().includes(sidebarFilter.toLowerCase())
   );
-
-  const mainArticle = FEATURED_ARTICLES.find((a) => a.isMainHero) || FEATURED_ARTICLES[0];
-  const sideArticles = FEATURED_ARTICLES.filter((a) => !a.isMainHero);
 
   return (
     <div className="w-full space-y-6 pb-16">
@@ -209,20 +199,20 @@ export default function HomePage() {
             {/* Active Sect Rich Card with Artwork & SVG Hexagonal Radar */}
             <div className="rounded-2xl border border-gold/40 bg-gradient-to-b from-ink-850 via-ink-900 to-ink-950 p-4 sm:p-5 shadow-gold-glow space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                {/* Character Art Preview (4 cols) */}
-                <div className="md:col-span-4 flex flex-col items-center justify-center relative min-h-[200px] border border-gold/25 rounded-xl bg-ink-950/80 p-2 overflow-hidden group">
+                {/* Character Art Preview (5 cols) */}
+                <div className="md:col-span-5 flex flex-col items-center justify-center relative min-h-[220px] border border-gold/25 rounded-xl bg-ink-950/80 p-2 overflow-hidden group">
                   <img
                     src={currentSect.imageUrl}
                     alt={currentSect.name}
-                    className="max-h-56 object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
+                    className="max-h-60 object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
                   />
                   <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-ink-950/90 border border-gold/30 text-[10px] font-mono text-gold-bright">
                     {currentSect.name}
                   </div>
                 </div>
 
-                {/* Sect Details & Pros/Cons (4 cols) */}
-                <div className="md:col-span-4 space-y-2.5">
+                {/* Sect Details & Pros/Cons (7 cols) */}
+                <div className="md:col-span-7 space-y-2.5">
                   <div>
                     <h3 className="font-serif text-2xl font-bold text-white flex items-center gap-2">
                       <span>{currentSect.name}</span>
@@ -278,14 +268,6 @@ export default function HomePage() {
                     </Link>
                   </div>
                 </div>
-
-                {/* SVG Hexagonal Radar Chart (4 cols) */}
-                <div className="md:col-span-4 flex flex-col items-center justify-center p-2 rounded-xl bg-ink-950/70 border border-gold/20">
-                  <span className="text-[10px] font-mono text-gold-bright uppercase tracking-wider mb-1">
-                    Lục Giác Thuộc Tính
-                  </span>
-                  <SectRadarChart stats={currentSect.radar} />
-                </div>
               </div>
 
               {/* 7 Sects Emblems Row */}
@@ -318,73 +300,7 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* SECTION 2: — BÀI VIẾT & HƯỚNG DẪN BUILD (FEATURED ARTICLES) */}
-          <section className="space-y-3">
-            <div className="flex items-center justify-between pb-1 border-b border-ink-800">
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-0.5 bg-gold inline-block" />
-                <h2 className="font-serif text-lg font-bold text-white">Bài Viết & Hướng Dẫn Build</h2>
-              </div>
-              <Link href="/simulator" className="text-xs text-gold hover:underline flex items-center gap-1 font-mono">
-                <span>Vào Giả Lập Build</span>
-                <ChevronRight className="w-3 h-3" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5">
-              {/* Main Banner Card (7 cols) */}
-              <Link
-                href="/simulator"
-                className="md:col-span-7 rounded-xl border border-gold/30 bg-gradient-to-b from-crimson/20 via-ink-900 to-ink-950 p-5 flex flex-col justify-between min-h-[220px] hover:border-gold transition-all shadow-md group relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 w-48 h-48 bg-crimson/10 rounded-full blur-2xl pointer-events-none" />
-                <div className="space-y-2 relative z-10">
-                  <span className="inline-block text-[10px] font-mono px-2 py-0.5 rounded bg-crimson text-white font-bold">
-                    {mainArticle.tag}
-                  </span>
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-white leading-tight group-hover:text-gold-bright transition-colors">
-                    {mainArticle.title}
-                  </h3>
-                  <p className="text-xs text-ink-300 line-clamp-3 leading-relaxed">
-                    {mainArticle.summary}
-                  </p>
-                </div>
-                <div className="pt-3 flex items-center justify-between text-xs font-mono text-ink-400 relative z-10">
-                  <span>Cập nhật: {mainArticle.date}</span>
-                  <span className="text-gold font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    <span>Xem Hướng Dẫn Build</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-              </Link>
-
-              {/* Side Featured Articles List (5 cols) */}
-              <div className="md:col-span-5 space-y-2">
-                {sideArticles.map((art) => (
-                  <Link
-                    key={art.id}
-                    href={art.href.startsWith('/simulator') ? art.href : '/simulator'}
-                    className="block p-3 rounded-xl border border-ink-800 bg-ink-900/90 hover:border-gold/40 hover:bg-ink-850 transition-all space-y-1 group"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-gold/15 text-gold-bright border border-gold/30 font-bold">
-                        {art.tag}
-                      </span>
-                      <span className="text-[10px] font-mono text-ink-400">{art.date}</span>
-                    </div>
-                    <h4 className="font-serif text-xs font-bold text-white group-hover:text-gold transition-colors line-clamp-2">
-                      {art.title}
-                    </h4>
-                    <p className="text-[11px] text-ink-300 line-clamp-1 leading-snug">
-                      {art.summary}
-                    </p>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* SECTION 3: — CHỦ ĐỀ CỐT LÕI */}
+          {/* SECTION 2: — CHỦ ĐỀ CỐT LÕI */}
           <section className="space-y-3">
             <div className="flex items-center justify-between pb-1 border-b border-ink-800">
               <div className="flex items-center gap-2">
@@ -484,100 +400,8 @@ export default function HomePage() {
               </button>
             </div>
           </div>
-
-          {/* Card 3: GIFT CODE */}
-          <div className="p-4 rounded-xl border border-gold/25 bg-ink-900/90 shadow-md space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-gold-soft font-bold flex items-center gap-1.5">
-                <Gift className="w-3.5 h-3.5 text-gold" />
-                <span>GIFT CODE</span>
-              </span>
-              <span className="text-[9px] font-mono px-1.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                4 Active
-              </span>
-            </div>
-            <p className="text-xs text-ink-300 leading-relaxed">
-              Nhập giftcode nhận quà trong game, hoặc xem các code đang còn hiệu lực.
-            </p>
-            <div className="space-y-1.5 pt-1">
-              <button
-                type="button"
-                onClick={() => setIsGiftModalOpen(true)}
-                className="w-full py-2 rounded-lg bg-gold/15 hover:bg-gold text-gold-bright hover:text-ink-950 border border-gold/40 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all"
-              >
-                <Gift className="w-3.5 h-3.5" />
-                <span>Gift Code Đang Hoạt Động</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Card 4: ĐÓNG GÓP & CONTRIBUTORS */}
-          <div className="p-4 rounded-xl border border-gold/25 bg-ink-900/90 shadow-md space-y-2.5">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-ink-400 block font-bold">
-              ĐÓNG GÓP WIKI
-            </span>
-            <div className="flex items-baseline justify-between">
-              <span className="text-xs text-ink-400 font-mono">cộng tác viên</span>
-              <span className="font-serif text-lg text-gold-soft font-bold">3</span>
-            </div>
-            <div className="flex items-baseline justify-between pb-2 border-b border-ink-800">
-              <span className="text-xs text-ink-400 font-mono">đề xuất / tuần</span>
-              <span className="font-mono text-ink-300 text-xs">8</span>
-            </div>
-            <ol className="space-y-1.5 text-xs">
-              {TOP_CONTRIBUTORS_DATA.map((c) => (
-                <li key={c.id} className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full border border-gold/30 bg-ink-950 flex items-center justify-center shrink-0 text-[10px] font-mono text-gold-bright">
-                    {c.id}
-                  </span>
-                  <span className="min-w-0 flex-1 text-ink-200 truncate">{c.name}</span>
-                  <span className="shrink-0 text-[10px] font-mono text-ink-400">{c.approvedCount} duyệt</span>
-                </li>
-              ))}
-            </ol>
-            <button
-              type="button"
-              onClick={() => alert("Tính năng đóng góp bài viết cộng đồng sẽ được mở trong phiên bản tiếp theo!")}
-              className="w-full py-1.5 rounded border border-ink-700 bg-ink-950 text-xs font-mono text-ink-300 hover:text-gold hover:border-gold transition-colors text-center block"
-            >
-              Đóng góp ngay →
-            </button>
-          </div>
-
-          {/* Card 5: THEO DÕI */}
-          <div className="p-4 rounded-xl border border-ink-800 bg-ink-900/80 space-y-2 text-xs">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-ink-400 block font-bold">
-              THEO DÕI
-            </span>
-            <div className="space-y-1.5">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-between p-2 rounded bg-ink-950 border border-ink-800 text-ink-300 hover:text-gold transition-colors"
-              >
-                <span>Facebook: Tiểu Hàn Dẫn Giới</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-between p-2 rounded bg-ink-950 border border-ink-800 text-ink-300 hover:text-gold transition-colors"
-              >
-                <span>Group: Cộng Đồng Nghịch Thủy Hàn</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </div>
         </aside>
       </div>
-
-      {/* Gift Code Modal */}
-      <GiftCodeModal
-        isOpen={isGiftModalOpen}
-        onClose={() => setIsGiftModalOpen(false)}
-      />
     </div>
   );
 }
