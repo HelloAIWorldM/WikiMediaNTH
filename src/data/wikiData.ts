@@ -109,7 +109,7 @@ export const SECTS_DETAILED_DATA: SectDetail[] = [
     desc: "Kỹ năng độc quyền Đao Ý. Phong cách ám sát tốc độ cao.",
     stats: { skills: 10, ultimate: 1, jump: 1 },
     tags: ["Ám sát", "Burst", "Cận chiến"],
-    imageUrl: "/images/sects/toaimong.webp",
+    imageUrl: "/images/sects/toaimong.jpg",
     iconUrl: "https://wikinghichthuyhan.com/media/site-icon-toaimong.webp",
     radar: { satThuong: 95, phongThu: 35, coDong: 92, hoTro: 25, tamDanh: 50, doKho: 90 },
     pros: ["Burst ám sát tốc độ cao", "Cơ động vượt trội", "Combo Đao Ý độc quyền"],
