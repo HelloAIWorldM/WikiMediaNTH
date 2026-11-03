@@ -38,7 +38,7 @@ import { ElementTrackBoard } from '@/components/ElementTrackBoard';
 import { CloudBuildModal } from '@/components/CloudBuildModal';
 import { fetchBuildByCode } from '@/services/buildService';
 
-const SECTS = ["Cửu Linh", "Toái Mộng", "Huyết Hà", "Thiết Y", "Thần Tương", "Tố Vấn", "Long Ngâm"];
+const SECTS = ["Cửu Linh", "Toái Mộng", "Huyết Hà", "Thiết Y", "Thần Tương", "Tố Vấn", "Long Ngâm", "Huyền Cơ"];
 const GEAR_SLOT_KEYS = ["Vũ Khí", "Áo", "Mũ", "Đai", "Giày", "Hộ Uyển", "Nhẫn 1", "Nhẫn 2", "Dây Chuyền", "Bội Ngọc"];
 
 const ELEMENT_COLORS: Record<ElementType, { name: string; bg: string; text: string; dot: string }> = {

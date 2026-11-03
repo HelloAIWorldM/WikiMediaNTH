@@ -180,7 +180,7 @@ export default function HomePage() {
               <span>•</span>
               <span><strong>8</strong> chuyên mục chính</span>
               <span>•</span>
-              <span className="text-gold-bright"><strong>7</strong> lưu phái</span>
+              <span className="text-gold-bright"><strong>8</strong> lưu phái</span>
               <span>•</span>
               <span><strong>248</strong> người đóng góp</span>
             </div>
@@ -270,8 +270,8 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* 7 Sects Emblems Row */}
-              <div className="grid grid-cols-7 gap-2 pt-2 border-t border-ink-800">
+              {/* 8 Sects Emblems Row */}
+              <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 pt-2 border-t border-ink-800">
                 {SECTS_DETAILED_DATA.map((s) => {
                   const isSelected = selectedSectSlug === s.slug;
                   return (

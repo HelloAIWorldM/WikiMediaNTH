@@ -363,7 +363,7 @@ export function CloudBuildModal({ isOpen, onClose, initialTab = 'share' }: Cloud
 
             {/* Sect filter pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-              {['Tất Cả', 'Cửu Linh', 'Toái Mộng', 'Huyết Hà', 'Thiết Y', 'Thần Tương', 'Tố Vấn', 'Long Ngâm'].map((s) => (
+              {['Tất Cả', 'Cửu Linh', 'Toái Mộng', 'Huyết Hà', 'Thiết Y', 'Thần Tương', 'Tố Vấn', 'Long Ngâm', 'Huyền Cơ'].map((s) => (
                 <button
                   key={s}
                   onClick={() => setExploreSectFilter(s)}

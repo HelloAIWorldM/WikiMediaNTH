@@ -896,5 +896,22 @@ export const POPULAR_PRESETS: BuildPreset[] = [
     ],
     targetResonance: ["Đãng Kiếm Dương Ba", "Côn Ngô Đoạn Ngọc", "Nhật Nguyệt Lưỡng Nghi"],
     totalPower: 89450
+  },
+  {
+    id: "preset-huyenco-s1",
+    name: "Huyền Cơ PvE Nỏ Cơ Quan - 3 Kim 3 Hỏa",
+    sect: "Huyền Cơ",
+    role: "PvE DPS Tầm Xa",
+    description: "Bộ build tối ưu hỏa lực nỏ cơ quan bạo kích tầm xa với Chu thiên Đãng Kiếm và Côn Ngô Đoạn Ngọc.",
+    gearItems: DEFAULT_GEAR_SLOTS,
+    innerKungfuList: [
+      INNER_KUNGFU_DATABASE[1], // Tỏa Phong (3 Kim, 2 Hỏa)
+      INNER_KUNGFU_DATABASE[7], // Phá Phủ (2 Kim, 3 Hỏa)
+      INNER_KUNGFU_DATABASE[8], // Trảm Tinh (1 Kim, 4 Hỏa)
+      INNER_KUNGFU_DATABASE[9], // Côn Ngô Đoạn Ngọc (Kim) (4 Kim, 1 Hỏa)
+      INNER_KUNGFU_DATABASE[10] // Côn Ngô Đoạn Ngọc (5 Hỏa)
+    ],
+    targetResonance: ["Đãng Kiếm Dương Ba", "Côn Ngô Đoạn Ngọc", "Nhật Nguyệt Lưỡng Nghi"],
+    totalPower: 91200
   }
 ];
