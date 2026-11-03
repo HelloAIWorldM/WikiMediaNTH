@@ -13,3 +13,4 @@ export default function ThienCoNgocHachLayout({
 }) {
   return <>{children}</>;
 }
+
