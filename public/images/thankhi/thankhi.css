@@ -205,3 +205,31 @@ background:linear-gradient(180deg,#bff6f8,#7fe3e8 60%,#3fb8c4);box-shadow:0 0 0 
 .tk:not(:has(.tk-lv:checked)) .tk-n-core .tk-ft::before{font-size:19px}
 .tk-pts{font-size:20px}.tk-reset{font-size:19px}.tk-hint{font-size:18px}
 }}
+
+/* ==================== 80% COMPACT SCALE OVERRIDES ==================== */
+#tk-demo.tk {
+  margin: 0 0 16px !important;
+}
+#tk-demo .tk-in {
+  padding: 24px 28px 20px;
+}
+#tk-demo .tk-head {
+  margin-bottom: 12px;
+}
+#tk-demo .tk-title {
+  font-size: 42px;
+  line-height: 1.15;
+  margin-top: 4px;
+}
+#tk-demo .tk-sub {
+  font-size: 15px;
+  margin-top: 4px;
+}
+#tk-demo .tk-tabs {
+  margin-bottom: 22px;
+  gap: 6px;
+}
+#tk-demo .tk-bar {
+  margin-top: 16px;
+  padding-top: 12px;
+}

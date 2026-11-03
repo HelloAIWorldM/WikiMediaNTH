@@ -70,12 +70,12 @@ export default function ThienCoNgocHachPage() {
   }, []);
 
   return (
-    <div className="w-full space-y-6 pb-16">
+    <div className="w-full max-w-[1240px] xl:max-w-[1280px] mx-auto space-y-5 pb-12">
       {/* Stylesheet link for 100% authentic Than Khi styles & fonts */}
       <link rel="stylesheet" href="/images/thankhi/thankhi.css" />
 
       {/* Breadcrumb Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-gold/20 bg-ink-900/80 backdrop-blur shadow-lg">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-gold/20 bg-ink-900/80 backdrop-blur shadow-lg">
         <div className="flex items-center gap-2 text-xs text-ink-300 flex-wrap">
           <Link href="/" className="hover:text-gold transition-colors flex items-center gap-1">
             <Sparkles className="w-3.5 h-3.5 text-gold" />
@@ -106,8 +106,8 @@ export default function ThienCoNgocHachPage() {
       </div>
 
       {/* Information & Guide Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl border border-gold/20 bg-ink-900/70 backdrop-blur space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+        <div className="p-3.5 rounded-xl border border-gold/20 bg-ink-900/70 backdrop-blur space-y-1.5">
           <div className="flex items-center gap-2 text-gold-bright font-serif font-bold text-sm">
             <Zap className="w-4 h-4 text-amber-400" />
             <span>Quy Tắc Cộng Mốc</span>
@@ -117,7 +117,7 @@ export default function ThienCoNgocHachPage() {
           </p>
         </div>
 
-        <div className="p-4 rounded-xl border border-gold/20 bg-ink-900/70 backdrop-blur space-y-2">
+        <div className="p-3.5 rounded-xl border border-gold/20 bg-ink-900/70 backdrop-blur space-y-1.5">
           <div className="flex items-center gap-2 text-gold-bright font-serif font-bold text-sm">
             <Shield className="w-4 h-4 text-teal-400" />
             <span>Thiên Phú Cốt Lõi</span>
@@ -127,7 +127,7 @@ export default function ThienCoNgocHachPage() {
           </p>
         </div>
 
-        <div className="p-4 rounded-xl border border-gold/20 bg-ink-900/70 backdrop-blur space-y-2">
+        <div className="p-3.5 rounded-xl border border-gold/20 bg-ink-900/70 backdrop-blur space-y-1.5">
           <div className="flex items-center gap-2 text-gold-bright font-serif font-bold text-sm">
             <Flame className="w-4 h-4 text-rose-400" />
             <span>Sát Vi Tấn Tiết-Cực</span>
@@ -140,4 +140,3 @@ export default function ThienCoNgocHachPage() {
     </div>
   );
 }
-
