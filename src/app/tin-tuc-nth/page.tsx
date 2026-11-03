@@ -10,7 +10,6 @@ import {
   Calendar, 
   ExternalLink, 
   Search, 
-  Eye, 
   X, 
   Flame,
   ArrowRight
@@ -96,6 +95,21 @@ export default function TinTucNTHPage() {
     return pages;
   }, [currentPage, totalPages]);
 
+  // Color helper for category pills
+  const getCategoryBadgeClass = (category: string) => {
+    const cat = category.toLowerCase();
+    if (cat.includes('thông báo') || cat.includes('thong bao')) {
+      return 'bg-[#b8860b] text-white';
+    }
+    if (cat.includes('sự kiện') || cat.includes('su kien')) {
+      return 'bg-[#dc2626] text-white';
+    }
+    if (cat.includes('tân thủ') || cat.includes('hướng dẫn')) {
+      return 'bg-[#059669] text-white';
+    }
+    return 'bg-[#0284c7] text-white';
+  };
+
   return (
     <div className="w-full max-w-[1240px] xl:max-w-[1280px] mx-auto space-y-5 pb-16">
       {/* Breadcrumb Header */}
@@ -125,41 +139,42 @@ export default function TinTucNTHPage() {
       </div>
 
       {/* Main Authentic VNG News Section */}
-      <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-[#91b1c8]/30 min-h-[920px] bg-[#0c1825]">
+      <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-[#7ea6c4]/50 min-h-[920px] bg-[#f0f6fa]">
         {/* Authentic Background with Misty Clouds & Lanterns */}
         <div 
-          className="absolute inset-0 bg-cover bg-top pointer-events-none opacity-85"
+          className="absolute inset-0 bg-cover bg-top pointer-events-none opacity-90"
           style={{ backgroundImage: `url('/images/news/bg.jpg')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-950/40 via-transparent to-ink-950/80 pointer-events-none" />
+        {/* Soft atmospheric gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-900/10 via-transparent to-slate-900/10 pointer-events-none" />
 
         {/* Content Container */}
         <div className="relative z-10 px-5 sm:px-10 lg:px-16 pt-10 pb-16">
-          {/* Header Row: Title & Tabs (Matching 100% Image 1) */}
-          <div className="relative pb-4 border-b border-[#91b1c8]/60 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          {/* Header Row: Title & Tabs (Matching 100% Image 1 with HIGH CONTRAST) */}
+          <div className="relative pb-4 border-b-2 border-[#7ea6c4] flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             {/* Left Title */}
             <div className="flex items-center gap-3">
               {/* Stylized Cyan Paper Crane / Arrow Icon */}
               <svg 
-                className="w-7 h-7 text-[#7ec2e5] shrink-0" 
+                className="w-8 h-8 text-[#0284c7] shrink-0 drop-shadow-sm" 
                 viewBox="0 0 24 24" 
                 fill="none" 
                 stroke="currentColor" 
-                strokeWidth="2" 
+                strokeWidth="2.5" 
                 strokeLinecap="round" 
                 strokeLinejoin="round"
               >
                 <polygon points="3 3 21 12 3 21 7 12 3 3" />
               </svg>
-              <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-serif font-black tracking-wider text-white uppercase flex items-baseline gap-2.5">
+              <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-serif font-black tracking-wider text-[#0a1f33] uppercase flex items-baseline gap-2.5 drop-shadow-sm">
                 <span>THÔNG TIN</span>
-                <span className="text-xl sm:text-2xl text-[#8ec8e8] font-normal tracking-wide lowercase first-letter:uppercase">
+                <span className="text-xl sm:text-2xl text-[#0284c7] font-bold tracking-wide lowercase first-letter:uppercase">
                   Tin tức
                 </span>
               </h1>
             </div>
 
-            {/* Right Tabs */}
+            {/* Right Tabs - HIGH CONTRAST & CLEAR */}
             <nav className="flex items-center gap-6 sm:gap-8 flex-wrap">
               {CATEGORY_TABS.map((tab) => {
                 const isActive = activeTab === tab.id;
@@ -167,15 +182,15 @@ export default function TinTucNTHPage() {
                   <button
                     key={tab.id}
                     onClick={() => handleTabChange(tab.id)}
-                    className={`relative text-sm sm:text-base font-bold uppercase tracking-wider transition-all duration-200 ${
+                    className={`relative text-sm sm:text-base font-black uppercase tracking-wider transition-all duration-200 ${
                       isActive 
-                        ? 'text-white' 
-                        : 'text-[#4a7794] hover:text-[#91c5e6]'
+                        ? 'text-[#0a1f33]' 
+                        : 'text-[#2a4d70] hover:text-[#0284c7]'
                     }`}
                   >
                     <span>{tab.name}</span>
                     {isActive && (
-                      <span className="absolute -bottom-4 left-0 w-full h-[2.5px] bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                      <span className="absolute -bottom-4 left-0 w-full h-[3px] bg-[#0a1f33] rounded-full shadow-sm" />
                     )}
                   </button>
                 );
@@ -183,46 +198,46 @@ export default function TinTucNTHPage() {
             </nav>
           </div>
 
-          {/* Quick Search Bar */}
-          <div className="mt-5 mb-4 flex items-center justify-between gap-4">
+          {/* Quick Search Bar & Counter - HIGH CONTRAST */}
+          <div className="mt-5 mb-4 flex items-center justify-between gap-4 flex-wrap">
             <div className="relative w-full max-w-xs">
-              <Search className="w-4 h-4 text-[#608aa7] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#2a4d70] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Tìm bài viết, sự kiện..."
+                placeholder="Tìm kiếm bài viết, sự kiện..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-[#91b1c8]/40 bg-[#0c1825]/80 text-xs sm:text-sm text-white placeholder-[#54738d] outline-none focus:border-[#7ec2e5] transition-colors"
+                className="w-full pl-9 pr-3 py-1.5 rounded-lg border-2 border-[#8db4d0] bg-white/95 text-xs sm:text-sm text-[#0a1f33] placeholder-[#4f708f] font-medium outline-none focus:border-[#0284c7] shadow-sm transition-colors"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#608aa7] hover:text-white"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#2a4d70] hover:text-black"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
 
-            <span className="text-xs font-mono text-[#54738d] hidden sm:inline">
-              Trang {currentPage} / {totalPages} • ({filteredArticles.length} bài)
+            <span className="text-xs font-mono font-bold text-[#1b3e60] bg-white/80 px-3 py-1 rounded-lg border border-[#8db4d0]/60 shadow-sm hidden sm:inline">
+              Trang {currentPage} / {totalPages} • ({filteredArticles.length} bài viết)
             </span>
           </div>
 
           {/* News List Container */}
           <div className="min-h-[580px] mt-4">
             {currentArticles.length === 0 ? (
-              <div className="text-center py-20 space-y-3">
-                <p className="text-2xl text-[#3d6a93] font-serif">Chưa có bài viết nào trong mục này</p>
+              <div className="text-center py-20 space-y-3 bg-white/60 rounded-2xl border border-white/80 backdrop-blur-sm shadow-sm">
+                <p className="text-2xl text-[#1e3e5c] font-serif font-bold">Chưa có bài viết nào trong mục này</p>
                 <button
                   onClick={() => {
                     setActiveTab('danh-sach');
                     setSearchQuery('');
                   }}
-                  className="px-4 py-1.5 rounded-lg bg-[#4a7794]/30 hover:bg-[#4a7794]/50 text-white text-xs font-mono transition-colors"
+                  className="px-5 py-2 rounded-lg bg-[#0a1f33] hover:bg-[#0284c7] text-white text-xs font-mono font-bold shadow-md transition-colors"
                 >
                   Xem tất cả bài viết
                 </button>
@@ -232,47 +247,44 @@ export default function TinTucNTHPage() {
                 {currentArticles.map((article) => {
                   return (
                     <li key={article.id} className="relative group">
-                      {/* Background Hover Highlight Bar (Using sprite or subtle gradient) */}
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/[0.04] via-sky-200/[0.12] to-white/[0.04] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-transparent group-hover:border-[#91b1c8]/30 shadow-sm" />
-
+                      {/* Frosted card container ensuring 100% clear text contrast */}
                       <div 
                         onClick={() => setSelectedArticle(article)}
-                        className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 p-3 sm:p-4 rounded-xl cursor-pointer"
+                        className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 p-4 rounded-xl cursor-pointer bg-white/80 hover:bg-white/95 backdrop-blur-md border border-[#c1d7e8]/80 hover:border-[#7ea6c4] shadow-sm hover:shadow-lg transition-all duration-200"
                       >
                         {/* Thumbnail Image (250px x 130px) */}
-                        <div className="w-full md:w-[250px] h-[140px] md:h-[130px] shrink-0 rounded-lg overflow-hidden border border-[#91b1c8]/40 bg-[#0e2133] shadow-md group-hover:shadow-cyan-900/40 transition-all">
+                        <div className="w-full md:w-[250px] h-[140px] md:h-[130px] shrink-0 rounded-lg overflow-hidden border border-[#91b1c8]/60 bg-[#0e2133] shadow-md group-hover:shadow-cyan-900/20 transition-all">
                           <img
                             src={article.image || '/images/thankhi/thankhi-satvi.jpg'}
                             alt={article.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             loading="lazy"
                             onError={(e) => {
-                              // Fallback image if external image fails
                               (e.target as HTMLImageElement).src = '/images/news/bg.jpg';
                             }}
                           />
                         </div>
 
-                        {/* Article Details */}
+                        {/* Article Details - HIGH CONTRAST & CLEAR */}
                         <div className="flex-1 min-w-0 space-y-2 pr-0 md:pr-24">
                           {/* Category Badge & Date */}
                           <div className="flex items-center gap-3">
-                            <span className="px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider text-white bg-[#c5ae7e] shadow-sm">
+                            <span className={`px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider shadow-sm ${getCategoryBadgeClass(article.category)}`}>
                               {article.category}
                             </span>
-                            <span className="text-xs font-mono text-[#4a7794] flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
+                            <span className="text-xs font-mono font-bold text-[#1b3e60] flex items-center gap-1.5">
+                              <Calendar className="w-3.5 h-3.5 text-[#0284c7]" />
                               {article.date}
                             </span>
                           </div>
 
-                          {/* Article Title */}
-                          <h2 className="text-base sm:text-lg font-bold text-[#e1eff8] group-hover:text-[#ffd67a] transition-colors line-clamp-2 leading-snug">
+                          {/* Article Title - BOLD DEEP NAVY TEXT */}
+                          <h2 className="text-base sm:text-lg font-black text-[#0a1f33] group-hover:text-[#b8860b] transition-colors line-clamp-2 leading-snug">
                             {article.title}
                           </h2>
 
-                          {/* Description Excerpt */}
-                          <p className="text-xs sm:text-sm text-[#7e9cb4] line-clamp-2 leading-relaxed">
+                          {/* Description Excerpt - CLEAR SLATE NAVY TEXT */}
+                          <p className="text-xs sm:text-sm text-[#274463] font-medium line-clamp-2 leading-relaxed">
                             {article.excerpt}
                           </p>
                         </div>
@@ -295,17 +307,17 @@ export default function TinTucNTHPage() {
             )}
           </div>
 
-          {/* Pagination Controls (Matching 100% Image 1: « < 1 2 3 4 5 > ») */}
+          {/* Pagination Controls - HIGH CONTRAST & CLEAR */}
           {totalPages > 1 && (
             <div className="mt-12 flex items-center justify-center gap-2 sm:gap-3 text-lg sm:text-xl font-mono">
               {/* First Page « */}
               <button
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}
-                className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
+                className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all ${
                   currentPage === 1 
-                    ? 'text-[#365063] cursor-not-allowed opacity-40' 
-                    : 'text-[#4a7794] hover:text-white hover:bg-[#4a7794]/20'
+                    ? 'text-[#8db4d0] cursor-not-allowed opacity-40 bg-white/40' 
+                    : 'bg-white/90 border border-[#8db4d0] text-[#1b3e60] hover:bg-[#0a1f33] hover:text-white shadow-sm'
                 }`}
                 title="Trang đầu"
               >
@@ -316,10 +328,10 @@ export default function TinTucNTHPage() {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
+                className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all ${
                   currentPage === 1 
-                    ? 'text-[#365063] cursor-not-allowed opacity-40' 
-                    : 'text-[#4a7794] hover:text-white hover:bg-[#4a7794]/20'
+                    ? 'text-[#8db4d0] cursor-not-allowed opacity-40 bg-white/40' 
+                    : 'bg-white/90 border border-[#8db4d0] text-[#1b3e60] hover:bg-[#0a1f33] hover:text-white shadow-sm'
                 }`}
                 title="Trang trước"
               >
@@ -333,10 +345,10 @@ export default function TinTucNTHPage() {
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all ${
+                    className={`w-9 h-9 rounded-lg flex items-center justify-center font-black transition-all ${
                       isActive
-                        ? 'bg-gradient-to-b from-[#7ec2e5] to-[#4a85a8] text-[#08151d] shadow-[0_0_12px_rgba(126,194,229,0.5)] scale-105'
-                        : 'text-[#4a7794] hover:text-white hover:bg-[#4a7794]/25'
+                        ? 'bg-[#0a1f33] text-white shadow-md border-2 border-[#0a1f33] scale-105'
+                        : 'bg-white/90 border border-[#8db4d0] text-[#1b3e60] hover:bg-[#0a1f33] hover:text-white shadow-sm'
                     }`}
                   >
                     {page}
@@ -348,10 +360,10 @@ export default function TinTucNTHPage() {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
+                className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all ${
                   currentPage === totalPages 
-                    ? 'text-[#365063] cursor-not-allowed opacity-40' 
-                    : 'text-[#4a7794] hover:text-white hover:bg-[#4a7794]/20'
+                    ? 'text-[#8db4d0] cursor-not-allowed opacity-40 bg-white/40' 
+                    : 'bg-white/90 border border-[#8db4d0] text-[#1b3e60] hover:bg-[#0a1f33] hover:text-white shadow-sm'
                 }`}
                 title="Trang sau"
               >
@@ -362,10 +374,10 @@ export default function TinTucNTHPage() {
               <button
                 onClick={() => handlePageChange(totalPages)}
                 disabled={currentPage === totalPages}
-                className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
+                className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all ${
                   currentPage === totalPages 
-                    ? 'text-[#365063] cursor-not-allowed opacity-40' 
-                    : 'text-[#4a7794] hover:text-white hover:bg-[#4a7794]/20'
+                    ? 'text-[#8db4d0] cursor-not-allowed opacity-40 bg-white/40' 
+                    : 'bg-white/90 border border-[#8db4d0] text-[#1b3e60] hover:bg-[#0a1f33] hover:text-white shadow-sm'
                 }`}
                 title="Trang cuối"
               >
@@ -396,10 +408,10 @@ export default function TinTucNTHPage() {
 
             {/* Modal Category & Date */}
             <div className="flex items-center gap-3 pt-1">
-              <span className="px-3 py-1 rounded text-xs font-bold uppercase tracking-wider text-white bg-[#c5ae7e]">
+              <span className={`px-3 py-1 rounded text-xs font-black uppercase tracking-wider ${getCategoryBadgeClass(selectedArticle.category)}`}>
                 {selectedArticle.category}
               </span>
-              <span className="text-xs font-mono text-ink-400 flex items-center gap-1.5">
+              <span className="text-xs font-mono font-bold text-ink-300 flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-gold" />
                 {selectedArticle.date}
               </span>
@@ -422,7 +434,7 @@ export default function TinTucNTHPage() {
             )}
 
             {/* Modal Excerpt */}
-            <div className="p-4 rounded-xl border border-gold/15 bg-ink-950/70 text-ink-200 text-sm leading-relaxed space-y-2">
+            <div className="p-4 rounded-xl border border-gold/15 bg-ink-950/70 text-ink-100 text-sm leading-relaxed space-y-2">
               <span className="text-[10px] font-mono uppercase tracking-wider text-gold block font-bold">
                 Tóm Tắt Nội Dung
               </span>
