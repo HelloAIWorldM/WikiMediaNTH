@@ -7,11 +7,9 @@ import {
   ChevronRight, 
   Calendar, 
   ArrowLeft, 
-  ExternalLink, 
-  Share2,
-  Newspaper
+  ExternalLink
 } from 'lucide-react';
-import { VNG_NEWS_ARTICLES, NewsArticle } from '@/data/newsData';
+import { VNG_NEWS_ARTICLES } from '@/data/newsData';
 import ArticleClientEnhancer from './ArticleClientEnhancer';
 
 interface PageProps {
@@ -71,24 +69,9 @@ export default async function TinTucDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  // Category badge color
-  const getCategoryBadgeClass = (category: string) => {
-    const cat = category.toLowerCase();
-    if (cat.includes('thông báo') || cat.includes('thong bao')) {
-      return 'bg-[#b8860b] text-white';
-    }
-    if (cat.includes('sự kiện') || cat.includes('su kien')) {
-      return 'bg-[#dc2626] text-white';
-    }
-    if (cat.includes('tân thủ') || cat.includes('hướng dẫn')) {
-      return 'bg-[#059669] text-white';
-    }
-    return 'bg-[#0284c7] text-white';
-  };
-
   return (
-    <div className="w-full max-w-[1240px] xl:max-w-[1280px] mx-auto space-y-5 pb-20">
-      {/* Breadcrumb Navigation Header */}
+    <div className="w-full max-w-[1560px] mx-auto space-y-4 pb-20">
+      {/* Top Breadcrumb Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-gold/20 bg-ink-900/80 backdrop-blur shadow-lg">
         <div className="flex items-center gap-2 text-xs text-ink-300 flex-wrap">
           <Link href="/" className="hover:text-gold transition-colors flex items-center gap-1">
@@ -104,7 +87,7 @@ export default async function TinTucDetailPage({ params }: PageProps) {
             Tin Tức NTH
           </Link>
           <ChevronRight className="w-3 h-3 text-ink-600" />
-          <span className="text-gold-bright font-serif font-bold truncate max-w-[280px] sm:max-w-[400px]">
+          <span className="text-gold-bright font-serif font-bold truncate max-w-[320px] sm:max-w-[500px]">
             {article.title}
           </span>
         </div>
@@ -115,24 +98,24 @@ export default async function TinTucDetailPage({ params }: PageProps) {
           className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#0284c7]/20 hover:bg-[#0284c7] text-[#38bdf8] hover:text-white border border-[#0284c7]/40 transition-all shrink-0 shadow-sm"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Danh Sách Tin Tức</span>
+          <span>Quay lại danh sách</span>
         </Link>
       </div>
 
-      {/* Main Authentic VNG Content Frame */}
-      <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-[#7ea6c4]/50 min-h-[920px] bg-[#f0f6fa]">
+      {/* Full-width Immersive VNG Content Frame (Matching 100% Image 1) */}
+      <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-[#7ea6c4]/60 min-h-[960px] bg-[#f0f6fa]">
         {/* Authentic Background with Misty Clouds & Lanterns */}
         <div 
-          className="absolute inset-0 bg-cover bg-top pointer-events-none opacity-90"
+          className="absolute inset-0 bg-cover bg-top pointer-events-none opacity-95"
           style={{ backgroundImage: `url('/images/news/bg.jpg')` }}
         />
-        {/* Atmospheric Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-900/10 via-transparent to-slate-900/10 pointer-events-none" />
+        {/* Soft Ambient Light Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-900/5 via-transparent to-slate-900/10 pointer-events-none" />
 
-        {/* Outer Content Area */}
-        <div className="relative z-10 px-4 sm:px-8 lg:px-14 pt-8 pb-16">
-          {/* Top Bar: Title & Tabs & Back Arrow Button (Matching Image 4) */}
-          <div className="relative pb-4 border-b-2 border-[#7ea6c4] flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        {/* Main Content Area spanning full width */}
+        <div className="relative z-10 px-4 sm:px-10 lg:px-16 pt-8 pb-20">
+          {/* Top Bar: Title & Category Tabs & Cyan Back Arrow Button (Matching Image 1) */}
+          <div className="relative pb-4 border-b-2 border-[#7ea6c4]/80 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             {/* Left Title */}
             <div className="flex items-center gap-3">
               <svg 
@@ -155,8 +138,8 @@ export default async function TinTucDetailPage({ params }: PageProps) {
             </div>
 
             {/* Right Tabs & Back Arrow Button */}
-            <div className="flex items-center gap-5 sm:gap-8 flex-wrap">
-              <nav className="flex items-center gap-5 sm:gap-7 flex-wrap">
+            <div className="flex items-center gap-6 sm:gap-10 flex-wrap">
+              <nav className="flex items-center gap-6 sm:gap-8 flex-wrap">
                 {CATEGORY_TABS.map((tab) => (
                   <Link
                     key={tab.id}
@@ -168,7 +151,7 @@ export default async function TinTucDetailPage({ params }: PageProps) {
                 ))}
               </nav>
 
-              {/* Authentic VNG Back Button (Cyan Arrow Button like Image 4) */}
+              {/* Authentic VNG Back Button (Cyan Arrow Button like Image 1) */}
               <Link
                 href="/tin-tuc-nth"
                 className="group flex items-center justify-center shrink-0 w-[90px] h-[33px] relative transition-transform duration-200 hover:-translate-x-1"
@@ -185,43 +168,38 @@ export default async function TinTucDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Article Main Paper Container (High Contrast & Clear) */}
-          <div className="mt-8 max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl border-2 border-[#91b1c8]/80 shadow-2xl p-6 sm:p-10 lg:p-14 space-y-8">
-            {/* Article Heading */}
-            <div className="space-y-4 text-center border-b border-[#c1d7e8] pb-6">
-              {/* Category Pill & Date */}
-              <div className="flex items-center justify-center gap-3">
-                <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-sm ${getCategoryBadgeClass(article.category)}`}>
-                  {article.category}
-                </span>
-                <span className="text-xs font-mono font-bold text-[#1b3e60] flex items-center gap-1.5 bg-[#f0f6fa] px-3 py-1 rounded-full border border-[#c1d7e8]">
-                  <Calendar className="w-3.5 h-3.5 text-[#0284c7]" />
-                  {article.date}
-                </span>
-              </div>
-
-              {/* Title centered with deep navy font */}
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-black tracking-wide text-[#0a1f33] uppercase leading-tight drop-shadow-sm">
+          {/* Full-width Immersive Article Container (NO Narrow White Box - 100% like Image 1) */}
+          <div className="mt-8 max-w-[1280px] xl:max-w-[1360px] mx-auto space-y-6">
+            {/* Article Title: Centered, Large, Deep Slate Navy Text directly on Cloud Background */}
+            <div className="text-center pt-2 pb-4 space-y-3">
+              <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-serif font-black tracking-wide text-[#20344a] uppercase leading-snug max-w-5xl mx-auto drop-shadow-sm">
                 {article.title}
               </h1>
 
-              {/* Source Link & Share */}
-              <div className="flex items-center justify-center gap-4 text-xs font-mono text-[#274463] pt-1">
+              {/* Date & Source info */}
+              <div className="flex items-center justify-center gap-4 text-xs font-mono font-bold text-[#3d6b86]">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-[#0284c7]" />
+                  {article.date}
+                </span>
+                <span>•</span>
+                <span className="uppercase text-[#b8860b]">{article.category}</span>
+                <span>•</span>
                 <a 
                   href={article.link} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[#0284c7] hover:text-[#0a1f33] font-bold underline underline-offset-4 transition-colors"
+                  className="inline-flex items-center gap-1 text-[#0284c7] hover:text-[#0a1f33] underline underline-offset-2 transition-colors"
                 >
-                  <span>Xem bài viết gốc trên VNG Official</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Nguồn VNG Official</span>
+                  <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
             </div>
 
             {/* Banner Cover Image (if article has prominent image) */}
             {article.image && (
-              <div className="w-full max-h-[460px] rounded-xl overflow-hidden border border-[#c1d7e8] shadow-lg bg-[#0e2133] mx-auto">
+              <div className="w-full max-w-4xl mx-auto max-h-[500px] rounded-2xl overflow-hidden border-2 border-[#91b1c8]/60 shadow-xl bg-[#0e2133] my-6">
                 <img
                   src={article.image}
                   alt={article.title}
@@ -230,14 +208,14 @@ export default async function TinTucDetailPage({ params }: PageProps) {
               </div>
             )}
 
-            {/* Article Rich HTML Content */}
+            {/* Article Rich HTML Content: Spans broadly across the cloudy sky background */}
             <div 
-              className="vng-article-body text-[#0a1f33] leading-relaxed text-sm sm:text-base space-y-4"
+              className="vng-article-body text-[#1d2a33] leading-relaxed text-base sm:text-[17px] space-y-5"
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
 
-            {/* Article Footer & Return Actions */}
-            <div className="border-t-2 border-[#c1d7e8] pt-8 mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Bottom Actions */}
+            <div className="border-t-2 border-[#7ea6c4]/60 pt-8 mt-14 flex flex-col sm:flex-row items-center justify-between gap-4">
               <Link
                 href="/tin-tuc-nth"
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0a1f33] hover:bg-[#0284c7] text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all"
@@ -250,9 +228,9 @@ export default async function TinTucDetailPage({ params }: PageProps) {
                 href={article.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-[#91b1c8] text-[#0a1f33] hover:border-[#0284c7] text-xs sm:text-sm font-bold shadow-sm transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/90 border border-[#91b1c8] text-[#0a1f33] hover:border-[#0284c7] text-xs sm:text-sm font-bold shadow-sm transition-all"
               >
-                <span>Nguồn VNG Official</span>
+                <span>Xem bài gốc trên trang chủ Nghịch Thủy Hàn</span>
                 <ExternalLink className="w-3.5 h-3.5 text-[#0284c7]" />
               </a>
             </div>
@@ -263,33 +241,40 @@ export default async function TinTucDetailPage({ params }: PageProps) {
       {/* Interactive Enhancer for Floating Scroll Button & Language Switch */}
       <ArticleClientEnhancer />
 
-      {/* Dedicated Styles for Authentic VNG Article Body */}
+      {/* Dedicated Styles for Authentic Full-width VNG Article Body */}
       <style>{`
+        .vng-article-body {
+          max-width: 100%;
+        }
         .vng-article-body h1, 
         .vng-article-body h2, 
         .vng-article-body h3 {
           font-family: inherit;
           font-weight: 800;
           color: #c98716;
-          margin-top: 1.6em;
+          margin-top: 1.8em;
           margin-bottom: 0.6em;
           line-height: 1.35;
           text-transform: uppercase;
+          letter-spacing: 0.02em;
         }
         .vng-article-body h1 {
-          font-size: 1.5em;
-          color: #0a1f33;
+          font-size: 1.6em;
+          color: #20344a;
         }
         .vng-article-body h2 {
-          font-size: 1.25em;
+          font-size: 1.3em;
+          color: #c98716;
         }
         .vng-article-body h3 {
-          font-size: 1.1em;
+          font-size: 1.15em;
+          color: #c98716;
         }
         .vng-article-body p {
           margin-bottom: 0.9em;
-          color: #0a1f33;
-          line-height: 1.7;
+          color: #1d2a33;
+          line-height: 1.75;
+          font-weight: 500;
         }
         .vng-article-body strong, 
         .vng-article-body b {
@@ -298,18 +283,18 @@ export default async function TinTucDetailPage({ params }: PageProps) {
         }
         .vng-article-body ul {
           list-style-type: disc;
-          padding-left: 1.5em;
-          margin-bottom: 1em;
-          space-y: 0.4em;
+          padding-left: 1.6em;
+          margin-bottom: 1.2em;
         }
         .vng-article-body ol {
           list-style-type: decimal;
-          padding-left: 1.5em;
-          margin-bottom: 1em;
+          padding-left: 1.6em;
+          margin-bottom: 1.2em;
         }
         .vng-article-body li {
-          margin-bottom: 0.35em;
+          margin-bottom: 0.45em;
           color: #1b3e60;
+          line-height: 1.65;
         }
         .vng-article-body a {
           color: #0284c7;
@@ -323,34 +308,93 @@ export default async function TinTucDetailPage({ params }: PageProps) {
         .vng-article-body img {
           max-width: 100%;
           height: auto;
-          border-radius: 0.75rem;
-          margin: 1.25rem auto;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+          border-radius: 1rem;
+          margin: 1.5rem auto;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.08);
           border: 1px solid #c1d7e8;
+          display: block;
         }
         .vng-article-body table {
           width: 100%;
           border-collapse: collapse;
           margin: 1.5em 0;
-          background: #ffffff;
-          border-radius: 0.5rem;
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 0.75rem;
           overflow: hidden;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+          border: 1px solid #c1d7e8;
         }
         .vng-article-body th, 
         .vng-article-body td {
           border: 1px solid #c1d7e8;
-          padding: 0.75rem 1rem;
+          padding: 0.85rem 1.1rem;
           text-align: left;
-          font-size: 0.9em;
+          font-size: 0.92em;
         }
         .vng-article-body th {
-          background-color: #f0f6fa;
+          background-color: #e2edf5;
           color: #0a1f33;
           font-weight: 800;
         }
         .vng-article-body tr:nth-child(even) {
-          background-color: #f8fafc;
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Language Switcher bar (.tl-bar) */
+        .tl-bar {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          margin: 0.5em 0 1.2em;
+        }
+        .tl-sw {
+          display: inline-flex;
+          gap: 4px;
+          padding: 4px;
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.75);
+          box-shadow: inset 0 0 0 1px rgba(143, 216, 199, 0.75), 0 4px 12px rgba(31, 79, 73, 0.12);
+        }
+        .tl-btn {
+          display: block;
+          padding: 8px 16px;
+          border-radius: 7px;
+          font-weight: 700;
+          font-size: 13px;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: #1f4f49;
+          text-decoration: none !important;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .tl-btn.is-on {
+          color: #fff !important;
+          background: linear-gradient(180deg, #14a86f, #01875f);
+          box-shadow: 0 2px 0 #016446, 0 3px 8px rgba(1, 135, 95, 0.3);
+        }
+
+        /* Tra cuu nhanh container (.nkq-find) */
+        .nkq-find {
+          background: rgba(255, 255, 255, 0.65) !important;
+          border: 1px solid rgba(60, 80, 95, 0.3) !important;
+          border-radius: 14px;
+          padding: 1.2em 1.5em;
+          margin: 1.5em 0;
+          backdrop-filter: blur(8px);
+        }
+        .nkq-find label {
+          font-weight: 800;
+          color: #0a1f33;
+          margin-bottom: 0.6em;
+          display: block;
+        }
+        .nkq details.nkq-block {
+          background: rgba(255, 255, 255, 0.65) !important;
+          border: 1px solid rgba(60, 80, 95, 0.25) !important;
+          border-radius: 14px;
+          margin: 0.8em 0;
+          backdrop-filter: blur(8px);
         }
       `}</style>
     </div>

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { ArrowUp, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { ArrowUp, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function ArticleClientEnhancer() {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -16,44 +16,44 @@ export default function ArticleClientEnhancer() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Wire up language switch buttons if article has .tl-bar
   useEffect(() => {
-    const viBtn = document.querySelector('.tl-set-vi');
-    const enBtn = document.querySelector('.tl-set-en');
-    const tlContainer = document.querySelector('.tl');
+    const viBtn = document.querySelector(".tl-set-vi");
+    const enBtn = document.querySelector(".tl-set-en");
+    const tlContainer = document.querySelector(".tl");
 
     if (viBtn && enBtn && tlContainer) {
-      tlContainer.classList.add('js');
-      viBtn.classList.add('is-on');
+      tlContainer.classList.add("js");
+      viBtn.classList.add("is-on");
 
       const handleVi = (e: Event) => {
         e.preventDefault();
-        tlContainer.classList.remove('is-en');
-        viBtn.classList.add('is-on');
-        enBtn.classList.remove('is-on');
+        tlContainer.classList.remove("is-en");
+        viBtn.classList.add("is-on");
+        enBtn.classList.remove("is-on");
       };
 
       const handleEn = (e: Event) => {
         e.preventDefault();
-        tlContainer.classList.add('is-en');
-        enBtn.classList.add('is-on');
-        viBtn.classList.remove('is-on');
+        tlContainer.classList.add("is-en");
+        enBtn.classList.add("is-on");
+        viBtn.classList.remove("is-on");
       };
 
-      viBtn.addEventListener('click', handleVi);
-      enBtn.addEventListener('click', handleEn);
+      viBtn.addEventListener("click", handleVi);
+      enBtn.addEventListener("click", handleEn);
 
       return () => {
-        viBtn.removeEventListener('click', handleVi);
-        enBtn.removeEventListener('click', handleEn);
+        viBtn.removeEventListener("click", handleVi);
+        enBtn.removeEventListener("click", handleEn);
       };
     }
   }, []);

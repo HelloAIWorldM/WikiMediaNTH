@@ -107,7 +107,7 @@ export default function TinTucNTHPage() {
   };
 
   return (
-    <div className="w-full max-w-[1240px] xl:max-w-[1280px] mx-auto space-y-5 pb-16">
+    <div className="w-full max-w-[1560px] mx-auto space-y-5 pb-16">
       {/* Breadcrumb Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-gold/20 bg-ink-900/80 backdrop-blur shadow-lg">
         <div className="flex items-center gap-2 text-xs text-ink-300 flex-wrap">
