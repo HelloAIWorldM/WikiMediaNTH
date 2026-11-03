@@ -93,6 +93,7 @@ export default function SimulatorPage() {
   const [cloudModalOpen, setCloudModalOpen] = useState<boolean>(false);
   const [cloudModalInitialTab, setCloudModalInitialTab] = useState<'share' | 'explore'>('share');
   const [hoveredInner, setHoveredInner] = useState<InnerKungfu | null>(null);
+  const [isEncyclopediaView, setIsEncyclopediaView] = useState<boolean>(false);
   const [editingSlotElementIndex, setEditingSlotElementIndex] = useState<{ slotIndex: number; kungfu: InnerKungfu } | null>(null);
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
@@ -157,7 +158,10 @@ export default function SimulatorPage() {
   // Filtered Inner Kungfu catalog list
   const filteredCatalog = (INNER_KUNGFU_DATABASE || []).filter((ik) => {
     if (!ik) return false;
-    const matchSearch = (ik.name || '').toLowerCase().includes(catalogSearch.toLowerCase());
+    const q = catalogSearch.toLowerCase().trim();
+    const matchSearch = !q ||
+      (ik.name || '').toLowerCase().includes(q) ||
+      (ik.tags || []).some((t) => t.toLowerCase().includes(q));
     const matchElement = catalogFilterElement === 'all' || (Array.isArray(ik.elements) && ik.elements.includes(catalogFilterElement as ElementType));
     return matchSearch && matchElement;
   });
@@ -438,7 +442,10 @@ export default function SimulatorPage() {
                       return (
                         <div
                           key={index}
-                          onClick={() => openCatalogForSlot(index)}
+                          onClick={() => {
+                            setIsEncyclopediaView(false);
+                            openCatalogForSlot(index);
+                          }}
                           onMouseEnter={() => slot && setHoveredInner(slot)}
                           onMouseLeave={() => setHoveredInner(null)}
                           className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[112px] ${
@@ -519,36 +526,32 @@ export default function SimulatorPage() {
                     })}
                   </div>
 
-                  {/* Cột Giữa: Bài vị Thiền Định & Vòng Càn Khôn Chu Thiên (Khung khép kín hoàn toàn, cân đối, không đè chữ) */}
-                  <div className="flex flex-col items-center justify-between p-3.5 sm:p-4 rounded-xl border border-gold/40 bg-gradient-to-b from-ink-900 via-ink-950 to-ink-900 text-center shadow-lg relative overflow-hidden min-h-[340px]">
-                    {/* Header: Trận Pháp Thiền Định & Bộ đếm node */}
-                    <div className="w-full flex items-center justify-between pb-2 border-b border-gold/20">
-                      <div className="flex items-center gap-1.5 text-xs font-serif font-bold text-gold-bright uppercase tracking-wider">
-                        <Sparkles className="w-3.5 h-3.5 text-gold" />
-                        <span>Trận Pháp Thiền Định</span>
-                      </div>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-gold/15 border border-gold/40 text-gold-bright font-bold">
-                        {(innerSlots || []).reduce((acc, s) => acc + (s && s.elements ? s.elements.length : 0), 0)}/30 Node
-                      </span>
-                    </div>
-
+                  {/* Cột Giữa: Bài vị Thiền Định & Vòng Càn Khôn Chu Thiên (Bố cục cân đối, hài hòa) */}
+                  <div className="flex flex-col items-center justify-between p-4 sm:p-5 rounded-2xl border border-gold/40 bg-gradient-to-b from-ink-900 via-ink-950 to-ink-900 text-center shadow-xl relative overflow-hidden min-h-[360px] h-full">
                     {/* Center Avatar / Yin-Yang Medallion */}
-                    <div className="my-auto py-2 flex flex-col items-center">
-                      <div className="w-20 h-20 rounded-full border-2 border-gold/60 flex items-center justify-center p-2 bg-gradient-to-b from-ink-950 to-ink-900 shadow-gold-glow relative">
-                        <div className="w-full h-full rounded-full border border-gold/40 flex items-center justify-center text-gold font-serif text-3xl font-bold bg-gold/10">
+                    <div className="my-auto py-3 flex flex-col items-center">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-gold/70 flex items-center justify-center p-2 bg-gradient-to-b from-ink-950 to-ink-900 shadow-gold-glow relative">
+                        <div className="w-full h-full rounded-full border border-gold/40 flex items-center justify-center text-gold font-serif text-3xl sm:text-4xl font-bold bg-gold/10">
                           ☯
                         </div>
                       </div>
-                      <div className="mt-2 text-base font-serif font-bold text-gold-bright tracking-wide">
+                      <div className="mt-3 text-lg font-serif font-bold text-gold-bright tracking-wide">
                         {selectedSect}
                       </div>
-                      <div className="text-[11px] text-ink-300 font-mono">
-                        Chu Thiên Hội Tụ
+                      <div className="text-xs text-ink-300 font-mono mt-0.5">
+                        Chu Thiên Thiền Định
+                      </div>
+
+                      {/* Elemental Activation Counter */}
+                      <div className="mt-2.5 px-3.5 py-1 rounded-full bg-gold/15 border border-gold/40 shadow-sm">
+                        <span className="text-xs font-mono text-gold-bright font-bold">
+                          Đã kích hoạt: {(innerSlots || []).reduce((acc, s) => acc + (s && s.elements ? s.elements.filter(e => e !== '?').length : 0), 0)} / 30 Nguyên Tố
+                        </span>
                       </div>
                     </div>
 
                     {/* Danh sách Nội công đang gắn (Hiển thị đầy đủ 100%) */}
-                    <div className="w-full px-2.5 py-2 rounded-lg bg-ink-950/80 border border-gold/25 text-left space-y-1 my-1.5">
+                    <div className="w-full px-3 py-2 rounded-xl bg-ink-950/80 border border-gold/25 text-left space-y-1.5 my-2">
                       <div className="text-[10px] font-mono font-bold text-ink-300 uppercase tracking-wider flex items-center justify-between">
                         <span className="text-amber-200/90">Nội công đang gắn:</span>
                         <span className="text-gold-bright font-extrabold">
@@ -575,7 +578,7 @@ export default function SimulatorPage() {
                     </div>
 
                     {/* Bottom Active Circuits Indicator - Hiển thị rõ chữ, badge sáng, không ngắt chữ */}
-                    <div className="w-full pt-2.5 border-t border-gold/25 flex flex-col items-center gap-1.5">
+                    <div className="w-full pt-3 border-t border-gold/25 flex flex-col items-center gap-1.5">
                       <div className="text-xs font-serif font-bold text-amber-200 flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-gold-bright" />
                         <span>Chu thiên:</span>
@@ -596,7 +599,7 @@ export default function SimulatorPage() {
                               </span>
                             ))
                         ) : (
-                          <span className="text-xs font-mono text-ink-400 italic">Chưa kích hoạt</span>
+                          <span className="text-xs font-mono text-ink-400 italic">Chưa kích hoạt Chu thiên</span>
                         )}
                       </div>
                     </div>
@@ -610,7 +613,10 @@ export default function SimulatorPage() {
                       return (
                         <div
                           key={index}
-                          onClick={() => openCatalogForSlot(index)}
+                          onClick={() => {
+                            setIsEncyclopediaView(false);
+                            openCatalogForSlot(index);
+                          }}
                           onMouseEnter={() => slot && setHoveredInner(slot)}
                           onMouseLeave={() => setHoveredInner(null)}
                           className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[112px] ${
@@ -857,7 +863,10 @@ export default function SimulatorPage() {
             <div className="mt-3 pt-3 border-t border-ink-700/70 flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => openCatalogForSlot(0)}
+                  onClick={() => {
+                    setIsEncyclopediaView(false);
+                    openCatalogForSlot(0);
+                  }}
                   className="px-3 py-1.5 rounded border border-gold/40 bg-gold/15 hover:bg-gold text-gold-bright hover:text-ink-950 font-mono text-xs font-bold transition-all flex items-center gap-1.5"
                 >
                   <span className="px-1 rounded bg-ink-950 text-gold text-[10px]">C</span>
@@ -865,7 +874,10 @@ export default function SimulatorPage() {
                 </button>
 
                 <button
-                  onClick={() => openCatalogForSlot(0)}
+                  onClick={() => {
+                    setIsEncyclopediaView(true);
+                    openCatalogForSlot(0);
+                  }}
                   className="px-3 py-1.5 rounded border border-ink-600 bg-ink-800 hover:border-gold text-ink-200 hover:text-gold font-mono text-xs transition-all flex items-center gap-1.5"
                 >
                   <span className="px-1 rounded bg-ink-950 text-ink-300 text-[10px]">T</span>
@@ -905,11 +917,16 @@ export default function SimulatorPage() {
           <div className="relative w-full max-w-4xl max-h-[85vh] rounded-2xl border border-gold/40 bg-ink-900 shadow-2xl flex flex-col overflow-hidden">
             {/* Header */}
             <div className="p-4 border-b border-gold/20 flex items-center justify-between bg-ink-850">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <Swords className="w-5 h-5 text-gold-bright" />
-                <h3 className="font-serif text-lg font-bold text-white">
-                  Chọn Loại Nội Công Trang Bị {selectedInnerSlotIndex !== null ? `(Ô #${selectedInnerSlotIndex + 1})` : ''}
-                </h3>
+                <div>
+                  <h3 className="font-serif text-lg font-bold text-white flex items-center gap-2">
+                    {isEncyclopediaView ? 'Bách Khoa Toàn Thư Nội Công (72 Bí Kíp)' : `Chọn Loại Nội Công Trang Bị ${selectedInnerSlotIndex !== null ? `(Ô #${selectedInnerSlotIndex + 1})` : ''}`}
+                  </h3>
+                  <p className="text-[11px] text-ink-300">
+                    {isEncyclopediaView ? 'Tra cứu thuộc tính ngũ hành, thẻ chiến thuật và gắn nhanh vào trận pháp thiền định' : 'Bấm vào một viên nội công để gắn vào ô trận pháp'}
+                  </p>
+                </div>
               </div>
               <button
                 onClick={closeCatalog}
@@ -953,7 +970,7 @@ export default function SimulatorPage() {
                 <Search className="w-4 h-4 text-ink-400 absolute left-2.5 top-2.5" />
                 <input
                   type="text"
-                  placeholder="Tìm theo tên nội công..."
+                  placeholder="Tìm theo tên hoặc thẻ (vd: Sát Thương, Phó Bản)..."
                   value={catalogSearch}
                   onChange={(e) => setCatalogSearch(e.target.value)}
                   className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-gold/30 bg-ink-800 text-xs text-white placeholder-ink-400 focus:border-gold outline-none"
@@ -961,7 +978,7 @@ export default function SimulatorPage() {
               </div>
             </div>
 
-            {/* 3-Column Grid of Inner Kungfu (Identical to user uploaded game screens 1, 2, 3) */}
+            {/* 3-Column Grid of Inner Kungfu (Identical to user uploaded game screens in folder Nội Công) */}
             <div className="p-4 overflow-y-auto flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {filteredCatalog.map((kungfu) => {
                 const isSelected = (innerSlots || []).some((s) => s?.id === kungfu.id);
@@ -969,44 +986,96 @@ export default function SimulatorPage() {
                   <div
                     key={kungfu.id}
                     onClick={() => {
-                      if (selectedInnerSlotIndex !== null) {
+                      if (!isEncyclopediaView && selectedInnerSlotIndex !== null) {
                         setInnerSlot(selectedInnerSlotIndex, kungfu);
+                        closeCatalog();
+                        setNotification(`Đã trang bị [${kungfu.name}] vào Ô #${selectedInnerSlotIndex + 1}`);
                       }
                     }}
-                    className={`p-3 rounded-xl border transition-all cursor-pointer flex gap-3 ${
+                    className={`p-3 rounded-xl border transition-all flex gap-3 ${
+                      !isEncyclopediaView ? 'cursor-pointer' : ''
+                    } ${
                       isSelected
                         ? 'border-gold bg-gold/15 shadow-gold-glow'
-                        : 'border-ink-700 bg-ink-850 hover:border-gold/60 hover:bg-ink-800'
+                        : 'border-[#304868]/70 bg-gradient-to-br from-[#1b2b3d] to-[#111c28] hover:border-gold/80 hover:shadow-gold-glow'
                     }`}
                   >
-                    <InnerKungfuIcon name={kungfu.name} element={kungfu.primaryElement} size={44} customImageUrl={kungfu.imageUrl} />
+                    {/* Icon container with butterfly star badge for Thần Thoại */}
+                    <div className="relative shrink-0 self-start">
+                      <InnerKungfuIcon name={kungfu.name} element={kungfu.primaryElement} size={48} customImageUrl={kungfu.imageUrl} />
+                      {kungfu.tier === 'Thần Thoại' && (
+                        <div className="absolute -top-1.5 -left-1.5 w-5 h-5 bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 rounded-full border border-amber-200 flex items-center justify-center text-[10px] text-ink-950 shadow-md font-bold">
+                          ★
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-serif text-sm font-bold text-white truncate">
+                        {/* Title & Badge */}
+                        <div className="flex items-center justify-between mb-1 gap-1">
+                          <span className="font-serif text-sm font-bold text-white truncate" title={kungfu.name}>
                             {kungfu.name}
                           </span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ink-950 text-gold border border-gold/30 shrink-0 ml-1">
-                            {kungfu.tier}
+                          <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded shrink-0 ${
+                            kungfu.tier === 'Thần Thoại'
+                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold'
+                              : 'bg-sky-500/20 text-sky-200 border border-sky-500/30'
+                          }`}>
+                            {kungfu.tier === 'Thần Thoại' ? 'Thần Thoại' : 'Thường dùng'}
                           </span>
                         </div>
-                        <p className="text-[11px] text-ink-300 line-clamp-2 leading-relaxed">
-                          {kungfu.description}
-                        </p>
-                      </div>
 
-                      <div className="mt-2.5 pt-2 border-t border-ink-700/60 flex items-center justify-between">
-                        {/* 5 Elemental Glyphs */}
-                        <div className="flex items-center gap-1.5">
+                        {/* Elemental Glyphs Row (Matches in-game screenshots with ? badge) */}
+                        <div className="flex items-center gap-1.5 my-1.5">
                           {((kungfu && kungfu.elements) || []).map((el, i) => (
                             <div key={i} className="w-4 h-4 flex items-center justify-center">
                               <ElementGlyph element={el} className="w-3.5 h-3.5" glow={true} />
                             </div>
                           ))}
                         </div>
+
+                        {/* Tags Chips (Phó Bản, Sát Thương, Thi Đấu, etc.) */}
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {(kungfu.tags && kungfu.tags.length > 0 ? kungfu.tags : ['Thông Dụng']).map((t, idx) => (
+                            <span
+                              key={idx}
+                              className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#162536] text-sky-200/90 border border-sky-500/25"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Bottom GS & Slot assignment if in encyclopedia mode */}
+                      <div className="mt-2.5 pt-1.5 border-t border-ink-700/60 flex items-center justify-between">
                         <span className="text-[10px] font-mono text-ink-400">
                           GS {kungfu.score}
                         </span>
+                        {isEncyclopediaView ? (
+                          <div className="flex items-center gap-1">
+                            <span className="text-[10px] text-ink-400">Gắn vào:</span>
+                            {[0, 1, 2, 3, 4, 5].map((sIdx) => (
+                              <button
+                                key={sIdx}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setInnerSlot(sIdx, kungfu);
+                                  setNotification(`Đã gắn [${kungfu.name}] vào Ô #${sIdx + 1}`);
+                                }}
+                                className="w-5 h-5 rounded bg-ink-950 border border-gold/30 hover:border-gold hover:bg-gold hover:text-ink-950 text-[10px] font-mono text-gold-bright flex items-center justify-center transition-all"
+                                title={`Gắn vào Ô #${sIdx + 1}`}
+                              >
+                                {sIdx + 1}
+                              </button>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-[10px] font-mono text-gold-bright hover:underline">
+                            Bấm để trang bị →
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>

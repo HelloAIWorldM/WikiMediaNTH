@@ -42,19 +42,23 @@ const safeLocalStorage: StateStorage = {
 
 const sanitizeKungfu = (k: any): InnerKungfu | null => {
   if (!k || typeof k !== 'object') return null;
-  const elements = Array.isArray(k.elements) && k.elements.length === 5 ? k.elements : ['Kim', 'Kim', 'Kim', 'Kim', 'Kim'];
+  const master = INNER_KUNGFU_DATABASE.find((item) => item.id === k.id || item.name === k.name);
+  const elements = Array.isArray(k.elements) && (k.elements.length === 5 || k.elements.length === 6)
+    ? k.elements
+    : (master ? [...master.elements] : ['Kim', 'Kim', 'Kim', 'Kim', '?']);
   return {
-    id: String(k.id || `kf-${Date.now()}`),
-    name: String(k.name || 'Nội Công'),
-    primaryElement: k.primaryElement || elements[0] || 'Kim',
-    secondaryElement: k.secondaryElement || elements[1] || 'Kim',
-    tier: k.tier === 'Hoàng Kim' ? 'Hoàng Kim' : 'Thần Thoại',
-    description: String(k.description || ''),
+    id: String(master ? master.id : (k.id || `kf-${Date.now()}`)),
+    name: String(master ? master.name : (k.name || 'Nội Công')),
+    primaryElement: master ? master.primaryElement : (k.primaryElement || elements[0] || 'Kim'),
+    secondaryElement: master?.secondaryElement || k.secondaryElement,
+    tier: master ? master.tier : (k.tier === 'Hoàng Kim' ? 'Hoàng Kim' : 'Thần Thoại'),
+    description: String(master ? master.description : (k.description || '')),
     elements,
-    score: typeof k.score === 'number' && !isNaN(k.score) ? k.score : 2500,
+    score: typeof k.score === 'number' && !isNaN(k.score) ? k.score : (master ? master.score : 2850),
     level: typeof k.level === 'number' && !isNaN(k.level) ? k.level : 25,
     subStats: Array.isArray(k.subStats) ? k.subStats.filter((s: any) => typeof s === 'string') : [],
-    imageUrl: typeof k.imageUrl === 'string' ? k.imageUrl : undefined
+    imageUrl: master?.imageUrl || (typeof k.imageUrl === 'string' ? k.imageUrl : undefined),
+    tags: master?.tags || (Array.isArray(k.tags) ? k.tags : [])
   };
 };
 
@@ -657,7 +661,7 @@ export const useSimulatorStore = create<SimulatorState>()(
       },
     }),
     {
-      name: 'nth_wiki_database_v2',
+      name: 'nth_wiki_database_v3',
       storage: createJSONStorage(() => safeLocalStorage),
       partialize: (state) => ({
         selectedSect: state.selectedSect,
