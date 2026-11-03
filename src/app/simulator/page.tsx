@@ -47,6 +47,7 @@ const ELEMENT_COLORS: Record<ElementType, { name: string; bg: string; text: stri
   Thuy: { name: "Thủy", bg: "bg-sky-400/20 border-sky-400/50", text: "text-sky-300", dot: "bg-sky-400 shadow-[0_0_8px_#38bdf8]" },
   Hoa: { name: "Hỏa", bg: "bg-rose-500/20 border-rose-500/50", text: "text-rose-400", dot: "bg-rose-500 shadow-[0_0_8px_#f43f5e]" },
   Tho: { name: "Thổ", bg: "bg-amber-700/20 border-amber-700/50", text: "text-amber-600", dot: "bg-amber-600 shadow-[0_0_8px_#d97706]" },
+  '?': { name: "Ngẫu nhiên", bg: "bg-slate-500/20 border-slate-400/50", text: "text-slate-200", dot: "bg-slate-300 shadow-[0_0_8px_#cbd5e1]" },
 };
 
 export default function SimulatorPage() {
@@ -1161,9 +1162,9 @@ export default function SimulatorPage() {
                     </div>
                   </div>
 
-                  {/* 5 element choices */}
+                  {/* element choices */}
                   <div className="flex items-center gap-1.5 flex-1 justify-end">
-                    {(['Kim', 'Moc', 'Thuy', 'Hoa', 'Tho'] as ElementType[]).map((elOption) => {
+                    {(['Kim', 'Moc', 'Thuy', 'Hoa', 'Tho', '?'] as ElementType[]).map((elOption) => {
                       const isActive = currentEl === elOption;
                       return (
                         <button

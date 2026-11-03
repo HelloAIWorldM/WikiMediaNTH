@@ -146,6 +146,7 @@ function calculateElementsAndResonances(innerSlots: (InnerKungfu | null)[] = [])
     Thuy: 0,
     Hoa: 0,
     Tho: 0,
+    '?': 0,
   };
 
   (innerSlots || []).forEach((slot) => {
@@ -395,7 +396,7 @@ export const useSimulatorStore = create<SimulatorState>()(
         const targetSlot = currentSlots[slotIndex];
         if (!targetSlot) return;
 
-        const ELEMENT_CYCLE: ElementType[] = ['Kim', 'Moc', 'Thuy', 'Hoa', 'Tho'];
+        const ELEMENT_CYCLE: ElementType[] = ['Kim', 'Moc', 'Thuy', 'Hoa', 'Tho', '?'];
         const currentEl = targetSlot.elements[elementIndex] || 'Kim';
         const nextEl = newElement || ELEMENT_CYCLE[(ELEMENT_CYCLE.indexOf(currentEl) + 1) % ELEMENT_CYCLE.length];
 
@@ -532,7 +533,7 @@ export const useSimulatorStore = create<SimulatorState>()(
           gearSlots: { ...EMPTY_GEAR_SLOTS },
           innerSlots: [...EMPTY_INNER_SLOTS],
           reserveKungfus: [],
-          elementCounts: { Kim: 0, Moc: 0, Thuy: 0, Hoa: 0, Tho: 0 },
+          elementCounts: { Kim: 0, Moc: 0, Thuy: 0, Hoa: 0, Tho: 0, '?': 0 },
           stats: calculateStats(EMPTY_GEAR_SLOTS, EMPTY_INNER_SLOTS, []),
         });
         get().setNotification(`Đã xóa sạch Database (Đưa 10 ô đồ, 6 nội công và kho về 0)`);

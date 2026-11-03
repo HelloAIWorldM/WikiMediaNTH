@@ -95,6 +95,39 @@ export function ThoGlyph({ className = "w-4 h-4", size, glow = false }: ElementI
   );
 }
 
+// 6. Random Element Glyph ? (Luminous Metallic Silver Badge as seen in screenshots)
+export function RandomGlyph({ className = "w-4 h-4", size, glow = false }: ElementIconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      className={`${className} ${glow ? 'drop-shadow-[0_0_6px_rgba(255,255,255,0.7)]' : ''}`}
+    >
+      <circle cx="12" cy="12" r="10" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="8.5" fill="url(#silverGradient)" />
+      <text
+        x="12"
+        y="16.5"
+        textAnchor="middle"
+        fontSize="13"
+        fontWeight="900"
+        fontFamily="sans-serif"
+        fill="#1e293b"
+      >
+        ?
+      </text>
+      <defs>
+        <radialGradient id="silverGradient" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="60%" stopColor="#cbd5e1" />
+          <stop offset="100%" stopColor="#64748b" />
+        </radialGradient>
+      </defs>
+    </svg>
+  );
+}
+
 // Unified Element Glyph Renderer
 export function ElementGlyph({
   element,
@@ -118,10 +151,12 @@ export function ElementGlyph({
       return <HoaGlyph className={`${className} text-[#fda4af]`} size={size} glow={glow} />;
     case 'Tho':
       return <ThoGlyph className={`${className} text-[#fed7aa]`} size={size} glow={glow} />;
+    case '?':
+      return <RandomGlyph className={className} size={size} glow={glow} />;
   }
 }
 
-// Color and Theme Metadata for 5 Elements
+// Color and Theme Metadata for Elements
 export const ELEMENT_THEME: Record<ElementType, {
   name: string;
   vnName: string;
@@ -181,6 +216,16 @@ export const ELEMENT_THEME: Record<ElementType, {
     pillBorder: 'border-[#fb923c]',
     pillGlow: 'shadow-[0_0_12px_rgba(251,146,60,0.4)]',
     badgeBg: 'bg-[#22160e]',
+  },
+  '?': {
+    name: '?',
+    vnName: 'Ngẫu Nhiên',
+    textColor: 'text-slate-200',
+    borderColor: 'border-slate-400/60',
+    bgColor: 'bg-slate-500/20',
+    pillBorder: 'border-slate-400',
+    pillGlow: 'shadow-[0_0_8px_rgba(203,213,225,0.4)]',
+    badgeBg: 'bg-[#18202f]',
   },
 };
 
