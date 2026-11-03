@@ -1,6 +1,7 @@
 // Auto-generated 100% authentic VNG Nghich Thuy Han News Dataset
 export interface NewsArticle {
   id: string;
+  slug: string;
   title: string;
   category: string;
   date: string;
@@ -19,7 +20,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Ưu Đãi Săn Ngọc Khóa đã khép lại, Tiểu Hàn gửi danh sách các Thiếu Hiệp đã nhận ưu đãi để mọi người cùng đối chiếu nha!",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/tieu-han-cong-bo-danh-sach-thieu-hiep-nhan-uu-dai-san-ngoc-khoa-tren-webshop.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-589-uu-dai-san-ngoc-khoa-giam-5-toi-da/san-ngoc-khoa-banner-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "tieu-han-cong-bo-danh-sach-thieu-hiep-nhan-uu-dai-san-ngoc-khoa-tren-webshop"
   },
   {
     "id": "news-1",
@@ -29,7 +31,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Phiên bản 2.1.1 Kỷ Nguyên Thiên Cơ: lưu phái Huyền Cơ, phó bản nhóm 12 người Thiên Cơ Mê Thành, Thần Khí, Phường Sáng Tạo và chuỗi phúc lợi mừng Kỷ Ni",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/thong-bao-cap-nhat-phien-ban-2-1-1-nghich-thuy-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/PhienBan/2-1-1/614-thong-bao-cap-nhat-phien-ban-2-1-1/thumb-211.jpg",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "thong-bao-cap-nhat-phien-ban-2-1-1-nghich-thuy-han"
   },
   {
     "id": "news-2",
@@ -39,7 +42,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Tiểu Hàn vừa nộp lên Hà Tổng một lá đơn rất nghiêm túc. Thiếu Hiệp vào xem và ủng hộ Tiểu Hàn nha!",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/don-xin-sap-nhap-luong-cua-tieu-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-11-616-don-xin-sap-nhap-luong-cua-tieu/sapnhap-banner.jpg",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "don-xin-sap-nhap-luong-cua-tieu-han"
   },
   {
     "id": "news-3",
@@ -49,7 +53,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Thể lệ xếp hạng và kết quả 10 Bang Hội Vinh Danh Năm 1: nguồn dữ liệu, điều kiện xét, cách tính Điểm Vinh Danh và bảng điểm chi tiết của từng bang.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/top-10-bang-hoi-c-a-nam-vinh-danh-tai-offline-fan-fest-nhat-nien-dai-yen.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/KetQua/2026-11-615-top-10-bang-hoi-cua-nam-the-le-xep/top10-banghoi-banner.jpg",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "top-10-bang-hoi-c-a-nam-vinh-danh-tai-offline-fan-fest-nhat-nien-dai-yen"
   },
   {
     "id": "news-4",
@@ -59,7 +64,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Tiểu Hàn ngồi đọc lại từng lời đánh giá trên Google Play, và có đôi điều muốn tâm sự cùng các Thiếu Hiệp trước sinh nhật 1 tuổi.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/thieu-hiep-tieu-han-va-google-play.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-607-sinh-nhat-10-nam-co-mot-tieu-han/t10-banner-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "thieu-hiep-tieu-han-va-google-play"
   },
   {
     "id": "news-5",
@@ -69,7 +75,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Lịch mở từ 06/11 đến 23/11, boss của từng phó bản, Không Đình cá nhân và quà rơi của raid 12 người Thiên Cơ Mê Thành.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/bon-pho-ban-moi-con-lon-than-son-the-ngoai-tam-an-tuoc-an-tr-ng-lau-va-raid-12-nguoi-thien-co-me-thanh.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-612-bon-pho-ban-moi-con-lon-than-son/pb14-banner2.jpg",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "bon-pho-ban-moi-con-lon-than-son-the-ngoai-tam-an-tuoc-an-tr-ng-lau-va-raid-12-nguoi-thien-co-me-thanh"
   },
   {
     "id": "news-6",
@@ -79,7 +86,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Nghịch Thủy Hàn Creator Awards 2026 mở cổng bình chọn từ 13:00 30/10 đến 23:59 04/11/2026: 6 hạng mục giải thưởng, cách bình chọn, cách tính điểm và đ",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/nghich-thuy-han-creator-awards-2026-the-le-binh-chon-dieu-khoan.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-611-nghich-thuy-han-creator-awards/creator-awards-2026-banner-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "nghich-thuy-han-creator-awards-2026-the-le-binh-chon-dieu-khoan"
   },
   {
     "id": "news-7",
@@ -89,7 +97,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Độc Trân rơi trùng, rèn mãi không ra Đặc Kỹ ưng ý, Nội Công rơi ra chỉ để làm nguyên liệu: Mùa Giải Năm mới từ 06/11 giải quyết cả ba với Cầu Nguyện Đ",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/mua-moi-de-tho-cau-nguyen-doc-tran-ren-co-bao-dam-noi-cong-moi.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-609-mua-moi-de-tho-cau-nguyen-doc-tran/detho-thumb2.jpg",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "mua-moi-de-tho-cau-nguyen-doc-tran-ren-co-bao-dam-noi-cong-moi"
   },
   {
     "id": "news-8",
@@ -99,7 +108,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Bộ ngoại trang đôi Thiên Tung Hồng Nhan &amp; Thiên Tung Hằng Tôn chính thức ra mắt: tông đen huyền phối vàng kim, cổ lông dày, thêu cá chép vượt sóng. Gi",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/ngoai-trang-moi-thien-tung-hong-nhan-thien-tung-hang-ton-ca-chep-vuot-song-khi-chat-tran-phai.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/NgoaiTrang/2026-10-610-ngoai-trang-moi-thien-tung-hong/thien-tung-thumb-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "ngoai-trang-moi-thien-tung-hong-nhan-thien-tung-hang-ton-ca-chep-vuot-song-khi-chat-tran-phai"
   },
   {
     "id": "news-9",
@@ -109,7 +119,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Từ 06/11, đạt cấp 43 là mở được Phường Sáng Tạo 1.0: tự dựng đường đua, mê cung, kịch bản cốt truyện, thậm chí làm hẳn một game mới ngay trong Nghịch",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/phuong-sang-tao-1-0-lam-game-ngay-trong-nghich-thuy-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-608-phuong-sang-tao-1-0-lam-game-ngay/pst-thumb2-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "phuong-sang-tao-1-0-lam-game-ngay-trong-nghich-thuy-han"
   },
   {
     "id": "news-10",
@@ -119,7 +130,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Nghịch Thủy Hàn tròn 1 tuổi! Nhất Niên Đại Yến chính thức mở tiệc: làm nhiệm vụ thắp Bánh Kem Đại Yến, tìm tri kỷ, gửi điều ước và Quay Thưởng để có c",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/the-le-trang-sinh-nhat-nhat-nien-dai-yen.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-600-the-le-trang-sinh-nhat-nhat-nien/nhatniendaiyen-banner-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "the-le-trang-sinh-nhat-nhat-nien-dai-yen"
   },
   {
     "id": "news-11",
@@ -129,7 +141,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Cơ chế tải game Nghịch Thủy Hàn trên Level Up vừa được nâng cấp: tự tải tiếp khi bị gián đoạn, cập nhật nhẹ hơn và ra mắt tính năng Sửa Chữa Game – sử",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/nang-cap-tai-game-tren-level-up-ra-mat-tinh-nang-sua-chua-game.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/ThongBao/2026-10-599-nang-cap-tai-game-tren-level-up-ra/level-up-sua-chua-game-thumb-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "nang-cap-tai-game-tren-level-up-ra-mat-tinh-nang-sua-chua-game"
   },
   {
     "id": "news-12",
@@ -139,7 +152,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Tokyo Dome, một tối cuối năm 2036. Tiểu Hàn viết cho mười năm sau.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/sinh-nhat-10-nam-co-mot-tieu-han-dung-o-hang-ghe-cuoi.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-607-sinh-nhat-10-nam-co-mot-tieu-han/t10-banner-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "sinh-nhat-10-nam-co-mot-tieu-han-dung-o-hang-ghe-cuoi"
   },
   {
     "id": "news-13",
@@ -149,7 +163,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Mùa Giải Năm thứ hai mở ra phần chính của câu chuyện Nghịch Thủy Hàn: Thập Tam Nguyên Hung lộ diện, mỗi lựa chọn của Thiếu Hiệp rẽ ra một kết cục, chí",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/cot-truyen-m-a-moi-thieu-hiep-la-nhan-vat-chinh.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-605-cot-truyen-mua-moi-thieu-hiep-la/cottruyen-thumb-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "cot-truyen-m-a-moi-thieu-hiep-la-nhan-vat-chinh"
   },
   {
     "id": "news-14",
@@ -159,7 +174,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Mừng Nghịch Thủy Hàn tròn 1 tuổi, ngoại trang Thiên Tứ chủ đề Ứng Long và Thiên Tứ Tường Thụy Chú Tinh Huyễn Long ra mắt từ 06/11: đổi thời tiết, gọi",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/ung-long-giang-the-ngoai-trang-thien-tu-va-rong-chu-tinh-huyen-long.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/NgoaiTrang/2026-10-606-ung-long-giang-the-ngoai-trang/thientu-thumb2-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "ung-long-giang-the-ngoai-trang-thien-tu-va-rong-chu-tinh-huyen-long"
   },
   {
     "id": "news-15",
@@ -169,7 +185,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/sang-tao-doanh-phien-ban-mo-rong-chinh-th-c-mo-don-tuyen-chon-creator.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/Chung/Anh/kv-creartor-campaign-10-6-opt2.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "sang-tao-doanh-phien-ban-mo-rong-chinh-th-c-mo-don-tuyen-chon-creator"
   },
   {
     "id": "news-16",
@@ -179,7 +196,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Mừng Nghịch Thủy Hàn tròn 1 tuổi và mở màn Mùa Giải Năm Kỷ Nguyên Thiên Cơ, cùng điểm qua toàn bộ sự kiện kỷ niệm: Đại Yến Sinh Nhật, Hội Hoa Đăng, đi",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/tong-hop-su-kien-mung-ky-niem-1-nam.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-597-mua-giai-nam-moi-lan-dau-he-lo-luu/huyenco-kv-800.jpg",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "tong-hop-su-kien-mung-ky-niem-1-nam"
   },
   {
     "id": "news-17",
@@ -189,7 +207,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Ngày 06/11/2026, Nghịch Thủy Hàn tròn 1 tuổi và mở Mùa Giải Năm Kỷ Nguyên Thiên Cơ, phiên bản Huyền Cơ Vạn Biến, cùng Lưu Phái mới Huyền Cơ.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/m-a-giai-nam-moi-lan-dau-he-lo-luu-phai-huyen-co.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-597-mua-giai-nam-moi-lan-dau-he-lo-luu/huyenco-banner.jpg",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "m-a-giai-nam-moi-lan-dau-he-lo-luu-phai-huyen-co"
   },
   {
     "id": "news-18",
@@ -199,7 +218,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Sau những màn flexing cực chất, những chiếc trailer được đầu tư chỉn chu và vô vàn câu chuyện riêng của các Bang Hội, Tiểu Hàn đã tìm ra TOP 10 BANG H",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/cong-bo-ket-qua-bang-hoi-flexing-ti-thi-mua-2.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-09-557-bang-hoi-flexing-ti-thi-mua-2/102-bang-hoi-ti-thi-flexing-cover-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "cong-bo-ket-qua-bang-hoi-flexing-ti-thi-mua-2"
   },
   {
     "id": "news-19",
@@ -209,7 +229,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Mùa Giải Năm Kỷ Nguyên Thiên Cơ (từ 06/11) mang đến Thần Khí – Thiên Cơ Ngọc Hạch: chiêu tủ có hình thái tiến hóa mới, tự chọn lối chơi thiên công hay",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/than-khi-la-gi-bi-mat-dang-sau-thien-co-ngoc-hach-vo-hoc-tien-hoa-trong-mua-giai-nam-moi.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-588-than-khi-la-gi-bi-mat-dang-sau/than-khi-banner-16x9.webp",
-    "tab": "danh-sach"
+    "tab": "danh-sach",
+    "slug": "than-khi-la-gi-bi-mat-dang-sau-thien-co-ngoc-hach-vo-hoc-tien-hoa-trong-mua-giai-nam-moi"
   },
   {
     "id": "news-20",
@@ -219,7 +240,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Nghịch Thủy Hàn ra mắt cặp ngoại trang mới - Vô Thường Bạch Bào &amp; Bách Chiến Phá Kinh Giả, giá bán 980 Văn Ngọc, có thể dùng phiếu giảm nửa giá.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/ngoai-trang-moi-vo-thuong-bach-bao-bach-chien-pha-kinh-gia.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/NgoaiTrang/2026-10-601-ngoai-trang-moi-vo-thuong-bach-bao/01-banner-ngang.jpg",
-    "tab": "news"
+    "tab": "news",
+    "slug": "ngoai-trang-moi-vo-thuong-bach-bao-bach-chien-pha-kinh-gia"
   },
   {
     "id": "news-21",
@@ -229,7 +251,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Từ 1 sao lên 5 sao luôn, Tiểu Hàn cảm động muốn xỉu nè! Cảm ơn Thiếu Hiệp đã thẳng thắn góp ý và cho tụi mình cơ hội sửa sai.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/cam-on-thieu-hiep-da-doi-1-sao-thanh-5-sao-cho-tieu-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-596-cam-on-thieu-hiep-da-doi-1-sao/tieu-han-khong-lam-mmorpg-nua-16x9.webp",
-    "tab": "news"
+    "tab": "news",
+    "slug": "cam-on-thieu-hiep-da-doi-1-sao-thanh-5-sao-cho-tieu-han"
   },
   {
     "id": "news-22",
@@ -239,7 +262,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Ngoại trang đôi Lân Cốt Phùng U chính thức ra mắt với kiểu tóc hiếm bạch phát, áo lông vũ u ám và tà váy xanh lưu ly. Giá ưu đãi hạn giờ chỉ 1.630 Văn",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/ra-mat-ngoai-trang-doi-lan-cot-phung-u-gia-uu-dai-chi-1-630-van-ngoc.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/NgoaiTrang/2026-10-591-ra-mat-ngoai-trang-doi-lan-cot/lan-cot-phung-u-banner-16x9.webp",
-    "tab": "news"
+    "tab": "news",
+    "slug": "ra-mat-ngoai-trang-doi-lan-cot-phung-u-gia-uu-dai-chi-1-630-van-ngoc"
   },
   {
     "id": "news-23",
@@ -249,7 +273,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "&quot;Tiểu Hàn không sao&quot; là nói dối đó. Tiểu Hàn có sao – đúng 3.4 sao trên Google Play. Tiểu Hàn đã nghe hết góp ý của Thiếu Hiệp: hộp thư góc màn hình đ",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/tieu-han-khong-sao-google-play-3-4-sao.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-585-tieu-han-khong-sao-google-play-3-4/vote-app-banner-16x9.webp",
-    "tab": "news"
+    "tab": "news",
+    "slug": "tieu-han-khong-sao-google-play-3-4-sao"
   },
   {
     "id": "news-24",
@@ -259,7 +284,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Nghịch Thủy Hàn 2.0 chơi lớn: hoàn trả tổng giá trị hơn 100 tỷ – hơn 300 triệu Ngọc &quot;Mây&quot; – cho toàn bộ Thiếu Hiệp từng nạp. Không phải quay thưởng, k",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/news/ca-nghich-th-y-han-chan-dong-khi-biet-tin-hoan-100-ty-cho-toan-bo-nguoi-choi-t-ng-nap.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2026-10-583-ca-nghich-thuy-han-chan-dong-khi/hoan-100-ty-banner-v2.webp",
-    "tab": "news"
+    "tab": "news",
+    "slug": "ca-nghich-th-y-han-chan-dong-khi-biet-tin-hoan-100-ty-cho-toan-bo-nguoi-choi-t-ng-nap"
   },
   {
     "id": "news-25",
@@ -269,7 +295,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Từ 26/10 – 08/11/2026, Nghịch Thủy Hàn bắt tay Haidilao và ZaloPay ra mắt set lẩu collab &quot;Nghịch Nước Lẩu&quot; tại 16 chi nhánh Hà Nội &amp; TP.HCM: nhận Stic",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/phong-vi-trung-phung-mung-sinh-nhat-1-tuoi-nghich-thuy-han-x-haidilao-x-zalopay.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-598-phong-vi-trung-phung-mung-sinh/haidilao-banner-16x9.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "phong-vi-trung-phung-mung-sinh-nhat-1-tuoi-nghich-thuy-han-x-haidilao-x-zalopay"
   },
   {
     "id": "news-26",
@@ -279,7 +306,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Vậy là Lễ hội Vạn Sắc Tương Phùng đã chính thức khép lại rồi đây!",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/cong-bo-ket-qua-le-hoi-van-sac-tuong-phung.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-09-571-le-hoi-van-sac-tuong-phung-chuoi/cover-2400x1200-option-16x9.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "cong-bo-ket-qua-le-hoi-van-sac-tuong-phung"
   },
   {
     "id": "news-27",
@@ -289,7 +317,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Mừng Nghịch Thủy Hàn tròn 1 tuổi, Nhất Niên Đại Yến chính thức khai tiệc: Ngoại trang 2.880 tự chọn, Văn Ngọc Giới Hạn toàn server, Đặc Kỹ Cam tự chọn",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/06-07-11-nhat-nien-dai-yen-mung-sinh-nhat-1-tuoi-free-ngoai-trang-2-880-ngoc-toan-server.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/NgoaiTrang/2026-10-590-06-07-11-nhat-nien-dai-yen-mung/nhat-nien-dai-yen-banner-16x9.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "06-07-11-nhat-nien-dai-yen-mung-sinh-nhat-1-tuoi-free-ngoai-trang-2-880-ngoc-toan-server"
   },
   {
     "id": "news-28",
@@ -299,7 +328,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Từ 05:00 ngày 15/10 đến hết 23:59 ngày 21/10/2026, Webshop Nghịch Thủy Hàn giảm 5% (tối đa 125.000đ) cho mọi đơn từ 20.000đ. Nạp ngay để tích Văn Ngọc",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/uu-dai-san-ngoc-khoa-giam-5-toi-da-125k-tren-webshop-tich-ngoc-khoa-don-ngoc-may-2-0.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-589-uu-dai-san-ngoc-khoa-giam-5-toi-da/san-ngoc-khoa-banner-16x9.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "uu-dai-san-ngoc-khoa-giam-5-toi-da-125k-tren-webshop-tich-ngoc-khoa-don-ngoc-may-2-0"
   },
   {
     "id": "news-29",
@@ -309,7 +339,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/nhat-nien-ky-hoi-chuoi-hoat-dong-vao-game-c-ng-chuan-bi-sinh-nhat-1-tuoi-nghich-th-y-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-586-nhat-nien-ky-hoi-chuoi-hoat-dong/key-visual-nhat-nien-ky-hoi-16x9.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "nhat-nien-ky-hoi-chuoi-hoat-dong-vao-game-c-ng-chuan-bi-sinh-nhat-1-tuoi-nghich-th-y-han"
   },
   {
     "id": "news-30",
@@ -319,7 +350,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/s-kien-nhat-nien-hoi-c-c-ng-ke-lai-ky-niem-dep-tai-nghich-th-y-han-sau-1-nam-gan-bo-dong-hanh.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-584-su-kien-nhat-nien-hoi-uc-cung-ke/nhatnienhoiuc.jpg",
-    "tab": "event"
+    "tab": "event",
+    "slug": "s-kien-nhat-nien-hoi-c-c-ng-ke-lai-ky-niem-dep-tai-nghich-th-y-han-sau-1-nam-gan-bo-dong-hanh"
   },
   {
     "id": "news-31",
@@ -329,7 +361,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Tháng 11 này, Nghịch Thủy Hàn chính thức tròn một tuổi. Hẹn Thiếu Hiệp tại Offline Fan Fest 13:00–19:00 ngày 07.11.2026, The Global City, TP.HCM.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/7-11-offline-fan-fest-sinh-nhat-nghich-thuy-han-hen-ngay-doan-tu.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-579-7-11-offline-fan-fest-sinh-nhat/fanfest-7thang11-offline-banner.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "7-11-offline-fan-fest-sinh-nhat-nghich-thuy-han-hen-ngay-doan-tu"
   },
   {
     "id": "news-32",
@@ -339,7 +372,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Phủ Xử Án Vạn Sắc – khu vực concept độc bản của Nghịch Thủy Hàn tại Color Fiesta 17, ngày 03 - 04/10/2026 tại Sky Expo, Công viên Phần mềm Quang Trung",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/bi-mat-thien-lao-phu-xu-an-van-sac-sap-sua-khai-mo.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-10-578-bi-mat-thien-lao-phu-xu-an-van-sac/pxa-00-banner-phu-xu-an-van-sac.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "bi-mat-thien-lao-phu-xu-an-van-sac-sap-sua-khai-mo"
   },
   {
     "id": "news-33",
@@ -349,7 +383,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Bốn chú mèo phù thủy Miêu Vu sắp đến giang hồ Nghịch Thủy Hàn, và chúng đã dẫn Tiểu Hàn lạc tới Phủ Xử Án Vạn Sắc tại Color Fiesta 17, 03–04/10/2026!",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/mieu-vu-giang-the-tieu-han-lac-vao-xu-so-van-sac.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-09-573-mieu-vu-giang-the-tieu-han-lac-vao/kv-phuxuanvansac.jpg",
-    "tab": "event"
+    "tab": "event",
+    "slug": "mieu-vu-giang-the-tieu-han-lac-vao-xu-so-van-sac"
   },
   {
     "id": "news-34",
@@ -359,7 +394,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Lễ Hội Vạn Sắc Tương Phùng đã sẵn sàng với chuỗi hoạt động hấp dẫn đang chờ đón các Thiếu Hiệp",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/chuoi-hoat-dong-khoe-sac.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-09-571-le-hoi-van-sac-tuong-phung-chuoi/cover-2400x1200-option-16x9.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "chuoi-hoat-dong-khoe-sac"
   },
   {
     "id": "news-35",
@@ -369,7 +405,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Mùa thu này, Thiếu Hiệp hoá thân phù thuỷ tập sự của giang hồ: ban ngày rong ruổi hái lượm, đào khoáng, câu cá để gom nguyên liệu; tối về lần theo lời",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/the-le-s-kien-luyen-ma-duoc.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-09-564-the-le-su-kien-luyen-ma-duoc/thumb-mainsite-16x9.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "the-le-s-kien-luyen-ma-duoc"
   },
   {
     "id": "news-36",
@@ -379,7 +416,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/event/nghich-thuy-van-sac-cuoc-thi-fanart.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-09-561-nghich-thuy-van-sac-cuoc-thi-ve/kv-cuoc-thi-fanart-ntvs-16x9.webp",
-    "tab": "event"
+    "tab": "event",
+    "slug": "nghich-thuy-van-sac-cuoc-thi-fanart"
   },
   {
     "id": "news-37",
@@ -389,7 +427,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Sau những ngày thi đấu căng thẳng cùng loạt livestream sôi động, Tiểu Hàn xin chính thức công bố kết quả hai hoạt động cộng đồng đồng hành cùng Quần H",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/cong-bo-ket-qua-chuoi-su-kien-cong-dong.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/News2/2026-10/594-cong-bo-ket-qua-chuoi-su-kien/Thi%E1%BA%BFt%20k%E1%BA%BF%20ch%C6%B0a%20c%C3%B3%20t%C3%AAn.jpg",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "cong-bo-ket-qua-chuoi-su-kien-cong-dong"
   },
   {
     "id": "news-38",
@@ -399,7 +438,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Ban Tổ Chức xin cảm ơn toàn thể Thiếu Hiệp đã tích cực chiêu mộ đồng đạo, cùng xây dựng cộng đồng Nghịch Thuỷ Hàn ngày một lớn mạnh.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/thong-bao-danh-sach-nhan-thuong-affiliate-thang-9.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/News2/2026-09/568-thong-bao-danh-sach-nhan-thuong/Frame.webp",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "thong-bao-danh-sach-nhan-thuong-affiliate-thang-9"
   },
   {
     "id": "news-39",
@@ -409,7 +449,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Ban Tổ Chức chính thức công bố danh sách 200 Thiếu Hiệp trúng thưởng sự kiện Luyện Ma Dược: Set Merchandise, Thẻ Tháng và Vé tham dự Color Fiesta. Thi",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/cong-bo-danh-sach-trung-thuong-su-kien-luyen-ma-duoc.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/KetQua/2026-10-587-cong-bo-danh-sach-trung-thuong-su/luyen-ma-duoc-ket-qua.webp",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "cong-bo-danh-sach-trung-thuong-su-kien-luyen-ma-duoc"
   },
   {
     "id": "news-40",
@@ -419,7 +460,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Sau những ngày cùng nhau tham gia các thử thách và săn tìm những phần quà hấp dẫn, Tiểu Hàn xin chính thức công bố kết quả của 02 sự kiện",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/cong-bo-ket-qua-chuoi-su-kien.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/KetQua/2026-10-582-cong-bo-ket-qua-chuoi-su-kien-nha/120-kq.webp",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "cong-bo-ket-qua-chuoi-su-kien"
   },
   {
     "id": "news-41",
@@ -429,7 +471,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/cong-bo-bang-xep-hang-top-10-an-tuong-nhat-top-15-noi-bat-cuoc-thi-fanart-nghich-th-y-van-sac.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-09-561-nghich-thuy-van-sac-cuoc-thi-ve/kv-cuoc-thi-fanart-ntvs-16x9.webp",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "cong-bo-bang-xep-hang-top-10-an-tuong-nhat-top-15-noi-bat-cuoc-thi-fanart-nghich-th-y-van-sac"
   },
   {
     "id": "news-42",
@@ -439,7 +482,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Nghịch Thủy Hàn đã ra mắt bản cập nhật 1.3.3. Cùng điểm qua những nội dung cập nhật trọng điểm của phiên bản này!",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/thong-bao-cap-nhat-phien-ban-1-3-3-nghich-thuy-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/PhienBan/1-3-3/570-thong-bao-cap-nhat-phien-ban-1-3-3/pb133-biennienkyvansac-16x9.webp",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "thong-bao-cap-nhat-phien-ban-1-3-3-nghich-thuy-han"
   },
   {
     "id": "news-43",
@@ -449,7 +493,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Nghịch Thủy Hàn bảo trì kênh thanh toán In-App trên App Store và Google Play từ 10:00 ngày 29/09/2026. Các Thiếu Hiệp vẫn nạp bình thường qua VNGGAMES",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/thong-bao-bao-tri-kenh-thanh-toan-in-app-tren-app-store-va-google-play.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/ThongBao/2026-09-566-thong-bao-bao-tri-kenh-dang-nhap/1-thong-bao-bao-tri.jpg",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "thong-bao-bao-tri-kenh-thanh-toan-in-app-tren-app-store-va-google-play"
   },
   {
     "id": "news-44",
@@ -459,7 +504,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/cong-bo-ket-qua-creator-battle-2-hoc-vien-giang-ho.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/KetQua/2026-09-569-cong-bo-ket-qua-creator-battle-2/cover-2000x1000-16x9.webp",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "cong-bo-ket-qua-creator-battle-2-hoc-vien-giang-ho"
   },
   {
     "id": "news-45",
@@ -469,7 +515,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Nghịch Thủy Hàn sẽ bảo trì kênh đăng nhập Apple vào sáng Thứ Hai, 28/09/2026, từ 06:00 đến 12:00. Thiếu Hiệp hãy liên kết email để đăng nhập không giá",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/thong-bao-bao-tri-kenh-dang-nhap-apple-ngay-28-09-2026.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/ThongBao/2026-09-566-thong-bao-bao-tri-kenh-dang-nhap/1-thong-bao-bao-tri.jpg",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "thong-bao-bao-tri-kenh-dang-nhap-apple-ngay-28-09-2026"
   },
   {
     "id": "news-46",
@@ -479,7 +526,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Sự kiện Dự Đoán Vạn Dặm Tiêu Hành đã khép lại. Ban Tổ Chức xin chúc mừng 50 Thiếu Hiệp có thành tích dự đoán xuất sắc nhất, giành trọn phần thưởng của",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/thong-bao-trung-thuong-su-kien-van-dam-tieu-hanh.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/SuKien/2026-09-559-the-le-su-kien-van-dam-tieu-hanh/h5-vandamtieuhanh-16x9.webp",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "thong-bao-trung-thuong-su-kien-van-dam-tieu-hanh"
   },
   {
     "id": "news-47",
@@ -489,7 +537,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Sau hành trình nhập học, hoàn thành bài tập và tích lũy điểm tại Học Viện Giang Hồ, những Học Viên xuất sắc đã chính thức có tên trong Danh Sách Trúng",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/inform/cong-bo-danh-sach-tr-ng-thuong-trang-s-kien-hoc-vien-giang-ho.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/KetQua/2026-09-563-cong-bo-danh-sach-trung-thuong/hoc-vien-giang-ho-trung-thuong-thumb-banner.jpg",
-    "tab": "inform"
+    "tab": "inform",
+    "slug": "cong-bo-danh-sach-tr-ng-thuong-trang-s-kien-hoc-vien-giang-ho"
   },
   {
     "id": "news-48",
@@ -499,7 +548,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/huong-dan-cac-buoc-xac-minh-so-dien-thoai-bao-ve-tai-khoan-nghich-th-y-han-vng.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/499-huong-dan-cac-buoc-xac-minh-so/4.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "huong-dan-cac-buoc-xac-minh-so-dien-thoai-bao-ve-tai-khoan-nghich-th-y-han-vng"
   },
   {
     "id": "news-49",
@@ -509,7 +559,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/huong-dan-pho-ban-kinh-thien-cac-cam-cac-do-kho-anh-h-ng-m-a-he-nay-la-phai-chien-c-c-chay.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/460-huong-dan-pho-ban-kinh-thien-cac/screenshot-7.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "huong-dan-pho-ban-kinh-thien-cac-cam-cac-do-kho-anh-h-ng-m-a-he-nay-la-phai-chien-c-c-chay"
   },
   {
     "id": "news-50",
@@ -519,7 +570,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/nghich-thuy-hiep-ky-co-kiem-hiep.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/PhienBan/1-2-0/374-thong-bao-cap-nhat-phien-ban-1-2-0/key.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "nghich-thuy-hiep-ky-co-kiem-hiep"
   },
   {
     "id": "news-51",
@@ -529,7 +581,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Chính thức ra mắt hệ thống chuyển phái ở phiên bản 1.2.0",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/chuyen-doi-mon-phai.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/372-huong-dan-tinh-nang-chuyen-doi-mon/bg-7-16x9.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "chuyen-doi-mon-phai"
   },
   {
     "id": "news-52",
@@ -539,7 +592,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/bich-huyet-minh-sa.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/350-thi-luyen-luu-phai-bich-huyet-minh/banner-16x9.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "bich-huyet-minh-sa"
   },
   {
     "id": "news-53",
@@ -549,7 +603,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Hoạt động Tập Kết Mời Năm Mới đã bắt đầu!",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/huong-dan-su-kien-cung-thap-hoa-dang-nghich-thuy-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/333-huong-dan-tham-gia-su-kien-cung/2.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "huong-dan-su-kien-cung-thap-hoa-dang-nghich-thuy-han"
   },
   {
     "id": "news-54",
@@ -559,7 +614,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/vu-duong-thanh-anh-hung.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/324-nhung-dieu-can-biet-de-chinh-phuc/banner-16x9.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "vu-duong-thanh-anh-hung"
   },
   {
     "id": "news-55",
@@ -569,7 +625,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Hãy cùng Tiểu Hàn khám phá 5 môn phái giang hồ với tuyệt kỹ bá đạo đến mức khiến cả võ lâm phải thở dài: “Ủa cái này là võ công hay siêu năng lực vậy?",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/mon-phai-giang-ho-nghich-thuy-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/301-mon-phai-giang-ho-noi-ren-luyen-vo/mpgh8-16x9.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "mon-phai-giang-ho-nghich-thuy-han"
   },
   {
     "id": "news-56",
@@ -579,7 +636,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Tiểu Hàn tin rằng mọi người đều có thể tận hưởng niềm vui khi chinh phục Vũ Dương Thành!",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/huong-dan-pho-ban-vu-duong-thanh-noi-thanh-nghich-thuy-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/296-hehe-ba-vi-boss-noi-thanh-vu-duong/banner.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "huong-dan-pho-ban-vu-duong-thanh-noi-thanh-nghich-thuy-han"
   },
   {
     "id": "news-57",
@@ -589,7 +647,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Tàu lượn &quot;thăng cấp&quot; siêu tốc khởi hành!",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/huong-dan-tan-thu-nghich-thuy-han-giao-dien-cap-do.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/Chung/Anh/a23.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "huong-dan-tan-thu-nghich-thuy-han-giao-dien-cap-do"
   },
   {
     "id": "news-58",
@@ -599,7 +658,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Đạo Tặc đã đến! Truy Nã ngay nhận quà liền tay.",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/huong-dan-hoat-dong-truy-na.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/290-muon-kiem-noi-cong-vang-den-nhan/thumnail-16x9.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "huong-dan-hoat-dong-truy-na"
   },
   {
     "id": "news-59",
@@ -609,7 +669,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Bài viết tâm huyết của một đại thần trên group đã được Tiểu Hàn tổng hợp lại rồi nè~",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/nghich-thuy-han-huong-dan-tan-thu-nhap-mon.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/287-tan-thu-nhap-mon-tu-so-0-den-cao/banner.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "nghich-thuy-han-huong-dan-tan-thu-nhap-mon"
   },
   {
     "id": "news-60",
@@ -619,7 +680,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Chinh phục phó bản 12 người cùng Tiểu Hàn~",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/pho-ban-12-nguoi-vu-duong-thanh-ngoai-thanh-nghich-thuy-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/HuongDan/285-ngoai-thanh-vu-duong-mo-cua-giai/banner.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "pho-ban-12-nguoi-vu-duong-thanh-ngoai-thanh-nghich-thuy-han"
   },
   {
     "id": "news-61",
@@ -629,7 +691,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Bách Khoa Nội Công đến rồi đâyy",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/he-thong-noi-cong-nghich-thuy-han.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/TinTuc/2025-09-210-cam-1-ty-trong-tay-ban-co-the-choi/a28.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "he-thong-noi-cong-nghich-thuy-han"
   },
   {
     "id": "news-62",
@@ -639,7 +702,8 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Trong vài ngày vừa qua, một số đồng môn gặp phải vấn đề khi tải game và đăng nhập, Tiểu Hàn đã nhanh chóng thống kê và tổng hợp lỗi cũng như khắc phục",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/huong-dan-khac-phuc-mot-so-van-de-ve-tai-game-va-dang-nhap.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/Chung/Anh/a26.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "huong-dan-khac-phuc-mot-so-van-de-ve-tai-game-va-dang-nhap"
   },
   {
     "id": "news-63",
@@ -649,6 +713,7 @@ export const VNG_NEWS_ARTICLES: NewsArticle[] = [
     "excerpt": "Chơi Ngay thì tiện thật đấy nhưng các Thiếu Hiệp nhớ chú ý bảo vệ tài khoản của mình nha~",
     "link": "https://nghichthuyhan.vnggames.com/tin-tuc/guide/huong-dan-bao-ve-tai-khoan-khi-su-dung-tinh-nang-choi-ngay.html",
     "image": "https://cdn-mainsite-aka.vnggames.com/upload/nghichthuyhan/source/ThongBao/2025-09-204-cau-hinh-de-xuat-khi-choi-nghich/a33.webp",
-    "tab": "guide"
+    "tab": "guide",
+    "slug": "huong-dan-bao-ve-tai-khoan-khi-su-dung-tinh-nang-choi-ngay"
   }
 ];

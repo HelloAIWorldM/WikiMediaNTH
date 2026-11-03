@@ -5,10 +5,7 @@ import Link from 'next/link';
 import { 
   Sparkles, 
   ChevronRight, 
-  Compass, 
-  Newspaper, 
   Calendar, 
-  ExternalLink, 
   Search, 
   X, 
   Flame,
@@ -30,7 +27,6 @@ export default function TinTucNTHPage() {
   const [activeTab, setActiveTab] = useState<string>('danh-sach');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
 
   // Filtered articles based on active tab and search query
   const filteredArticles = useMemo(() => {
@@ -247,10 +243,10 @@ export default function TinTucNTHPage() {
                 {currentArticles.map((article) => {
                   return (
                     <li key={article.id} className="relative group">
-                      {/* Frosted card container ensuring 100% clear text contrast */}
-                      <div 
-                        onClick={() => setSelectedArticle(article)}
-                        className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 p-4 rounded-xl cursor-pointer bg-white/80 hover:bg-white/95 backdrop-blur-md border border-[#c1d7e8]/80 hover:border-[#7ea6c4] shadow-sm hover:shadow-lg transition-all duration-200"
+                      {/* Direct Link to dedicated Article Page instead of Popup */}
+                      <Link 
+                        href={`/tin-tuc-nth/${article.slug}`}
+                        className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 p-4 rounded-xl cursor-pointer bg-white/80 hover:bg-white/95 backdrop-blur-md border border-[#c1d7e8]/80 hover:border-[#7ea6c4] shadow-sm hover:shadow-lg transition-all duration-200 block"
                       >
                         {/* Thumbnail Image (250px x 130px) */}
                         <div className="w-full md:w-[250px] h-[140px] md:h-[130px] shrink-0 rounded-lg overflow-hidden border border-[#91b1c8]/60 bg-[#0e2133] shadow-md group-hover:shadow-cyan-900/20 transition-all">
@@ -299,7 +295,7 @@ export default function TinTucNTHPage() {
                             }}
                           />
                         </div>
-                      </div>
+                      </Link>
                     </li>
                   );
                 })}
@@ -387,81 +383,6 @@ export default function TinTucNTHPage() {
           )}
         </div>
       </div>
-
-      {/* Quick Article Preview Modal */}
-      {selectedArticle && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/80 backdrop-blur-sm animate-fade-in"
-          onClick={() => setSelectedArticle(null)}
-        >
-          <div 
-            className="w-full max-w-2xl bg-ink-900 border border-gold/40 rounded-2xl p-6 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Close Button */}
-            <button
-              onClick={() => setSelectedArticle(null)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg border border-gold/20 bg-ink-800 text-ink-300 hover:text-white hover:border-gold transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Modal Category & Date */}
-            <div className="flex items-center gap-3 pt-1">
-              <span className={`px-3 py-1 rounded text-xs font-black uppercase tracking-wider ${getCategoryBadgeClass(selectedArticle.category)}`}>
-                {selectedArticle.category}
-              </span>
-              <span className="text-xs font-mono font-bold text-ink-300 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-gold" />
-                {selectedArticle.date}
-              </span>
-            </div>
-
-            {/* Modal Title */}
-            <h3 className="text-xl sm:text-2xl font-serif font-bold text-gold-bright leading-snug">
-              {selectedArticle.title}
-            </h3>
-
-            {/* Modal Image */}
-            {selectedArticle.image && (
-              <div className="w-full h-[240px] sm:h-[300px] rounded-xl overflow-hidden border border-gold/20 bg-ink-950">
-                <img
-                  src={selectedArticle.image}
-                  alt={selectedArticle.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-
-            {/* Modal Excerpt */}
-            <div className="p-4 rounded-xl border border-gold/15 bg-ink-950/70 text-ink-100 text-sm leading-relaxed space-y-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-gold block font-bold">
-                Tóm Tắt Nội Dung
-              </span>
-              <p>{selectedArticle.excerpt}</p>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-3 pt-2 border-t border-ink-800">
-              <button
-                onClick={() => setSelectedArticle(null)}
-                className="px-4 py-2 rounded-lg border border-ink-700 bg-ink-800/80 text-xs font-mono text-ink-300 hover:text-white transition-colors"
-              >
-                Đóng lại
-              </button>
-              <a
-                href={selectedArticle.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-2 rounded-lg bg-gradient-to-r from-gold via-gold-bright to-gold text-ink-950 font-bold text-xs font-mono flex items-center gap-2 shadow-gold-glow hover:brightness-110 transition-all"
-              >
-                <span>Xem Bài Gốc Trên VNG</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
