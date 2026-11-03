@@ -157,6 +157,13 @@ export default function HomePage() {
                 <Layers className="w-3.5 h-3.5" />
                 <span>Giả Lập Build (10 Đồ + 6 Nội Công)</span>
               </Link>
+              <Link
+                href="/thien-co-ngoc-hach"
+                className="w-full py-2 rounded-lg bg-gradient-to-r from-teal-500/20 via-teal-500/10 to-teal-500/20 hover:from-teal-500/30 hover:to-teal-500/30 text-teal-300 border border-teal-500/40 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all"
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span>Thần Khí · Thiên Cơ Ngọc Hạch</span>
+              </Link>
             </div>
           </div>
         </aside>

@@ -13,7 +13,8 @@ import {
   Layers, 
   FileCode2, 
   Camera,
-  ExternalLink
+  ExternalLink,
+  Compass
 } from 'lucide-react';
 import { useSimulatorStore } from '@/store/useSimulatorStore';
 
@@ -26,6 +27,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Trang Chủ Wiki', href: '/', icon: Sparkles },
     { name: 'Giả Lập Build (10 Đồ + 6 Nội Công)', href: '/simulator', icon: Layers, badge: 'PRO' },
+    { name: 'Thiên Cơ Ngọc Hạch', href: '/thien-co-ngoc-hach', icon: Compass, badge: 'MỚI' },
   ];
 
   return (

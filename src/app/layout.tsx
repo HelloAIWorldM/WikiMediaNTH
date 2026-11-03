@@ -37,6 +37,7 @@ export default function RootLayout({
               <span className="text-gold/80 font-mono">Patch v1.3.3</span>
               <a href="/guide" className="hover:text-gold transition-colors">Cẩm Nang</a>
               <a href="/simulator" className="hover:text-gold transition-colors">Giả Lập</a>
+              <a href="/thien-co-ngoc-hach" className="hover:text-gold transition-colors text-gold">Thiên Cơ Ngọc Hạch</a>
               <a href="/niendu" className="hover:text-gold transition-colors">Niên Du Hub</a>
             </div>
           </div>
