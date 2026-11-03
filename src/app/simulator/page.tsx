@@ -440,7 +440,7 @@ export default function SimulatorPage() {
                           onClick={() => openCatalogForSlot(index)}
                           onMouseEnter={() => slot && setHoveredInner(slot)}
                           onMouseLeave={() => setHoveredInner(null)}
-                          className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[104px] ${
+                          className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[112px] ${
                             isOccupied
                               ? 'border-gold/60 bg-ink-900 shadow-md hover:border-gold hover:shadow-gold-glow'
                               : 'border-dashed border-ink-700 bg-ink-950/60 hover:border-gold/60'
@@ -466,7 +466,7 @@ export default function SimulatorPage() {
                                   </button>
                                 </div>
 
-                                <div className="font-sans text-base font-extrabold text-white truncate my-0.5 tracking-wide" title={slot.name}>
+                                <div className="font-sans text-[13px] sm:text-sm font-extrabold text-white my-0.5 tracking-wide leading-tight break-words line-clamp-2" title={slot.name}>
                                   {slot.name}
                                 </div>
 
@@ -518,41 +518,86 @@ export default function SimulatorPage() {
                     })}
                   </div>
 
-                  {/* Cột Giữa: Bài vị Thiền Định & Vòng Càn Khôn Chu Thiên (Khung khép kín hoàn toàn, không đè chữ) */}
-                  <div className="flex flex-col items-center justify-between p-4 rounded-xl border border-gold/40 bg-gradient-to-b from-ink-900 via-ink-950 to-ink-900 text-center shadow-lg relative overflow-hidden min-h-[310px]">
-                    {/* Header: Càn - Khôn Bát Quái */}
-                    <div className="flex items-center gap-2 text-[11px] font-mono text-gold-bright tracking-widest uppercase">
-                      <span className="text-gold font-bold">☰ CÀN</span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-gold/60" />
-                      <span>THIỀN ĐỊNH</span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-gold/60" />
-                      <span className="text-gold font-bold">☷ KHÔN</span>
+                  {/* Cột Giữa: Bài vị Thiền Định & Vòng Càn Khôn Chu Thiên (Khung khép kín hoàn toàn, cân đối, không đè chữ) */}
+                  <div className="flex flex-col items-center justify-between p-3.5 sm:p-4 rounded-xl border border-gold/40 bg-gradient-to-b from-ink-900 via-ink-950 to-ink-900 text-center shadow-lg relative overflow-hidden min-h-[340px]">
+                    {/* Header: Trận Pháp Thiền Định & Bộ đếm node */}
+                    <div className="w-full flex items-center justify-between pb-2 border-b border-gold/20">
+                      <div className="flex items-center gap-1.5 text-xs font-serif font-bold text-gold-bright uppercase tracking-wider">
+                        <Sparkles className="w-3.5 h-3.5 text-gold" />
+                        <span>Trận Pháp Thiền Định</span>
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-gold/15 border border-gold/40 text-gold-bright font-bold">
+                        {(innerSlots || []).reduce((acc, s) => acc + (s && s.elements ? s.elements.length : 0), 0)}/30 Node
+                      </span>
                     </div>
 
                     {/* Center Avatar / Yin-Yang Medallion */}
-                    <div className="my-auto py-3 flex flex-col items-center">
-                      <div className="w-24 h-24 rounded-full border-2 border-gold/50 flex items-center justify-center p-2 bg-ink-950 shadow-gold-glow relative">
-                        <div className="w-full h-full rounded-full border border-gold/30 flex items-center justify-center text-gold font-serif text-3xl font-bold bg-gold/5 animate-spin-slow">
+                    <div className="my-auto py-2 flex flex-col items-center">
+                      <div className="w-20 h-20 rounded-full border-2 border-gold/60 flex items-center justify-center p-2 bg-gradient-to-b from-ink-950 to-ink-900 shadow-gold-glow relative">
+                        <div className="w-full h-full rounded-full border border-gold/40 flex items-center justify-center text-gold font-serif text-3xl font-bold bg-gold/10">
                           ☯
                         </div>
                       </div>
-                      <div className="mt-3 text-sm font-serif font-bold text-gold-bright tracking-wider">
+                      <div className="mt-2 text-base font-serif font-bold text-gold-bright tracking-wide">
                         {selectedSect}
                       </div>
                       <div className="text-[11px] text-ink-300 font-mono">
-                        Chu Thiên Thiền Định
-                      </div>
-                      <div className="mt-2 text-xs font-mono px-2.5 py-0.5 rounded bg-ink-900 border border-gold/30 text-gold shadow-sm">
-                        Đã kích hoạt: {(innerSlots || []).reduce((acc, s) => acc + (s && s.elements ? s.elements.length : 0), 0)} / 30 Nguyên Tố
+                        Chu Thiên Hội Tụ
                       </div>
                     </div>
 
-                    {/* Bottom Active Circuits Indicator */}
-                    <div className="w-full pt-2 border-t border-ink-800 text-[10px] font-mono text-ink-300">
-                      <span>Chu thiên:&nbsp;</span>
-                      <span className="text-gold-bright font-bold">
-                        {(resonances || []).filter((r) => r && r.active).map((r) => r.name).join(', ') || 'Chưa kích hoạt'}
-                      </span>
+                    {/* Danh sách Nội công đang gắn (Hiển thị đầy đủ 100%) */}
+                    <div className="w-full px-2.5 py-2 rounded-lg bg-ink-950/80 border border-gold/25 text-left space-y-1 my-1.5">
+                      <div className="text-[10px] font-mono font-bold text-ink-300 uppercase tracking-wider flex items-center justify-between">
+                        <span className="text-amber-200/90">Nội công đang gắn:</span>
+                        <span className="text-gold-bright font-extrabold">
+                          {(innerSlots || []).filter(Boolean).length}/6
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {(innerSlots || []).filter((s): s is NonNullable<typeof s> => Boolean(s)).length > 0 ? (
+                          (innerSlots || [])
+                            .filter((s): s is NonNullable<typeof s> => Boolean(s))
+                            .map((s, idx) => (
+                              <span
+                                key={idx}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-ink-900/90 border border-gold/30 text-white text-[11px] font-medium leading-tight shadow-sm"
+                              >
+                                <ElementGlyph element={s.primaryElement} className="w-3 h-3 flex-shrink-0" glow={true} />
+                                <span>{s.name}</span>
+                              </span>
+                            ))
+                        ) : (
+                          <span className="text-[11px] font-mono text-ink-500 italic">Chưa gắn nội công</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Bottom Active Circuits Indicator - Hiển thị rõ chữ, badge sáng, không ngắt chữ */}
+                    <div className="w-full pt-2.5 border-t border-gold/25 flex flex-col items-center gap-1.5">
+                      <div className="text-xs font-serif font-bold text-amber-200 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-gold-bright" />
+                        <span>Chu thiên:</span>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-center gap-1.5 w-full">
+                        {(resonances || []).filter((r) => r && r.active).length > 0 ? (
+                          (resonances || [])
+                            .filter((r) => r && r.active)
+                            .map((r) => (
+                              <span
+                                key={r.id}
+                                className="px-2.5 py-1 rounded-md bg-gold/20 border border-gold/60 text-gold-bright text-xs font-mono font-bold shadow-gold-glow flex items-center gap-1"
+                              >
+                                <span>{r.name}</span>
+                                <span className="px-1 py-0.2 rounded bg-ink-950/80 text-[10px] text-amber-300 border border-gold/30">
+                                  Lv{r.level}
+                                </span>
+                              </span>
+                            ))
+                        ) : (
+                          <span className="text-xs font-mono text-ink-400 italic">Chưa kích hoạt</span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -567,7 +612,7 @@ export default function SimulatorPage() {
                           onClick={() => openCatalogForSlot(index)}
                           onMouseEnter={() => slot && setHoveredInner(slot)}
                           onMouseLeave={() => setHoveredInner(null)}
-                          className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[104px] ${
+                          className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[112px] ${
                             isOccupied
                               ? 'border-gold/60 bg-ink-900 shadow-md hover:border-gold hover:shadow-gold-glow'
                               : 'border-dashed border-ink-700 bg-ink-950/60 hover:border-gold/60'
@@ -593,7 +638,7 @@ export default function SimulatorPage() {
                                   </button>
                                 </div>
 
-                                <div className="font-sans text-base font-extrabold text-white truncate my-0.5 tracking-wide" title={slot.name}>
+                                <div className="font-sans text-[13px] sm:text-sm font-extrabold text-white my-0.5 tracking-wide leading-tight break-words line-clamp-2" title={slot.name}>
                                   {slot.name}
                                 </div>
 
