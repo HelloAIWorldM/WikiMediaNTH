@@ -24,7 +24,8 @@ import {
   Search,
   CheckCircle2,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Newspaper
 } from 'lucide-react';
 import { 
   SECTS_DETAILED_DATA, 
@@ -163,6 +164,13 @@ export default function HomePage() {
               >
                 <Compass className="w-3.5 h-3.5" />
                 <span>Thần Khí · Thiên Cơ Ngọc Hạch</span>
+              </Link>
+              <Link
+                href="/tin-tuc-nth"
+                className="w-full py-2 rounded-lg bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-amber-500/20 hover:from-amber-500/30 hover:to-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all"
+              >
+                <Newspaper className="w-3.5 h-3.5" />
+                <span>Tin Tức NTH (Mới Nhất)</span>
               </Link>
             </div>
           </div>

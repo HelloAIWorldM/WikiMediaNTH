@@ -11,6 +11,7 @@ import {
   Camera,
   ExternalLink,
   Compass,
+  Newspaper,
   Menu,
   X
 } from 'lucide-react';
@@ -42,6 +43,13 @@ export default function Navbar() {
       icon: Compass, 
       badge: 'MỚI',
       badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
+    },
+    { 
+      name: 'Tin Tức NTH', 
+      href: '/tin-tuc-nth', 
+      icon: Newspaper, 
+      badge: 'HOT',
+      badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
     },
   ];
 
